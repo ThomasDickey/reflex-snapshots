@@ -4,12 +4,12 @@
 
 extern int yylex();
 
-int main( argc, argv )
-int argc;
-char *argv[];
-	{
-	while ( yylex() != 0 )
-		;
+int
+main(argc, argv)
+     int argc;
+     char *argv[];
+{
+    while (yylex() != 0) ;
 
-	return 0;
-	}
+    return 0;
+}
