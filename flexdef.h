@@ -6,7 +6,7 @@
  *
  * This code is derived from software contributed to Berkeley by
  * Vern Paxson.
- * 
+ *
  * The United States Government has rights in this work pursuant
  * to contract no. DE-AC03-76SF00098 between the United States
  * Department of Energy and the University of California.
@@ -77,14 +77,6 @@
 /* Size of input alphabet - should be size of ASCII set. */
 #ifndef DEFAULT_CSIZE
 #define DEFAULT_CSIZE 128
-#endif
-
-#ifndef PROTO
-#if __STDC__
-#define PROTO(proto) proto
-#else
-#define PROTO(proto) ()
-#endif
 #endif
 
 #ifdef VMS
@@ -246,7 +238,7 @@
 
 /* The percentage the number of homogeneous out-transitions of a state
  * must be of the number of total out-transitions of the state in order
- * that the state's transition table is first compared with a potential 
+ * that the state's transition table is first compared with a potential
  * template of the most common out-transition instead of with the first
  * proto in the proto queue.
  */
@@ -334,7 +326,7 @@ typedef struct hash_entry **hash_table;
 #define START_COND_HASH_SIZE 101
 #define CCL_HASH_SIZE 101
 
-extern struct hash_entry *ndtbl[NAME_TABLE_HASH_SIZE]; 
+extern struct hash_entry *ndtbl[NAME_TABLE_HASH_SIZE];
 extern struct hash_entry *sctbl[START_COND_HASH_SIZE];
 extern struct hash_entry *ccltab[CCL_HASH_SIZE];
 
@@ -415,7 +407,7 @@ extern int yymore_really_used, reject_really_used;
  * use_stdout - the -t flag
  * input_files - array holding names of input files
  * num_input_files - size of input_files array
- * program_name - name with which program was invoked 
+ * program_name - name with which program was invoked
  *
  * action_array - array to hold the rule actions
  * action_size - size of action_array
@@ -652,12 +644,12 @@ extern int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 extern int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
 extern int num_backing_up, bol_needed;
 
-void *allocate_array PROTO((int, size_t));
-void *reallocate_array PROTO((void*, int, size_t));
+void *allocate_array (int, size_t);
+void *reallocate_array (void*, int, size_t);
 
-void *flex_alloc PROTO((size_t));
-void *flex_realloc PROTO((void*, size_t));
-void flex_free PROTO((void*));
+void *flex_alloc (size_t);
+void *flex_realloc (void*, size_t);
+void flex_free (void*);
 
 #define allocate_integer_array(size) \
 	(int *) allocate_array( size, sizeof( int ) )
@@ -709,340 +701,340 @@ extern int yylval;
 
 /* from file ccl.c */
 
-extern void ccladd PROTO((int, int));	/* add a single character to a ccl */
-extern int cclinit PROTO((void));	/* make an empty ccl */
-extern void cclnegate PROTO((int));	/* negate a ccl */
+extern void ccladd (int, int);	/* add a single character to a ccl */
+extern int cclinit (void);	/* make an empty ccl */
+extern void cclnegate (int);	/* negate a ccl */
 
 /* List the members of a set of characters in CCL form. */
-extern void list_character_set PROTO((FILE*, int[]));
+extern void list_character_set (FILE*, int[]);
 
 
 /* from file dfa.c */
 
 /* Check a DFA state for backing up. */
-extern void check_for_backing_up PROTO((int, int[]));
+extern void check_for_backing_up (int, int[]);
 
 /* Check to see if NFA state set constitutes "dangerous" trailing context. */
-extern void check_trailing_context PROTO((int*, int, int*, int));
+extern void check_trailing_context (int*, int, int*, int);
 
 /* Construct the epsilon closure of a set of ndfa states. */
-extern int *epsclosure PROTO((int*, int*, int[], int*, int*));
+extern int *epsclosure (int*, int*, int[], int*, int*);
 
 /* Increase the maximum number of dfas. */
-extern void increase_max_dfas PROTO((void));
+extern void increase_max_dfas (void);
 
-extern void ntod PROTO((void));	/* convert a ndfa to a dfa */
+extern void ntod (void);	/* convert a ndfa to a dfa */
 
 /* Converts a set of ndfa states into a dfa state. */
-extern int snstods PROTO((int[], int, int[], int, int, int*));
+extern int snstods (int[], int, int[], int, int, int*);
 
 
 /* from file ecs.c */
 
 /* Convert character classes to set of equivalence classes. */
-extern void ccl2ecl PROTO((void));
+extern void ccl2ecl (void);
 
 /* Associate equivalence class numbers with class members. */
-extern int cre8ecs PROTO((int[], int[], int));
+extern int cre8ecs (int[], int[], int);
 
 /* Update equivalence classes based on character class transitions. */
-extern void mkeccl PROTO((Char[], int, int[], int[], int, int));
+extern void mkeccl (Char[], int, int[], int[], int, int);
 
 /* Create equivalence class for single character. */
-extern void mkechar PROTO((int, int[], int[]));
+extern void mkechar (int, int[], int[]);
 
 
 /* from file gen.c */
 
-extern void do_indent PROTO((void));	/* indent to the current level */
+extern void do_indent (void);	/* indent to the current level */
 
 /* Generate the code to keep backing-up information. */
-extern void gen_backing_up PROTO((void));
+extern void gen_backing_up (void);
 
 /* Generate the code to perform the backing up. */
-extern void gen_bu_action PROTO((void));
+extern void gen_bu_action (void);
 
 /* Generate full speed compressed transition table. */
-extern void genctbl PROTO((void));
+extern void genctbl (void);
 
 /* Generate the code to find the action number. */
-extern void gen_find_action PROTO((void));
+extern void gen_find_action (void);
 
-extern void genftbl PROTO((void));	/* generate full transition table */
+extern void genftbl (void);	/* generate full transition table */
 
 /* Generate the code to find the next compressed-table state. */
-extern void gen_next_compressed_state PROTO((char*));
+extern void gen_next_compressed_state (char*);
 
 /* Generate the code to find the next match. */
-extern void gen_next_match PROTO((void));
+extern void gen_next_match (void);
 
 /* Generate the code to find the next state. */
-extern void gen_next_state PROTO((int));
+extern void gen_next_state (int);
 
 /* Generate the code to make a NUL transition. */
-extern void gen_NUL_trans PROTO((void));
+extern void gen_NUL_trans (void);
 
 /* Generate the code to find the start state. */
-extern void gen_start_state PROTO((void));
+extern void gen_start_state (void);
 
 /* Generate data statements for the transition tables. */
-extern void gentabs PROTO((void));
+extern void gentabs (void);
 
 /* Write out a formatted string at the current indentation level. */
-extern void indent_put2s PROTO((char[], char[]));
+extern void indent_put2s (char[], char[]);
 
 /* Write out a string + newline at the current indentation level. */
-extern void indent_puts PROTO((char[]));
+extern void indent_puts (char[]);
 
-extern void make_tables PROTO((void));	/* generate transition tables */
+extern void make_tables (void);	/* generate transition tables */
 
 
 /* from file main.c */
 
-extern void check_options PROTO((void));
-extern void flexend PROTO((int));
-extern void usage PROTO((void));
+extern void check_options (void);
+extern void flexend (int);
+extern void usage (void);
 
 
 /* from file misc.c */
 
 /* Add a #define to the action file. */
-extern void action_define PROTO(( char *defname, int value ));
+extern void action_define ( char *defname, int value );
 
 /* Add the given text to the stored actions. */
-extern void add_action PROTO(( char *new_text ));
+extern void add_action ( char *new_text );
 
 /* True if a string is all lower case. */
-extern int all_lower PROTO((register char *));
+extern int all_lower (register char *);
 
 /* True if a string is all upper case. */
-extern int all_upper PROTO((register char *));
+extern int all_upper (register char *);
 
 /* Bubble sort an integer array. */
-extern void bubble PROTO((int [], int));
+extern void bubble (int [], int);
 
 /* Check a character to make sure it's in the expected range. */
-extern void check_char PROTO((int c));
+extern void check_char (int c);
 
 /* Replace upper-case letter to lower-case. */
-extern Char clower PROTO((int));
+extern Char clower (int);
 
 /* Returns a dynamically allocated copy of a string. */
-extern char *copy_string PROTO((register const char *));
+extern char *copy_string (register const char *);
 
 /* Returns a dynamically allocated copy of a (potentially) unsigned string. */
-extern Char *copy_unsigned_string PROTO((register Char *));
+extern Char *copy_unsigned_string (register Char *);
 
 /* Shell sort a character array. */
-extern void cshell PROTO((Char [], int, int));
+extern void cshell (Char [], int, int);
 
 /* Finish up a block of data declarations. */
-extern void dataend PROTO((void));
+extern void dataend (void);
 
 /* Flush generated data statements. */
-extern void dataflush PROTO((void));
+extern void dataflush (void);
 
 /* Report an error message and terminate. */
-extern void flexerror PROTO((const char[]));
+extern void flexerror (const char[]);
 
 /* Report a fatal error message and terminate. */
-extern void flexfatal PROTO((const char[]));
+extern void flexfatal (const char[]);
 
 /* Convert a hexadecimal digit string to an integer value. */
-extern int htoi PROTO((Char[]));
+extern int htoi (Char[]);
 
 /* Report an error message formatted with one integer argument. */
-extern void lerrif PROTO((const char[], int));
+extern void lerrif (const char[], int);
 
 /* Report an error message formatted with one string argument. */
-extern void lerrsf PROTO((const char[], const char[]));
+extern void lerrsf (const char[], const char[]);
 
 /* Spit out a "#line" statement. */
-extern void line_directive_out PROTO((FILE*, int));
+extern void line_directive_out (FILE*, int);
 
 /* Mark the current position in the action array as the end of the section 1
  * user defs.
  */
-extern void mark_defs1 PROTO((void));
+extern void mark_defs1 (void);
 
 /* Mark the current position in the action array as the end of the prolog. */
-extern void mark_prolog PROTO((void));
+extern void mark_prolog (void);
 
 /* Generate a data statment for a two-dimensional array. */
-extern void mk2data PROTO((int));
+extern void mk2data (int);
 
-extern void mkdata PROTO((int));	/* generate a data statement */
+extern void mkdata (int);	/* generate a data statement */
 
 /* Return the integer represented by a string of digits. */
-extern int myctoi PROTO((char []));
+extern int myctoi (char []);
 
 /* Return character corresponding to escape sequence. */
-extern Char myesc PROTO((Char[]));
+extern Char myesc (Char[]);
 
 /* Convert an octal digit string to an integer value. */
-extern int otoi PROTO((Char [] ));
+extern int otoi (Char [] );
 
 /* Output a (possibly-formatted) string to the generated scanner. */
-extern void out PROTO((const char []));
-extern void out_dec PROTO((const char [], int));
-extern void out_dec2 PROTO((const char [], int, int));
-extern void out_hex PROTO((const char [], unsigned int));
-extern void out_line_count PROTO((const char []));
-extern void out_str PROTO((const char [], const char []));
+extern void out (const char []);
+extern void out_dec (const char [], int);
+extern void out_dec2 (const char [], int, int);
+extern void out_hex (const char [], unsigned int);
+extern void out_line_count (const char []);
+extern void out_str (const char [], const char []);
 extern void out_str3
-	PROTO((const char [], const char [], const char [], const char []));
-extern void out_str_dec PROTO((const char [], const char [], int));
-extern void outc PROTO((int));
-extern void outn PROTO((const char []));
+	(const char [], const char [], const char [], const char []);
+extern void out_str_dec (const char [], const char [], int);
+extern void outc (int);
+extern void outn (const char []);
 
 /* Return a printable version of the given character, which might be
  * 8-bit.
  */
-extern char *readable_form PROTO((int));
+extern char *readable_form (int);
 
 /* Write out one section of the skeleton file. */
-extern void skelout PROTO((void));
+extern void skelout (void);
 
 /* Output a yy_trans_info structure. */
-extern void transition_struct_out PROTO((int, int));
+extern void transition_struct_out (int, int);
 
 /* Only needed when using certain broken versions of bison to build parse.c. */
-extern void *yy_flex_xmalloc PROTO(( int ));
+extern void *yy_flex_xmalloc ( int );
 
 /* Set a region of memory to 0. */
-extern void zero_out PROTO((char *, size_t));
+extern void zero_out (char *, size_t);
 
 
 /* from file nfa.c */
 
 /* Add an accepting state to a machine. */
-extern void add_accept PROTO((int, int));
+extern void add_accept (int, int);
 
 /* Make a given number of copies of a singleton machine. */
-extern int copysingl PROTO((int, int));
+extern int copysingl (int, int);
 
 /* Debugging routine to write out an nfa. */
-extern void dumpnfa PROTO((int));
+extern void dumpnfa (int);
 
 /* Finish up the processing for a rule. */
-extern void finish_rule PROTO((int, int, int, int));
+extern void finish_rule (int, int, int, int);
 
 /* Connect two machines together. */
-extern int link_machines PROTO((int, int));
+extern int link_machines (int, int);
 
 /* Mark each "beginning" state in a machine as being a "normal" (i.e.,
  * not trailing context associated) state.
  */
-extern void mark_beginning_as_normal PROTO((register int));
+extern void mark_beginning_as_normal (register int);
 
 /* Make a machine that branches to two machines. */
-extern int mkbranch PROTO((int, int));
+extern int mkbranch (int, int);
 
-extern int mkclos PROTO((int));	/* convert a machine into a closure */
-extern int mkopt PROTO((int));	/* make a machine optional */
+extern int mkclos (int);	/* convert a machine into a closure */
+extern int mkopt (int);	/* make a machine optional */
 
 /* Make a machine that matches either one of two machines. */
-extern int mkor PROTO((int, int));
+extern int mkor (int, int);
 
 /* Convert a machine into a positive closure. */
-extern int mkposcl PROTO((int));
+extern int mkposcl (int);
 
-extern int mkrep PROTO((int, int, int));	/* make a replicated machine */
+extern int mkrep (int, int, int);	/* make a replicated machine */
 
 /* Create a state with a transition on a given symbol. */
-extern int mkstate PROTO((int));
+extern int mkstate (int);
 
-extern void new_rule PROTO((void));	/* initialize for a new rule */
+extern void new_rule (void);	/* initialize for a new rule */
 
 
 /* from file parse.y */
 
 /* Build the "<<EOF>>" action for the active start conditions. */
-extern void build_eof_action PROTO((void));
+extern void build_eof_action (void);
 
 /* Write out a message formatted with one string, pinpointing its location. */
-extern void format_pinpoint_message PROTO((char[], char[]));
+extern void format_pinpoint_message (char[], char[]);
 
 /* Write out a message, pinpointing its location. */
-extern void pinpoint_message PROTO((char[]));
+extern void pinpoint_message (char[]);
 
 /* Write out a warning, pinpointing it at the given line. */
-extern void line_warning PROTO(( char[], int ));
+extern void line_warning ( char[], int );
 
 /* Write out a message, pinpointing it at the given line. */
-extern void line_pinpoint PROTO(( char[], int ));
+extern void line_pinpoint ( char[], int );
 
 /* Report a formatted syntax error. */
-extern void format_synerr PROTO((char [], char[]));
-extern void synerr PROTO((char []));	/* report a syntax error */
-extern void format_warn PROTO((char [], char[]));
-extern void warn PROTO((char []));	/* report a warning */
-extern void yyerror PROTO((char []));	/* report a parse error */
-extern int yyparse PROTO((void));	/* the YACC parser */
+extern void format_synerr (char [], char[]);
+extern void synerr (char []);	/* report a syntax error */
+extern void format_warn (char [], char[]);
+extern void warn (char []);	/* report a warning */
+extern void yyerror (char []);	/* report a parse error */
+extern int yyparse (void);	/* the YACC parser */
 
 
 /* from file scan.l */
 
 /* The Flex-generated scanner for flex. */
-extern int flexscan PROTO((void));
+extern int flexscan (void);
 
 /* Open the given file (if NULL, stdin) for scanning. */
-extern void set_input_file PROTO((char*));
+extern void set_input_file (char*);
 
 /* Wrapup a file in the lexical analyzer. */
-extern int yywrap PROTO((void));
+extern int yywrap (void);
 
 
 /* from file sym.c */
 
 /* Add symbol and definitions to symbol table. */
-extern int addsym PROTO((register char[], char*, int, hash_table, int));
+extern int addsym (register char[], char*, int, hash_table, int);
 
 /* Save the text of a character class. */
-extern void cclinstal PROTO ((Char [], int));
+extern void cclinstal (Char [], int);
 
 /* Lookup the number associated with character class. */
-extern int ccllookup PROTO((Char []));
+extern int ccllookup (Char []);
 
 /* Find symbol in symbol table. */
-extern struct hash_entry *findsym PROTO((register char[], hash_table, int ));
+extern struct hash_entry *findsym (register char[], hash_table, int );
 
-extern void ndinstal PROTO((char[], Char[]));	/* install a name definition */
-extern Char *ndlookup PROTO((char[]));	/* lookup a name definition */
+extern void ndinstal (char[], Char[]);	/* install a name definition */
+extern Char *ndlookup (char[]);	/* lookup a name definition */
 
 /* Increase maximum number of SC's. */
-extern void scextend PROTO((void));
-extern void scinstal PROTO((char[], int));	/* make a start condition */
+extern void scextend (void);
+extern void scinstal (char[], int);	/* make a start condition */
 
 /* Lookup the number associated with a start condition. */
-extern int sclookup PROTO((char[]));
+extern int sclookup (char[]);
 
 
 /* from file tblcmp.c */
 
 /* Build table entries for dfa state. */
-extern void bldtbl PROTO((int[], int, int, int, int));
+extern void bldtbl (int[], int, int, int, int);
 
-extern void cmptmps PROTO((void));	/* compress template table entries */
-extern void expand_nxt_chk PROTO((void));	/* increase nxt/chk arrays */
+extern void cmptmps (void);	/* compress template table entries */
+extern void expand_nxt_chk (void);	/* increase nxt/chk arrays */
 /* Finds a space in the table for a state to be placed. */
-extern int find_table_space PROTO((int*, int));
-extern void inittbl PROTO((void));	/* initialize transition tables */
+extern int find_table_space (int*, int);
+extern void inittbl (void);	/* initialize transition tables */
 /* Make the default, "jam" table entries. */
-extern void mkdeftbl PROTO((void));
+extern void mkdeftbl (void);
 
 /* Create table entries for a state (or state fragment) which has
  * only one out-transition.
  */
-extern void mk1tbl PROTO((int, int, int, int));
+extern void mk1tbl (int, int, int, int);
 
 /* Place a state into full speed transition table. */
-extern void place_state PROTO((int*, int, int));
+extern void place_state (int*, int, int);
 
 /* Save states with only one out-transition to be processed later. */
-extern void stack1 PROTO((int, int, int, int));
+extern void stack1 (int, int, int, int);
 
 
 /* from file yylex.c */
 
-extern int yylex PROTO((void));
+extern int yylex (void);

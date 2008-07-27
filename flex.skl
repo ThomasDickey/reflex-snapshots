@@ -60,13 +60,6 @@ class istream;
 #define yyconst
 #endif
 
-
-#ifdef YY_USE_PROTOS
-#define YY_PROTO(proto) proto
-#else
-#define YY_PROTO(proto) ()
-#endif
-
 /* Returned upon end-of-file. */
 #define YY_NULL 0
 
@@ -239,24 +232,24 @@ static int yy_start = 0;	/* start state number */
  */
 static int yy_did_buffer_switch_on_eof;
 
-void yyrestart YY_PROTO(( FILE *input_file ));
+void yyrestart ( FILE *input_file );
 
-void yy_switch_to_buffer YY_PROTO(( YY_BUFFER_STATE new_buffer ));
-void yy_load_buffer_state YY_PROTO(( void ));
-YY_BUFFER_STATE yy_create_buffer YY_PROTO(( FILE *file, int size ));
-void yy_delete_buffer YY_PROTO(( YY_BUFFER_STATE b ));
-void yy_init_buffer YY_PROTO(( YY_BUFFER_STATE b, FILE *file ));
-void yy_flush_buffer YY_PROTO(( YY_BUFFER_STATE b ));
+void yy_switch_to_buffer ( YY_BUFFER_STATE new_buffer );
+void yy_load_buffer_state ( void );
+YY_BUFFER_STATE yy_create_buffer ( FILE *file, int size );
+void yy_delete_buffer ( YY_BUFFER_STATE b );
+void yy_init_buffer ( YY_BUFFER_STATE b, FILE *file );
+void yy_flush_buffer ( YY_BUFFER_STATE b );
 #define YY_FLUSH_BUFFER yy_flush_buffer( yy_current_buffer )
 
-YY_BUFFER_STATE yy_scan_buffer YY_PROTO(( char *base, yy_size_t size ));
-YY_BUFFER_STATE yy_scan_string YY_PROTO(( yyconst char *yy_str ));
-YY_BUFFER_STATE yy_scan_bytes YY_PROTO(( yyconst char *bytes, int len ));
+YY_BUFFER_STATE yy_scan_buffer ( char *base, yy_size_t size );
+YY_BUFFER_STATE yy_scan_string ( yyconst char *yy_str );
+YY_BUFFER_STATE yy_scan_bytes ( yyconst char *bytes, int len );
 %*
 
-static void *yy_flex_alloc YY_PROTO(( yy_size_t ));
-static void *yy_flex_realloc YY_PROTO(( void *, yy_size_t ));
-static void yy_flex_free YY_PROTO(( void * ));
+static void *yy_flex_alloc ( yy_size_t );
+static void *yy_flex_realloc ( void *, yy_size_t );
+static void yy_flex_free ( void * );
 
 #define yy_new_buffer yy_create_buffer
 
@@ -279,10 +272,10 @@ static void yy_flex_free YY_PROTO(( void * ));
 %% yytext/yyin/yyout/yy_state_type/yylineno etc. def's & init go here
 
 %- Standard (non-C++) definition
-static yy_state_type yy_get_previous_state YY_PROTO(( void ));
-static yy_state_type yy_try_NUL_trans YY_PROTO(( yy_state_type current_state ));
-static int yy_get_next_buffer YY_PROTO(( void ));
-static void yy_fatal_error YY_PROTO(( yyconst char msg[] ));
+static yy_state_type yy_get_previous_state ( void );
+static yy_state_type yy_try_NUL_trans ( yy_state_type current_state );
+static int yy_get_next_buffer ( void );
+static void yy_fatal_error ( yyconst char msg[] );
 %*
 
 /* Done after the current pattern has been matched and before the
@@ -304,32 +297,32 @@ static void yy_fatal_error YY_PROTO(( yyconst char msg[] ));
 
 #ifndef YY_SKIP_YYWRAP
 #ifdef __cplusplus
-extern "C" int yywrap YY_PROTO(( void ));
+extern "C" int yywrap ( void );
 #else
-extern int yywrap YY_PROTO(( void ));
+extern int yywrap ( void );
 #endif
 #endif
 
 %-
 #ifndef YY_NO_UNPUT
-static void yyunput YY_PROTO(( int c, char *buf_ptr ));
+static void yyunput ( int c, char *buf_ptr );
 #endif
 %*
 
 #ifndef yytext_ptr
-static void yy_flex_strncpy YY_PROTO(( char *, yyconst char *, int ));
+static void yy_flex_strncpy ( char *, yyconst char *, int );
 #endif
 
 #ifdef YY_NEED_STRLEN
-static int yy_flex_strlen YY_PROTO(( yyconst char * ));
+static int yy_flex_strlen ( yyconst char * );
 #endif
 
 #ifndef YY_NO_INPUT
 %- Standard (non-C++) definition
 #ifdef __cplusplus
-static int yyinput YY_PROTO(( void ));
+static int yyinput ( void );
 #else
-static int input YY_PROTO(( void ));
+static int input ( void );
 #endif
 %*
 #endif
@@ -339,13 +332,13 @@ static int yy_start_stack_ptr = 0;
 static int yy_start_stack_depth = 0;
 static int *yy_start_stack = 0;
 #ifndef YY_NO_PUSH_STATE
-static void yy_push_state YY_PROTO(( int new_state ));
+static void yy_push_state ( int new_state );
 #endif
 #ifndef YY_NO_POP_STATE
-static void yy_pop_state YY_PROTO(( void ));
+static void yy_pop_state ( void );
 #endif
 #ifndef YY_NO_TOP_STATE
-static int yy_top_state YY_PROTO(( void ));
+static int yy_top_state ( void );
 #endif
 
 #else
@@ -426,7 +419,7 @@ YY_MALLOC_DECL
  */
 #ifndef YY_DECL
 %- Standard (non-C++) definition
-#define YY_DECL int yylex YY_PROTO(( void ))
+#define YY_DECL int yylex ( void )
 %+ C++ definition
 #define YY_DECL int yyFlexLexer::yylex()
 %*
@@ -1179,7 +1172,7 @@ void yyFlexLexer::yy_delete_buffer( YY_BUFFER_STATE b )
 %-
 #ifndef YY_ALWAYS_INTERACTIVE
 #ifndef YY_NEVER_INTERACTIVE
-extern int isatty YY_PROTO(( int ));
+extern int isatty ( int );
 #endif
 #endif
 
@@ -1192,7 +1185,7 @@ FILE *file;
 #endif
 
 %+
-extern "C" int isatty YY_PROTO(( int ));
+extern "C" int isatty ( int );
 void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, istream* file )
 %*
 
