@@ -29,9 +29,6 @@ class istream;
 %*
 #include <unistd.h>
 
-/* Use prototypes in function declarations. */
-#define YY_USE_PROTOS
-
 /* The "const" storage-class-modifier is valid. */
 #define YY_USE_CONST
 
@@ -39,7 +36,6 @@ class istream;
 
 #if __STDC__
 
-#define YY_USE_PROTOS
 #define YY_USE_CONST
 
 #endif	/* __STDC__ */
@@ -51,7 +47,6 @@ class istream;
 #include <io.h>
 #include <stdlib.h>
 #define YY_USE_CONST
-#define YY_USE_PROTOS
 #endif
 
 #ifdef YY_USE_CONST
@@ -893,12 +888,7 @@ yy_state_type yyFlexLexer::yy_get_previous_state()
  */
 
 %-
-#ifdef YY_USE_PROTOS
 static yy_state_type yy_try_NUL_trans( yy_state_type yy_current_state )
-#else
-static yy_state_type yy_try_NUL_trans( yy_current_state )
-yy_state_type yy_current_state;
-#endif
 %+
 yy_state_type yyFlexLexer::yy_try_NUL_trans( yy_state_type yy_current_state )
 %*
@@ -912,13 +902,7 @@ yy_state_type yyFlexLexer::yy_try_NUL_trans( yy_state_type yy_current_state )
 
 %-
 #ifndef YY_NO_UNPUT
-#ifdef YY_USE_PROTOS
 static void yyunput( int c, register char *yy_bp )
-#else
-static void yyunput( c, yy_bp )
-int c;
-register char *yy_bp;
-#endif
 %+
 void yyFlexLexer::yyunput( int c, register char* yy_bp )
 %*
@@ -1041,12 +1025,7 @@ int yyFlexLexer::yyinput()
 
 
 %-
-#ifdef YY_USE_PROTOS
 void yyrestart( FILE *input_file )
-#else
-void yyrestart( input_file )
-FILE *input_file;
-#endif
 %+
 void yyFlexLexer::yyrestart( istream* input_file )
 %*
@@ -1060,12 +1039,7 @@ void yyFlexLexer::yyrestart( istream* input_file )
 
 
 %-
-#ifdef YY_USE_PROTOS
 void yy_switch_to_buffer( YY_BUFFER_STATE new_buffer )
-#else
-void yy_switch_to_buffer( new_buffer )
-YY_BUFFER_STATE new_buffer;
-#endif
 %+
 void yyFlexLexer::yy_switch_to_buffer( YY_BUFFER_STATE new_buffer )
 %*
@@ -1094,11 +1068,7 @@ void yyFlexLexer::yy_switch_to_buffer( YY_BUFFER_STATE new_buffer )
 
 
 %-
-#ifdef YY_USE_PROTOS
 void yy_load_buffer_state( void )
-#else
-void yy_load_buffer_state()
-#endif
 %+
 void yyFlexLexer::yy_load_buffer_state()
 %*
@@ -1111,13 +1081,7 @@ void yyFlexLexer::yy_load_buffer_state()
 
 
 %-
-#ifdef YY_USE_PROTOS
 YY_BUFFER_STATE yy_create_buffer( FILE *file, int size )
-#else
-YY_BUFFER_STATE yy_create_buffer( file, size )
-FILE *file;
-int size;
-#endif
 %+
 YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( istream* file, int size )
 %*
@@ -1146,12 +1110,7 @@ YY_BUFFER_STATE yyFlexLexer::yy_create_buffer( istream* file, int size )
 
 
 %-
-#ifdef YY_USE_PROTOS
 void yy_delete_buffer( YY_BUFFER_STATE b )
-#else
-void yy_delete_buffer( b )
-YY_BUFFER_STATE b;
-#endif
 %+
 void yyFlexLexer::yy_delete_buffer( YY_BUFFER_STATE b )
 %*
@@ -1176,13 +1135,7 @@ extern int isatty ( int );
 #endif
 #endif
 
-#ifdef YY_USE_PROTOS
 void yy_init_buffer( YY_BUFFER_STATE b, FILE *file )
-#else
-void yy_init_buffer( b, file )
-YY_BUFFER_STATE b;
-FILE *file;
-#endif
 
 %+
 extern "C" int isatty ( int );
@@ -1212,12 +1165,7 @@ void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, istream* file )
 
 
 %-
-#ifdef YY_USE_PROTOS
 void yy_flush_buffer( YY_BUFFER_STATE b )
-#else
-void yy_flush_buffer( b )
-YY_BUFFER_STATE b;
-#endif
 
 %+
 void yyFlexLexer::yy_flush_buffer( YY_BUFFER_STATE b )
@@ -1248,13 +1196,7 @@ void yyFlexLexer::yy_flush_buffer( YY_BUFFER_STATE b )
 
 #ifndef YY_NO_SCAN_BUFFER
 %-
-#ifdef YY_USE_PROTOS
 YY_BUFFER_STATE yy_scan_buffer( char *base, yy_size_t size )
-#else
-YY_BUFFER_STATE yy_scan_buffer( base, size )
-char *base;
-yy_size_t size;
-#endif
 	{
 	YY_BUFFER_STATE b;
 
@@ -1288,12 +1230,7 @@ yy_size_t size;
 
 #ifndef YY_NO_SCAN_STRING
 %-
-#ifdef YY_USE_PROTOS
 YY_BUFFER_STATE yy_scan_string( yyconst char *yy_str )
-#else
-YY_BUFFER_STATE yy_scan_string( yy_str )
-yyconst char *yy_str;
-#endif
 	{
 	int len;
 	for ( len = 0; yy_str[len]; ++len )
@@ -1307,13 +1244,7 @@ yyconst char *yy_str;
 
 #ifndef YY_NO_SCAN_BYTES
 %-
-#ifdef YY_USE_PROTOS
 YY_BUFFER_STATE yy_scan_bytes( yyconst char *bytes, int len )
-#else
-YY_BUFFER_STATE yy_scan_bytes( bytes, len )
-yyconst char *bytes;
-int len;
-#endif
 	{
 	YY_BUFFER_STATE b;
 	char *buf;
@@ -1348,12 +1279,7 @@ int len;
 
 #ifndef YY_NO_PUSH_STATE
 %-
-#ifdef YY_USE_PROTOS
 static void yy_push_state( int new_state )
-#else
-static void yy_push_state( new_state )
-int new_state;
-#endif
 %+
 void yyFlexLexer::yy_push_state( int new_state )
 %*
@@ -1415,12 +1341,7 @@ int yyFlexLexer::yy_top_state()
 #endif
 
 %-
-#ifdef YY_USE_PROTOS
 static void yy_fatal_error( yyconst char msg[] )
-#else
-static void yy_fatal_error( msg )
-char msg[];
-#endif
 	{
 	(void) fprintf( stderr, "%s\n", msg );
 	exit( YY_EXIT_FAILURE );
@@ -1455,14 +1376,7 @@ void yyFlexLexer::LexerError( yyconst char msg[] )
 /* Internal utility routines. */
 
 #ifndef yytext_ptr
-#ifdef YY_USE_PROTOS
 static void yy_flex_strncpy( char *s1, yyconst char *s2, int n )
-#else
-static void yy_flex_strncpy( s1, s2, n )
-char *s1;
-yyconst char *s2;
-int n;
-#endif
 	{
 	register int i;
 	for ( i = 0; i < n; ++i )
@@ -1471,12 +1385,7 @@ int n;
 #endif
 
 #ifdef YY_NEED_STRLEN
-#ifdef YY_USE_PROTOS
 static int yy_flex_strlen( yyconst char *s )
-#else
-static int yy_flex_strlen( s )
-yyconst char *s;
-#endif
 	{
 	register int n;
 	for ( n = 0; s[n]; ++n )
@@ -1487,23 +1396,12 @@ yyconst char *s;
 #endif
 
 
-#ifdef YY_USE_PROTOS
 static void *yy_flex_alloc( yy_size_t size )
-#else
-static void *yy_flex_alloc( size )
-yy_size_t size;
-#endif
 	{
 	return (void *) malloc( size );
 	}
 
-#ifdef YY_USE_PROTOS
 static void *yy_flex_realloc( void *ptr, yy_size_t size )
-#else
-static void *yy_flex_realloc( ptr, size )
-void *ptr;
-yy_size_t size;
-#endif
 	{
 	/* The cast to (char *) in the following accommodates both
 	 * implementations that use char* generic pointers, and those
@@ -1515,12 +1413,7 @@ yy_size_t size;
 	return (void *) realloc( (char *) ptr, size );
 	}
 
-#ifdef YY_USE_PROTOS
 static void yy_flex_free( void *ptr )
-#else
-static void yy_flex_free( ptr )
-void *ptr;
-#endif
 	{
 	free( ptr );
 	}

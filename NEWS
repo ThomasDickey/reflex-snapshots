@@ -1,3 +1,11 @@
+2008/11/14
+	modify skeleton and code-generator to improve indentation of generated
+	file for better readability.
+
+2008/11/12
+	update configure script, adding ability to rename executable during
+	install, e.g., as "reflex".
+
 2008/07/26
 	eliminate PROTO(), YY_PROTO and YY_USE_PROTOS macros.
 	ANSIfy'd all of the C files.

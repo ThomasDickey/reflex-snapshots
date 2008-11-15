@@ -65,6 +65,10 @@
 #include <stdlib.h>
 #endif
 
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+
 /* As an aid for the internationalization patch to flex, which
  * is maintained outside this distribution for copyright reasons.
  */
@@ -746,8 +750,6 @@ extern void mkechar (int, int[], int[]);
 
 /* from file gen.c */
 
-extern void do_indent (void);	/* indent to the current level */
-
 /* Generate the code to keep backing-up information. */
 extern void gen_backing_up (void);
 
@@ -783,9 +785,6 @@ extern void gentabs (void);
 /* Write out a formatted string at the current indentation level. */
 extern void indent_put2s (char[], char[]);
 
-/* Write out a string + newline at the current indentation level. */
-extern void indent_puts (char[]);
-
 extern void make_tables (void);	/* generate transition tables */
 
 
@@ -802,13 +801,14 @@ extern void usage (void);
 extern void action_define ( char *defname, int value );
 
 /* Add the given text to the stored actions. */
-extern void add_action ( char *new_text );
+extern void add_action ( const char *new_text );
+extern void add_ind_action ( int level, const char *new_text );
 
 /* True if a string is all lower case. */
-extern int all_lower (register char *);
+extern int all_lower (char *);
 
 /* True if a string is all upper case. */
-extern int all_upper (register char *);
+extern int all_upper (char *);
 
 /* Bubble sort an integer array. */
 extern void bubble (int [], int);
@@ -820,10 +820,10 @@ extern void check_char (int c);
 extern Char clower (int);
 
 /* Returns a dynamically allocated copy of a string. */
-extern char *copy_string (register const char *);
+extern char *copy_string (const char *);
 
 /* Returns a dynamically allocated copy of a (potentially) unsigned string. */
-extern Char *copy_unsigned_string (register Char *);
+extern Char *copy_unsigned_string (Char *);
 
 /* Shell sort a character array. */
 extern void cshell (Char [], int, int);
@@ -887,6 +887,12 @@ extern void out_str_dec (const char [], const char [], int);
 extern void outc (int);
 extern void outn (const char []);
 
+#define INDENT_SIZE 4
+extern void indent_up(void);
+extern void indent_down(void);
+extern int set_indent(int);
+extern void do_indent (void);	/* indent to the current level */
+
 /* Return a printable version of the given character, which might be
  * 8-bit.
  */
@@ -925,7 +931,7 @@ extern int link_machines (int, int);
 /* Mark each "beginning" state in a machine as being a "normal" (i.e.,
  * not trailing context associated) state.
  */
-extern void mark_beginning_as_normal (register int);
+extern void mark_beginning_as_normal (int);
 
 /* Make a machine that branches to two machines. */
 extern int mkbranch (int, int);
@@ -988,7 +994,7 @@ extern int yywrap (void);
 /* from file sym.c */
 
 /* Add symbol and definitions to symbol table. */
-extern int addsym (register char[], char*, int, hash_table, int);
+extern int addsym (char[], char*, int, hash_table, int);
 
 /* Save the text of a character class. */
 extern void cclinstal (Char [], int);
@@ -997,7 +1003,7 @@ extern void cclinstal (Char [], int);
 extern int ccllookup (Char []);
 
 /* Find symbol in symbol table. */
-extern struct hash_entry *findsym (register char[], hash_table, int );
+extern struct hash_entry *findsym (char[], hash_table, int );
 
 extern void ndinstal (char[], Char[]);	/* install a name definition */
 extern Char *ndlookup (char[]);	/* lookup a name definition */

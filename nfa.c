@@ -198,7 +198,7 @@ finish_rule(int mach, int variable_trail_rule, int headcnt, int trailcnt)
 	--rule_linenum[num_rules];
 
     sprintf(action_text, "case %d:\n", num_rules);
-    add_action(action_text);
+    add_ind_action(2, action_text);
 
     if (variable_trail_rule) {
 	rule_type[num_rules] = RULE_VARIABLE;
@@ -221,23 +221,21 @@ finish_rule(int mach, int variable_trail_rule, int headcnt, int trailcnt)
 	    char *scanner_cp = "yy_c_buf_p = yy_cp";
 	    char *scanner_bp = "yy_bp";
 
-	    add_action(
-			  "*yy_cp = yy_hold_char; /* undo effects of setting up yytext */\n");
+	    add_ind_action(3, "*yy_cp = yy_hold_char;\t/* undo effects of setting up yytext */\n");
 
 	    if (headcnt > 0) {
 		sprintf(action_text, "%s = %s + %d;\n",
 			scanner_cp, scanner_bp, headcnt);
-		add_action(action_text);
+		add_ind_action(3, action_text);
 	    }
 
 	    else {
 		sprintf(action_text, "%s -= %d;\n",
 			scanner_cp, trailcnt);
-		add_action(action_text);
+		add_ind_action(3, action_text);
 	    }
 
-	    add_action(
-			  "YY_DO_BEFORE_ACTION; /* set up yytext again */\n");
+	    add_ind_action(3, "YY_DO_BEFORE_ACTION;\t/* set up yytext again */\n");
 	}
     }
 
@@ -247,7 +245,7 @@ finish_rule(int mach, int variable_trail_rule, int headcnt, int trailcnt)
      * as that'll result in multiple YY_RULE_SETUP's.
      */
     if (!continued_action)
-	add_action("YY_RULE_SETUP\n");
+	add_ind_action(3, "YY_RULE_SETUP\n");
 
     line_directive_out((FILE *) 0, 1);
 }

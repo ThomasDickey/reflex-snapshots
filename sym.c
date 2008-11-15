@@ -6,7 +6,7 @@
  *
  * This code is derived from software contributed to Berkeley by
  * Vern Paxson.
- * 
+ *
  * The United States Government has rights in this work pursuant
  * to contract no. DE-AC03-76SF00098 between the United States
  * Department of Energy and the University of California.
@@ -37,8 +37,6 @@ int hashfunct (register char[], int);
 struct hash_entry *ndtbl[NAME_TABLE_HASH_SIZE];
 struct hash_entry *sctbl[START_COND_HASH_SIZE];
 struct hash_entry *ccltab[CCL_HASH_SIZE];
-
-struct hash_entry *findsym();
 
 /* addsym - add symbol and definitions to symbol table
  *
@@ -91,21 +89,9 @@ cclinstal(Char ccltxt[], int cclnum)
     /* We don't bother checking the return status because we are not
      * called unless the symbol is new.
      */
-    Char *copy_unsigned_string();
-
     (void) addsym((char *) copy_unsigned_string(ccltxt),
 		  (char *) 0, cclnum,
 		  ccltab, CCL_HASH_SIZE);
-}
-
-/* ccllookup - lookup the number associated with character class text
- *
- * Returns 0 if there's no CCL associated with the text.
- */
-int
-ccllookup(Char ccltxt[])
-{
-    return findsym((char *) ccltxt, ccltab, CCL_HASH_SIZE)->int_val;
 }
 
 /* findsym - find symbol in symbol table */
@@ -127,6 +113,16 @@ findsym(char sym[], hash_table table, int table_size)
     }
 
     return &empty_entry;
+}
+
+/* ccllookup - lookup the number associated with character class text
+ *
+ * Returns 0 if there's no CCL associated with the text.
+ */
+int
+ccllookup(Char ccltxt[])
+{
+    return findsym((char *) ccltxt, ccltab, CCL_HASH_SIZE)->int_val;
 }
 
 /* hashfunct - compute the hash value for "str" and hash size "hash_size" */
@@ -151,9 +147,6 @@ hashfunct(char str[], int hash_size)
 void
 ndinstal(char name[], Char definition[])
 {
-    char *copy_string();
-    Char *copy_unsigned_string();
-
     if (addsym(copy_string(name),
 	       (char *) copy_unsigned_string(definition), 0,
 	       ndtbl, NAME_TABLE_HASH_SIZE))
@@ -194,7 +187,6 @@ scextend(void)
 void
 scinstal(char str[], int xcluflg)
 {
-    char *copy_string();
 
     /* Generate start condition definition, for use in BEGIN et al. */
     action_define(str, lastsc);

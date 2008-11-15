@@ -13,7 +13,7 @@
  *
  * This code is derived from software contributed to Berkeley by
  * Vern Paxson.
- * 
+ *
  * The United States Government has rights in this work pursuant
  * to contract no. DE-AC03-76SF00098 between the United States
  * Department of Energy and the University of California.
@@ -129,12 +129,13 @@ goal		:  initlex sect1 sect1end sect2 initforrule
 				scset[i] = mkbranch( scset[i], def_rule );
 
 			if ( spprdflt )
-				add_action(
-				"YY_FATAL_ERROR( \"flex scanner jammed\" )" );
+				add_ind_action(3,
+				"YY_FATAL_ERROR(\"flex scanner jammed\")");
 			else
-				add_action( "ECHO" );
+				add_ind_action(2, "ECHO");
 
-			add_action( ";\n\tYY_BREAK\n" );
+			add_action(";\n");
+			add_ind_action(3,"YY_BREAK\n");
 			}
 		;
 
@@ -280,7 +281,7 @@ flexrule	:  '^' rule
 			{
 			if ( scon_stk_ptr > 0 )
 				build_eof_action();
-	
+
 			else
 				{
 				/* This EOF applies to all start conditions
@@ -410,7 +411,7 @@ rule		:  re2 re
 					num_rules | YY_TRAILING_HEAD_MASK );
 				variable_trail_rule = true;
 				}
-			
+
 			else
 				trailcnt = rulelen;
 
@@ -757,7 +758,7 @@ ccl_expr:	   CCE_ALNUM	{ CCL_EXPR(isalnum) }
 				}
 		|  CCE_XDIGIT	{ CCL_EXPR(isxdigit) }
 		;
-		
+
 string		:  string CHAR
 			{
 			if ( caseins && $2 >= 'A' && $2 <= 'Z' )
@@ -781,22 +782,22 @@ string		:  string CHAR
 
 void build_eof_action()
 	{
-	register int i;
+	register int ii;
 	char action_text[MAXLINE];
 
-	for ( i = 1; i <= scon_stk_ptr; ++i )
+	for ( ii = 1; ii <= scon_stk_ptr; ++ii )
 		{
-		if ( sceof[scon_stk[i]] )
+		if ( sceof[scon_stk[ii]] )
 			format_pinpoint_message(
 				"multiple <<EOF>> rules for start condition %s",
-				scname[scon_stk[i]] );
+				scname[scon_stk[ii]] );
 
 		else
 			{
-			sceof[scon_stk[i]] = true;
+			sceof[scon_stk[ii]] = true;
 			sprintf( action_text, "case YY_STATE_EOF(%s):\n",
-				scname[scon_stk[i]] );
-			add_action( action_text );
+				scname[scon_stk[ii]] );
+			add_ind_action( 2, action_text );
 			}
 		}
 

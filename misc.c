@@ -31,9 +31,7 @@
 #include "flexdef.h"
 
 void
-action_define(defname, value)
-     char *defname;
-     int value;
+action_define(char *defname, int value)
 {
     char buf[MAXLINE];
 
@@ -48,8 +46,7 @@ action_define(defname, value)
 }
 
 void
-add_action(new_text)
-     char *new_text;
+add_action(const char *new_text)
 {
     int len = strlen(new_text);
 
@@ -74,13 +71,35 @@ add_action(new_text)
     action_index += len;
 }
 
+/* add action, indented */
+void
+add_ind_action(int level, const char *new_text)
+{
+    char buffer[80];
+    if (level > 0) {
+	int cols = level * INDENT_SIZE;
+	int len = 0;
+
+	buffer[0] = 0;
+	while (cols >= 8) {
+	    buffer[len++] = '\t';
+	    cols -= 8;
+	}
+	while (cols > 0) {
+	    buffer[len++] = ' ';
+	    --cols;
+	}
+	buffer[len] = '\0';
+	add_action(buffer);
+    }
+    add_action(new_text);
+}
+
 /* allocate_array - allocate memory for an integer array of the given size */
 void *
-allocate_array(size, element_size)
-     int size;
-     size_t element_size;
+allocate_array(int size, size_t element_size)
 {
-    register void *mem;
+    void *mem;
     size_t num_bytes = element_size * size;
 
     mem = flex_alloc(num_bytes);
@@ -92,8 +111,7 @@ allocate_array(size, element_size)
 
 /* all_lower - true if a string is all lower-case */
 int
-all_lower(str)
-     register char *str;
+all_lower(char *str)
 {
     while (*str) {
 	if (!isascii((Char) * str) || !islower(*str))
@@ -106,8 +124,7 @@ all_lower(str)
 
 /* all_upper - true if a string is all upper-case */
 int
-all_upper(str)
-     register char *str;
+all_upper(char *str)
 {
     while (*str) {
 	if (!isascii((Char) * str) || !isupper(*str))
@@ -133,10 +150,9 @@ all_upper(str)
  *   n - the number of elements of 'v' to be sorted
  */
 void
-bubble(v, n)
-     int v[], n;
+bubble(int *v, int n)
 {
-    register int i, j, k;
+    int i, j, k;
 
     for (i = n; i > 1; --i) {
 	for (j = 1; j < i; ++j) {
@@ -154,8 +170,7 @@ bubble(v, n)
  *		and exits.
  */
 void
-check_char(c)
-     int c;
+check_char(int c)
 {
     if (c >= CSIZE) {
 	lerrsf(_("bad character '%s' detected in check_char()"),
@@ -170,19 +185,17 @@ check_char(c)
 
 /* clower - replace upper-case letter to lower-case */
 Char
-clower(c)
-     register int c;
+clower(int c)
 {
     return (Char) ((isascii(c) && isupper(c)) ? tolower(c) : c);
 }
 
 /* copy_string - returns a dynamically allocated copy of a string */
 char *
-copy_string(str)
-     register const char *str;
+copy_string(const char *str)
 {
-    register const char *c1;
-    register char *c2;
+    const char *c1;
+    char *c2;
     char *copy;
     unsigned int size;
 
@@ -208,10 +221,9 @@ copy_string(str)
  *    returns a dynamically allocated copy of a (potentially) unsigned string
  */
 Char *
-copy_unsigned_string(str)
-     register Char *str;
+copy_unsigned_string(Char * str)
 {
-    register Char *c;
+    Char *c;
     Char *copy;
 
     /* find length */
@@ -246,9 +258,7 @@ copy_unsigned_string(str)
  *   n - number of elements of v to be sorted
  */
 void
-cshell(v, n, special_case_0)
-     Char v[];
-     int n, special_case_0;
+cshell(Char * v, int n, int special_case_0)
 {
     int gap, i, j, jg;
     Char k;
@@ -277,13 +287,13 @@ cshell(v, n, special_case_0)
 
 /* dataend - finish up a block of data declarations */
 void
-dataend()
+dataend(void)
 {
     if (datapos > 0)
 	dataflush();
 
     /* add terminator for initialization; { for vi */
-    outn("    } ;\n");
+    outn("    } ;");
 
     dataline = 0;
     datapos = 0;
@@ -291,7 +301,7 @@ dataend()
 
 /* dataflush - flush generated data statements */
 void
-dataflush()
+dataflush(void)
 {
     outc('\n');
 
@@ -309,8 +319,7 @@ dataflush()
 
 /* flexerror - report an error message and terminate */
 void
-flexerror(msg)
-     const char msg[];
+flexerror(const char *msg)
 {
     fprintf(stderr, "%s: %s\n", program_name, msg);
     flexend(1);
@@ -318,19 +327,16 @@ flexerror(msg)
 
 /* flexfatal - report a fatal error message and terminate */
 void
-flexfatal(msg)
-     const char msg[];
+flexfatal(const char *msg)
 {
     fprintf(stderr, _("%s: fatal internal error, %s\n"),
 	    program_name, msg);
     exit(1);
 }
 
-
 /* htoi - convert a hexadecimal digit string to an integer value */
 int
-htoi(str)
-     Char str[];
+htoi(Char * str)
 {
     unsigned int result;
 
@@ -341,9 +347,7 @@ htoi(str)
 
 /* lerrif - report an error message formatted with one integer argument */
 void
-lerrif(msg, arg)
-     const char msg[];
-     int arg;
+lerrif(const char *msg, int arg)
 {
     char errmsg[MAXLINE];
     (void) sprintf(errmsg, msg, arg);
@@ -352,8 +356,7 @@ lerrif(msg, arg)
 
 /* lerrsf - report an error message formatted with one string argument */
 void
-lerrsf(msg, arg)
-     const char msg[], arg[];
+lerrsf(const char *msg, const char *arg)
 {
     char errmsg[MAXLINE];
 
@@ -363,9 +366,7 @@ lerrsf(msg, arg)
 
 /* line_directive_out - spit out a "#line" statement */
 void
-line_directive_out(output_file, do_infile)
-     FILE *output_file;
-     int do_infile;
+line_directive_out(FILE *output_file, int do_infile)
 {
     char directive[MAXLINE], filename[MAXLINE];
     char *s1, *s2, *s3;
@@ -417,7 +418,7 @@ line_directive_out(output_file, do_infile)
  *		 and the prolog begins
  */
 void
-mark_defs1()
+mark_defs1(void)
 {
     defs1_offset = 0;
     action_array[action_index++] = '\0';
@@ -429,7 +430,7 @@ mark_defs1()
  *               representing the end of the action prolog
  */
 void
-mark_prolog()
+mark_prolog(void)
 {
     action_array[action_index++] = '\0';
     action_offset = action_index;
@@ -441,8 +442,7 @@ mark_prolog()
  * Generates a data statement initializing the current 2-D array to "value".
  */
 void
-mk2data(value)
-     int value;
+mk2data(int value)
 {
     if (datapos >= NUMDATAITEMS) {
 	outc(',');
@@ -467,8 +467,7 @@ mk2data(value)
  * "value".
  */
 void
-mkdata(value)
-     int value;
+mkdata(int value)
 {
     if (datapos >= NUMDATAITEMS) {
 	outc(',');
@@ -489,8 +488,7 @@ mkdata(value)
 
 /* myctoi - return the integer represented by a string of digits */
 int
-myctoi(array)
-     char array[];
+myctoi(char *array)
 {
     int val = 0;
 
@@ -499,11 +497,9 @@ myctoi(array)
     return val;
 }
 
-
 /* myesc - return character corresponding to escape sequence */
 Char
-myesc(array)
-     Char array[];
+myesc(Char * array)
 {
     Char c, esc_char;
 
@@ -591,8 +587,7 @@ myesc(array)
 
 /* otoi - convert an octal digit string to an integer value */
 int
-otoi(str)
-     Char str[];
+otoi(Char * str)
 {
     unsigned int result;
 
@@ -600,50 +595,114 @@ otoi(str)
     return result;
 }
 
+static int indent_level = 0;	/* each level is 8 spaces */
 
-/* out - various flavors of outputing a (possibly formatted) string for the
+void
+indent_up(void)
+{
+    ++indent_level;
+}
+
+void
+indent_down(void)
+{
+    --indent_level;
+}
+
+int
+set_indent(int indent_val)
+{
+    int result = indent_level;
+    indent_level = indent_val;
+    return result;
+}
+
+/*
+ * Convert tabs in the input-string to indent's with tabs and spaces as needed
+ * for the INDENT_SIZE (a power of two).
+ */
+static const char *
+out_indent(const char *str)
+{
+    if (*str != '\0') {
+	int cols = (indent_level * INDENT_SIZE);
+
+	while (*str != '\0') {
+	    if (*str == ' ') {
+		str++;
+		cols++;
+	    } else if (*str == '\t') {
+		str++;
+		cols |= (INDENT_SIZE - 1);
+		cols++;
+	    } else {
+		break;
+	    }
+	}
+	while (cols >= 8) {
+	    outc('\t');
+	    cols -= 8;
+	}
+	while (cols-- > 0) {
+	    outc(' ');
+	}
+    }
+    return str;
+}
+
+/* Indent to the current level. */
+
+void
+do_indent(void)
+{
+    int i = indent_level * INDENT_SIZE;
+
+    while (i >= 8) {
+	outc('\t');
+	i -= 8;
+    }
+
+    while (i > 0) {
+	outc(' ');
+	--i;
+    }
+}
+
+/* out - various flavors of outputting a (possibly formatted) string for the
  *	 generated scanner, keeping track of the line count.
  */
 void
-out(str)
-     const char str[];
+out(const char *str)
 {
-    fputs(str, stdout);
+    fputs(out_indent(str), stdout);
     out_line_count(str);
 }
 
 void
-out_dec(fmt, n)
-     const char fmt[];
-     int n;
+out_dec(const char *fmt, int n)
 {
     printf(fmt, n);
     out_line_count(fmt);
 }
 
 void
-out_dec2(fmt, n1, n2)
-     const char fmt[];
-     int n1, n2;
+out_dec2(const char *fmt, int n1, int n2)
 {
     printf(fmt, n1, n2);
     out_line_count(fmt);
 }
 
 void
-out_hex(fmt, x)
-     const char fmt[];
-     unsigned int x;
+out_hex(const char *fmt, unsigned int x)
 {
     printf(fmt, x);
     out_line_count(fmt);
 }
 
 void
-out_line_count(str)
-     const char str[];
+out_line_count(const char *str)
 {
-    register int i;
+    int i;
 
     for (i = 0; str[i]; ++i) {
 	if (str[i] == '\n') {
@@ -653,8 +712,7 @@ out_line_count(str)
 }
 
 void
-out_str(fmt, str)
-     const char fmt[], str[];
+out_str(const char *fmt, const char *str)
 {
     printf(fmt, str);
     out_line_count(fmt);
@@ -662,8 +720,7 @@ out_str(fmt, str)
 }
 
 void
-out_str3(fmt, s1, s2, s3)
-     const char fmt[], s1[], s2[], s3[];
+out_str3(const char *fmt, const char *s1, const char *s2, const char *s3)
 {
     printf(fmt, s1, s2, s3);
     out_line_count(fmt);
@@ -673,9 +730,7 @@ out_str3(fmt, s1, s2, s3)
 }
 
 void
-out_str_dec(fmt, str, n)
-     const char fmt[], str[];
-     int n;
+out_str_dec(const char *fmt, const char *str, int n)
 {
     printf(fmt, str, n);
     out_line_count(fmt);
@@ -683,8 +738,7 @@ out_str_dec(fmt, str, n)
 }
 
 void
-outc(c)
-     int c;
+outc(int c)
 {
     putc(c, stdout);
 
@@ -693,10 +747,9 @@ outc(c)
 }
 
 void
-outn(str)
-     const char str[];
+outn(const char *str)
 {
-    puts(str);
+    puts(out_indent(str));
     out_line_count(str);
     ++out_linenum;
 }
@@ -706,8 +759,7 @@ outn(str)
  * The returned string is in static storage.
  */
 char *
-readable_form(c)
-     register int c;
+readable_form(int c)
 {
     static char rform[10];
 
@@ -747,12 +799,9 @@ readable_form(c)
 
 /* reallocate_array - increase the size of a dynamic array */
 void *
-reallocate_array(array, size, element_size)
-     void *array;
-     int size;
-     size_t element_size;
+reallocate_array(void *array, int size, size_t element_size)
 {
-    register void *new_array;
+    void *new_array;
     size_t num_bytes = element_size * size;
 
     new_array = flex_realloc(array, num_bytes);
@@ -769,7 +818,7 @@ reallocate_array(array, size, element_size)
  *    "%%" or EOF is found.
  */
 void
-skelout()
+skelout(void)
 {
     char buf_storage[MAXLINE];
     char *buf = buf_storage;
@@ -812,6 +861,7 @@ skelout()
 		outn(buf);
 	}
     }
+    return;
 }
 
 /* transition_struct_out - output a yy_trans_info structure
@@ -820,8 +870,7 @@ skelout()
  * element_n.  Formats the output with spaces and carriage returns.
  */
 void
-transition_struct_out(element_v, element_n)
-     int element_v, element_n;
+transition_struct_out(int element_v, int element_n)
 {
     out_dec2(" {%4d,%4d },", element_v, element_n);
 
@@ -841,8 +890,7 @@ transition_struct_out(element_v, element_n)
  * broken versions of bison.
  */
 void *
-yy_flex_xmalloc(size)
-     int size;
+yy_flex_xmalloc(int size)
 {
     void *result = flex_alloc((size_t) size);
 
@@ -857,11 +905,9 @@ yy_flex_xmalloc(size)
  * Sets region_ptr[0] through region_ptr[size_in_bytes - 1] to zero.
  */
 void
-zero_out(region_ptr, size_in_bytes)
-     char *region_ptr;
-     size_t size_in_bytes;
+zero_out(char *region_ptr, size_t size_in_bytes)
 {
-    register char *rp, *rp_end;
+    char *rp, *rp_end;
 
     rp = region_ptr;
     rp_end = region_ptr + size_in_bytes;

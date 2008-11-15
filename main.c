@@ -313,7 +313,7 @@ check_options(void)
 	if (do_yywrap)
 	    GEN_PREFIX("wrap");
 
-	outn("");
+	outc('\n');
     }
 
     if (did_outfilename)
@@ -331,7 +331,6 @@ void
 flexend(int exit_status)
 {
     int tblsiz;
-    int unlink();
 
     if (skelfile != NULL) {
 	if (ferror(skelfile))

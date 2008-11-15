@@ -9,6 +9,9 @@
 /* Define if you have the ANSI C header files.  */
 #undef STDC_HEADERS
 
+/* Define if you have the <unistd.h> header file.  */
+#undef HAVE_UNISTD_H
+
 /* Define if you have the <malloc.h> header file.  */
 #undef HAVE_MALLOC_H
 
@@ -23,3 +26,5 @@
 
 /* Define if platform-specific command line handling is necessary.  */
 #undef NEED_ARGV_FIXUP
+
+/* vile:cmode */
