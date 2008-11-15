@@ -362,7 +362,7 @@ ntod(void)
 {
     int *accset, ds, nacc, newds;
     int sym, hashval, numstates, dsize;
-    int num_full_table_rows;	/* used only for -f */
+    int num_full_table_rows = 0;	/* used only for -f */
     int *nset, *dset;
     int targptr, totaltrans, i, comstate, comfreq, targ;
     int symlist[CSIZE + 1];

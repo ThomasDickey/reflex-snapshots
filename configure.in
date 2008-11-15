@@ -3,6 +3,8 @@ dnl
 AC_INIT(initscan.c)
 AC_CONFIG_HEADER(config.h:conf.in)
 
+AC_ARG_PROGRAM
+
 AC_LN_S
 AC_PROG_YACC
 AC_PROG_CC

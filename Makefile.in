@@ -14,52 +14,61 @@
 # For MS-DOS, add "-DMS_DOS" to DEFS.  See the directory MISC/MSDOS for
 # additional info.
 
-CFLAGS = @CFLAGS@
-CPPFLAGS = @CPPFLAGS@
-DEFS = @DEFS@
-LDFLAGS = 
-LIBS = @LIBS@
+CFLAGS          = @CFLAGS@
+CPPFLAGS        = @CPPFLAGS@
+DEFS            = @DEFS@
+LDFLAGS         =
+LIBS            = @LIBS@
 
 # Installation targeting.  Files will be installed under the tree
 # rooted at prefix.  flex will be installed in bindir, libfl.a in
 # libdir, FlexLexer.h will be installed in includedir, and the manual
 # pages will be installed in mandir with extension manext.
-# 
+#
 # Raw, unformatted troff source will be installed if INSTALLMAN=man,
 # nroff preformatted versions will be installed if INSTALLMAN=cat.
 
-prefix = @prefix@
-exec_prefix = @exec_prefix@
-bindir = $(exec_prefix)/bin
-libdir = $(exec_prefix)/lib
-includedir = $(prefix)/include
-manext = 1
-mandir = $(prefix)/man/man$(manext)
+prefix          = @prefix@
+exec_prefix     = @exec_prefix@
+bindir          = $(exec_prefix)/bin
+libdir          = $(exec_prefix)/lib
+includedir      = $(prefix)/include
+manext          = 1
+mandir          = $(prefix)/man/man$(manext)
 
-# You can define these to be "lex" and "libl.a" if you want to replace
+transform       = @program_transform_name@
+
+# You can define these to be "lex" and "l" if you want to replace
 # lex at your site.
-FLEX = flex
-FLEXLIB = libfl.a
+PROGRAM_ROOT	= flex
+LIBRARY_ROOT	= fl
 
-INSTALLMAN = man
+FLEX            = $(PROGRAM_ROOT)
+FLEXLIB         = lib$(LIBRARY_ROOT).a
 
-SHELL = /bin/sh
-srcdir = @srcdir@
-VPATH = @srcdir@
+actual_FLEX     = `echo $(PROGRAM_ROOT)| sed '$(transform)'`
+actual_FLEXLIB  = lib`echo $(LIBRARY_ROOT)| sed '$(transform)'`.a
+actual_HEADER	= `echo FlexLexer|sed '$(transform)'`.h
 
-LN_S = @LN_S@
-YACC = @YACC@
-CC = @CC@
-AR = ar
-RANLIB = @RANLIB@
-INSTALL = @INSTALL@
-INSTALL_DATA = @INSTALL_DATA@
+INSTALLMAN      = man
+
+SHELL           = /bin/sh
+srcdir          = @srcdir@
+VPATH           = @srcdir@
+
+LN_S            = @LN_S@
+YACC            = @YACC@
+CC              = @CC@
+AR              = ar
+RANLIB          = @RANLIB@
+INSTALL         = @INSTALL@
+INSTALL_DATA    = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 
 # You normally do not need to modify anything below this point.
 # ------------------------------------------------------------
 
-CPPFLAGS = -I. -I$(srcdir)
+CPPFLAGS        = -I. -I$(srcdir)
 
 .c.o:
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $<
@@ -82,13 +91,13 @@ DISTFILES = README NEWS COPYING INSTALL FlexLexer.h \
 	$(HEADERS) $(SOURCES) $(LIBSRCS) MISC \
 	flex.1 scan.c install.sh mkinstalldirs configure
 
-DIST_NAME = flex
+DIST_NAME       = flex
 
 # which "flex" to use to generate scan.c from scan.l
-FLEX_EXEC = ./$(FLEX)
-FLEX_FLAGS = -t $(PERF_REPORT)
-COMPRESSION =
-PERF_REPORT = -p
+FLEX_EXEC       = ./$(FLEX)
+FLEX_FLAGS      = -t $(PERF_REPORT)
+COMPRESSION     =
+PERF_REPORT     = -p
 
 
 all: $(FLEX)
@@ -166,32 +175,29 @@ $(FLEX).man: flex.1
 	cd $(srcdir) && nroff -man flex.1 >$(FLEX).man
 
 install: $(FLEX) $(FLEXLIB) installdirs install.$(INSTALLMAN)
-	$(INSTALL_PROGRAM) $(FLEX) $(bindir)/$(FLEX)
-	@rm -f $(bindir)/$(FLEX)++
-	cd $(bindir) && $(LN_S) $(FLEX) $(FLEX)++
-	$(INSTALL_DATA) $(FLEXLIB) $(libdir)/$(FLEXLIB)
-	-cd $(libdir) && $(RANLIB) $(FLEXLIB)
-	$(INSTALL_DATA) $(srcdir)/FlexLexer.h $(includedir)/FlexLexer.h
+	$(INSTALL_PROGRAM) $(FLEX) $(bindir)/$(actual_FLEX)
+	@rm -f $(bindir)/$(actual_FLEX)++
+	cd $(bindir) && $(LN_S) $(actual_FLEX) $(actual_FLEX)++
+	$(INSTALL_DATA) $(FLEXLIB) $(libdir)/$(actual_FLEXLIB)
+	-cd $(libdir) && $(RANLIB) $(actual_FLEXLIB)
+	$(INSTALL_DATA) $(srcdir)/FlexLexer.h $(includedir)/$(actual_HEADER)
 
-# Note, the following rules delete any vestigial flexdoc installed
-# for a prior flex release.
 install.man: flex.1
-	rm -f $(mandir)/$(FLEX)doc.$(manext)
-	$(INSTALL_DATA) $(srcdir)/flex.1 $(mandir)/$(FLEX).$(manext)
+	$(INSTALL_DATA) $(srcdir)/flex.1 $(mandir)/$(actual_FLEX).$(manext)
 
 install.cat: $(FLEX).man
-	rm -f $(mandir)/$(FLEX)doc.$(manext)
-	$(INSTALL_DATA) $(srcdir)/$(FLEX).man $(mandir)/$(FLEX).$(manext)
+	$(INSTALL_DATA) $(srcdir)/$(FLEX).man $(mandir)/$(actual_FLEX).$(manext)
 
 installdirs:
 	$(SHELL) $(srcdir)/mkinstalldirs \
 	  $(bindir) $(libdir) $(includedir) $(mandir)
 
 uninstall:
-	rm -f $(bindir)/$(FLEX) $(bindir)/$(FLEX)++
-	rm -f $(libdir)/$(FLEXLIB)
-	rm -f $(includedir)/FlexLexer.h
-	rm -f $(mandir)/$(FLEX).$(manext) $(mandir)/$(FLEX)doc.$(manext)
+	rm -f $(bindir)/$(actual_FLEX)
+	rm -f $(bindir)/$(actual_FLEX)++
+	rm -f $(libdir)/$(actual_FLEXLIB)
+	rm -f $(includedir)/$(actual_HEADER)
+	rm -f $(mandir)/$(actual_FLEX).$(manext)
 
 tags: $(SOURCES)
 	ctags $(SOURCES)
