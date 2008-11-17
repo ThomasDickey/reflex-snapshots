@@ -1,3 +1,28 @@
+-------------------------------------------------------------------------------
+-- Changes by Thomas E. Dickey
+-- vile:txtmode
+-------------------------------------------------------------------------------
+
+2008/11/16
+	add a missing ifdef for YY_NO_INPUT, needed to make the function
+	actually removed.
+
+	move C-code supporting YY_FATAL_ERROR() in skeleton so that if the
+	macro is overridden, then the support-code will not be compiled.
+	That eliminates unused-code warnings.
+
+	modify makefile rule for "make check" to ensure that it uses POSIX
+	locale, since the reference file is generated that way.
+
+	eliminate use of isascii(), which prevented flex from parsing according
+	to 8-bit locales.
+
+	modify makefile to work with AC_EXEEXT and AC_OBJEXT macros.
+
+	add configure --disable-echo and --enable-warnings options.
+
+	eliminate register keyword.
+
 2008/11/14
 	modify skeleton and code-generator to improve indentation of generated
 	file for better readability.
@@ -11,6 +36,8 @@
 	ANSIfy'd all of the C files.
 	indent'd all of the C files.
 
+-------------------------------------------------------------------------------
+-- Changes by Verne Paxson
 -------------------------------------------------------------------------------
 Changes between release 2.5.4 (11Sep96) and release 2.5.3:
 
@@ -287,7 +314,7 @@ Changes between release 2.5.1 (28Mar95) and release 2.4.7:
 	  class; other elements may occur inside the character class, too).
 	  The expressions flex recognizes are:
 
-		[:alnum:] [:alpha:] [:blank:] [:cntrl:] [:digit:] [:graph:]	
+		[:alnum:] [:alpha:] [:blank:] [:cntrl:] [:digit:] [:graph:]
 		[:lower:] [:print:] [:punct:] [:space:] [:upper:] [:xdigit:]
 
 	  These expressions all designate a set of characters equivalent to
@@ -1213,7 +1240,7 @@ Changes between 2.1 beta-test release of June '89 and previous release:
 
 	- The macro YY_USER_ACTION can be redefined to provide an action
 	  which is always executed prior to the matched rule's action.
-	
+
 	- yyrestart() is a new action which can be used to restart
 	  the scanner after it has seen an end-of-file (a "real" one,
 	  that is, one for which yywrap() returned non-zero).  It takes

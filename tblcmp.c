@@ -32,11 +32,11 @@
 
 /* declarations for functions that have forward references */
 
-void mkentry (register int *, int, int, int, int);
-void mkprot (int[], int, int);
-void mktemplate (int[], int, int);
-void mv2front (int);
-int tbldiff (int[], int, int[]);
+void mkentry(int *, int, int, int, int);
+void mkprot(int[], int, int);
+void mktemplate(int[], int, int);
+void mv2front(int);
+int tbldiff(int[], int, int[]);
 
 /* bldtbl - build table entries for dfa state
  *
@@ -213,7 +213,7 @@ void
 cmptmps(void)
 {
     int tmpstorage[CSIZE + 1];
-    register int *tmp = tmpstorage, i, j;
+    int *tmp = tmpstorage, i, j;
     int totaltrans, trans;
 
     peakpairs = numtemps * numecs + tblend;
@@ -277,7 +277,7 @@ cmptmps(void)
 void
 expand_nxt_chk(void)
 {
-    register int old_max = current_max_xpairs;
+    int old_max = current_max_xpairs;
 
     current_max_xpairs += MAX_XPAIRS_INCREMENT;
 
@@ -314,9 +314,9 @@ find_table_space(int *state, int numtrans)
     /* Firstfree is the position of the first possible occurrence of two
      * consecutive unused records in the chk and nxt arrays.
      */
-    register int i;
-    register int *state_ptr, *chk_ptr;
-    register int *ptr_to_last_entry_in_state;
+    int i;
+    int *state_ptr, *chk_ptr;
+    int *ptr_to_last_entry_in_state;
 
     /* If there are too many out-transitions, put the state at the end of
      * nxt and chk.
@@ -406,9 +406,9 @@ find_table_space(int *state, int numtrans)
 void
 inittbl(void)
 {
-    register int i;
+    int i;
 
-    zero_out((char *) chk, (size_t) (current_max_xpairs * sizeof(int)));
+    zero_out((char *) chk, ((unsigned) current_max_xpairs * sizeof(int)));
 
     tblend = 0;
     firstfree = tblend + 1;
@@ -484,7 +484,7 @@ mkdeftbl(void)
 void
 mkentry(int *state, int numchars, int statenum, int deflink, int totaltrans)
 {
-    register int minec, maxec, i, baseaddr;
+    int minec, maxec, i, baseaddr;
     int tblbase, tbllast;
 
     if (totaltrans == 0) {	/* there are no out-transitions */
@@ -595,7 +595,7 @@ mkentry(int *state, int numchars, int statenum, int deflink, int totaltrans)
  *            has only one out-transition
  */
 void
-mk1tbl(int state, int sym, int onenxt, int onedef)
+mk1tbl(int state, int sym, int onenxt, int onedft)
 {
     if (firstfree < sym)
 	firstfree = sym;
@@ -605,7 +605,7 @@ mk1tbl(int state, int sym, int onenxt, int onedef)
 	    expand_nxt_chk();
 
     base[state] = firstfree - sym;
-    def[state] = onedef;
+    def[state] = onedft;
     chk[firstfree] = state;
     nxt[firstfree] = onenxt;
 
@@ -681,13 +681,14 @@ mktemplate(int state[], int statenum, int comstate)
 					current_max_template_xpairs);
     }
 
-    for (i = 1; i <= numecs; ++i)
-	if (state[i] == 0)
+    for (i = 1; i <= numecs; ++i) {
+	if (state[i] == 0) {
 	    tnxt[tmpbase + i] = 0;
-	else {
-	    transset[tsptr++] = i;
+	} else {
+	    transset[tsptr++] = (Char) i;
 	    tnxt[tmpbase + i] = comstate;
 	}
+    }
 
     if (usemecs)
 	mkeccl(transset, tsptr, tecfwd, tecbck, numecs, 0);
@@ -731,8 +732,8 @@ mv2front(int qelm)
 void
 place_state(int *state, int statenum, int transnum)
 {
-    register int i;
-    register int *state_ptr;
+    int i;
+    int *state_ptr;
     int position = find_table_space(state, transnum);
 
     /* "base" is the table of start positions. */
@@ -800,8 +801,8 @@ stack1(int statenum, int sym, int nextstate, int deflink)
 int
 tbldiff(int state[], int pr, int ext[])
 {
-    register int i, *sp = state, *ep = ext, *protp;
-    register int numdiff = 0;
+    int i, *sp = state, *ep = ext, *protp;
+    int numdiff = 0;
 
     protp = &protsave[numecs * (pr - 1)];
 

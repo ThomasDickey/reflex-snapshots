@@ -33,9 +33,7 @@
 /* ccladd - add a single character to a ccl */
 
 void
-ccladd(cclp, ch)
-     int cclp;
-     int ch;
+ccladd(int cclp, int ch)
 {
     int ind, len, newpos, i;
 
@@ -62,13 +60,13 @@ ccladd(cclp, ch)
     }
 
     ccllen[cclp] = len + 1;
-    ccltbl[newpos] = ch;
+    ccltbl[newpos] = (Char) ch;
 }
 
 /* cclinit - return an empty ccl */
 
 int
-cclinit()
+cclinit(void)
 {
     if (++lastccl >= current_maxccls) {
 	current_maxccls += MAX_CCLS_INCREMENT;
@@ -101,8 +99,7 @@ cclinit()
 /* cclnegate - negate the given ccl */
 
 void
-cclnegate(cclp)
-     int cclp;
+cclnegate(int cclp)
 {
     cclng[cclp] = 1;
 }
@@ -115,17 +112,15 @@ cclnegate(cclp)
  */
 
 void
-list_character_set(file, cset)
-     FILE *file;
-     int cset[];
+list_character_set(FILE *file, int cset[])
 {
-    register int i;
+    int i;
 
     putc('[', file);
 
     for (i = 0; i < csize; ++i) {
 	if (cset[i]) {
-	    register int start_char = i;
+	    int start_char = i;
 
 	    putc(' ', file);
 

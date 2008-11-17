@@ -35,7 +35,7 @@
 /* yylex - scan for a regular expression token */
 
 int
-yylex()
+yylex(void)
 {
     int toktype;
     static int beglin = false;
@@ -148,8 +148,7 @@ yylex()
 		break;
 
 	    default:
-		if (!isascii(yylval) ||
-		    !isprint(yylval))
+		if (!isprint(yylval))
 		    fprintf(stderr,
 			    "\\%.3o",
 			    (unsigned int) yylval);

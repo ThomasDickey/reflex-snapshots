@@ -105,13 +105,7 @@
 #define MAX(x,y) ((x) > (y) ? (x) : (y))
 #endif
 #ifndef ABS
-#define ABS(x) ((x) < 0 ? -(x) : (x))
-#endif
-
-
-/* ANSI C does not guarantee that isascii() is defined */
-#ifndef isascii
-#define isascii(c) ((c) <= 0177)
+#define ABS(x)   ((x) < 0 ? -(x) : (x))
 #endif
 
 

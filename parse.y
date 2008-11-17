@@ -91,7 +91,7 @@ int previous_continued_action;	/* whether the previous rule's action was '|' */
 	{ \
 	int c; \
 	for ( c = 0; c < csize; ++c ) \
-		if ( isascii(c) && func(c) ) \
+		if ( func(c) ) \
 			ccladd( currccl, c ); \
 	}
 
@@ -775,31 +775,28 @@ string		:  string CHAR
 
 %%
 
-
 /* build_eof_action - build the "<<EOF>>" action for the active start
  *                    conditions
  */
 
-void build_eof_action()
-	{
-	register int ii;
+void build_eof_action(void)
+{
+	int ii;
 	char action_text[MAXLINE];
 
-	for ( ii = 1; ii <= scon_stk_ptr; ++ii )
-		{
+	for ( ii = 1; ii <= scon_stk_ptr; ++ii ) {
 		if ( sceof[scon_stk[ii]] )
 			format_pinpoint_message(
 				"multiple <<EOF>> rules for start condition %s",
 				scname[scon_stk[ii]] );
 
-		else
-			{
+		else {
 			sceof[scon_stk[ii]] = true;
 			sprintf( action_text, "case YY_STATE_EOF(%s):\n",
 				scname[scon_stk[ii]] );
 			add_ind_action( 2, action_text );
-			}
 		}
+	}
 
 	line_directive_out( (FILE *) 0, 1 );
 
@@ -810,105 +807,85 @@ void build_eof_action()
 	 */
 	--num_rules;
 	++num_eof_rules;
-	}
-
+}
 
 /* format_synerr - write out formatted syntax error */
 
-void format_synerr( msg, arg )
-char msg[], arg[];
-	{
+void format_synerr(char msg[], char arg[])
+{
 	char errmsg[MAXLINE];
 
 	(void) sprintf( errmsg, msg, arg );
 	synerr( errmsg );
-	}
-
+}
 
 /* synerr - report a syntax error */
 
-void synerr( str )
-char str[];
-	{
+void synerr(char str[])
+{
 	syntaxerror = true;
 	pinpoint_message( str );
-	}
-
+}
 
 /* format_warn - write out formatted warning */
 
-void format_warn( msg, arg )
-char msg[], arg[];
-	{
+void format_warn(char msg[], char arg[])
+{
 	char warn_msg[MAXLINE];
 
 	(void) sprintf( warn_msg, msg, arg );
 	warn( warn_msg );
-	}
-
+}
 
 /* warn - report a warning, unless -w was given */
 
-void warn( str )
-char str[];
-	{
+void warn(char str[])
+{
 	line_warning( str, linenum );
-	}
+}
 
 /* format_pinpoint_message - write out a message formatted with one string,
  *			     pinpointing its location
  */
 
-void format_pinpoint_message( msg, arg )
-char msg[], arg[];
-	{
+void format_pinpoint_message(char msg[], char arg[])
+{
 	char errmsg[MAXLINE];
 
 	(void) sprintf( errmsg, msg, arg );
 	pinpoint_message( errmsg );
-	}
-
+}
 
 /* pinpoint_message - write out a message, pinpointing its location */
 
-void pinpoint_message( str )
-char str[];
-	{
+void pinpoint_message(char str[])
+{
 	line_pinpoint( str, linenum );
-	}
-
+}
 
 /* line_warning - report a warning at a given line, unless -w was given */
 
-void line_warning( str, line )
-char str[];
-int line;
-	{
+void line_warning(char str[], int line)
+{
 	char warning[MAXLINE];
 
-	if ( ! nowarn )
-		{
+	if ( ! nowarn ) {
 		sprintf( warning, "warning, %s", str );
 		line_pinpoint( warning, line );
-		}
 	}
-
+}
 
 /* line_pinpoint - write out a message, pinpointing it at the given line */
 
-void line_pinpoint( str, line )
-char str[];
-int line;
-	{
+void line_pinpoint(char str[], int line)
+{
 	fprintf( stderr, "\"%s\", line %d: %s\n", infilename, line, str );
-	}
-
+}
 
 /* yyerror - eat up an error message from the parser;
  *	     currently, messages are ignore
  */
 
-void yyerror( msg )
-char msg[];
-	{
-	}
+void yyerror(char msg[])
+{
+}

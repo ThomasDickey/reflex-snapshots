@@ -6,6 +6,9 @@
 /* Define to `unsigned' if <sys/types.h> doesn't define.  */
 #undef size_t
 
+/* Define if you have the setlocale() function and locale.h header file.  */
+#undef LOCALE
+
 /* Define if you have the ANSI C header files.  */
 #undef STDC_HEADERS
 

@@ -32,7 +32,7 @@
 
 /* declare functions that have forward references */
 
-int hashfunct (register char[], int);
+int hashfunct (char[], int);
 
 struct hash_entry *ndtbl[NAME_TABLE_HASH_SIZE];
 struct hash_entry *sctbl[START_COND_HASH_SIZE];
@@ -47,9 +47,9 @@ int
 addsym(char sym[], char *str_def, int int_def, hash_table table, int table_size)
 {
     int hash_val = hashfunct(sym, table_size);
-    register struct hash_entry *sym_entry = table[hash_val];
-    register struct hash_entry *new_entry;
-    register struct hash_entry *successor;
+    struct hash_entry *sym_entry = table[hash_val];
+    struct hash_entry *new_entry;
+    struct hash_entry *successor;
 
     while (sym_entry) {
 	if (!strcmp(sym, sym_entry->name)) {	/* entry already exists */
@@ -103,7 +103,7 @@ findsym(char sym[], hash_table table, int table_size)
 	(struct hash_entry *) 0, (struct hash_entry *) 0,
 	(char *) 0, (char *) 0, 0,
     };
-    register struct hash_entry *sym_entry =
+    struct hash_entry *sym_entry =
     table[hashfunct(sym, table_size)];
 
     while (sym_entry) {
@@ -129,8 +129,8 @@ ccllookup(Char ccltxt[])
 int
 hashfunct(char str[], int hash_size)
 {
-    register int hashval;
-    register int locstr;
+    int hashval;
+    int locstr;
 
     hashval = 0;
     locstr = 0;

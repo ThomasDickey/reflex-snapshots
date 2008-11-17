@@ -37,16 +37,20 @@ char copyright[] =
 #include "flexdef.h"
 #include "version.h"
 
+#ifdef LOCALE
+#include <locale.h>
+#endif
+
 static char flex_version[] = FLEX_VERSION;
 
 /* declare functions that have forward references */
 
-void flexinit (int, char **);
-void readin (void);
-void set_up_initial_allocations (void);
+void flexinit(int, char **);
+void readin(void);
+void set_up_initial_allocations(void);
 
 #ifdef NEED_ARGV_FIXUP
-extern void argv_fixup (int *, char ***);
+extern void argv_fixup(int *, char ***);
 #endif
 
 /* these globals are all defined and commented in flexdef.h */
@@ -135,6 +139,10 @@ main(int argc, char **argv)
 #endif
 #ifdef NEED_ARGV_FIXUP
     argv_fixup(&argc, &argv);
+#endif
+
+#ifdef LOCALE
+    setlocale(LC_ALL, "");
 #endif
 
     flexinit(argc, argv);
