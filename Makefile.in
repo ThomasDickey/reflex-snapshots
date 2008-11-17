@@ -20,6 +20,9 @@ DEFS            = @DEFS@
 LDFLAGS         =
 LIBS            = @LIBS@
 
+o		= .@OBJEXT@
+x		= @EXEEXT@
+
 # Installation targeting.  Files will be installed under the tree
 # rooted at prefix.  flex will be installed in bindir, libfl.a in
 # libdir, FlexLexer.h will be installed in includedir, and the manual
@@ -43,7 +46,7 @@ transform       = @program_transform_name@
 PROGRAM_ROOT	= flex
 LIBRARY_ROOT	= fl
 
-FLEX            = $(PROGRAM_ROOT)
+FLEX            = $(PROGRAM_ROOT)$x
 FLEXLIB         = lib$(LIBRARY_ROOT).a
 
 actual_FLEX     = `echo $(PROGRAM_ROOT)| sed '$(transform)'`
@@ -65,23 +68,26 @@ INSTALL         = @INSTALL@
 INSTALL_DATA    = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 
+EXTRA_CFLAGS	= @EXTRA_CFLAGS@
+
 # You normally do not need to modify anything below this point.
 # ------------------------------------------------------------
 
 CPPFLAGS        = -I. -I$(srcdir)
 
-.c.o:
-	$(CC) -c $(CPPFLAGS) $(CFLAGS) $<
+.c$o:
+@RULE_CC@
+	@ECHO_CC@$(CC) -c $(CPPFLAGS) $(CFLAGS) $<
 
 HEADERS = flexdef.h version.h
 
 SOURCES = ccl.c dfa.c ecs.c gen.c main.c misc.c nfa.c parse.y \
 	scan.l skel.c sym.c tblcmp.c yylex.c
-OBJECTS = ccl.o dfa.o ecs.o gen.o main.o misc.o nfa.o parse.o \
-	scan.o skel.o sym.o tblcmp.o yylex.o @ALLOCA@
+OBJECTS = ccl$o dfa$o ecs$o gen$o main$o misc$o nfa$o parse$o \
+	scan$o skel$o sym$o tblcmp$o yylex$o @ALLOCA@
 
 LIBSRCS = libmain.c libyywrap.c
-LIBOBJS = libmain.o libyywrap.o
+LIBOBJS = libmain$o libyywrap$o
 
 LINTSRCS = ccl.c dfa.c ecs.c gen.c main.c misc.c nfa.c parse.c \
 	scan.c skel.c sym.c tblcmp.c yylex.c
@@ -103,7 +109,7 @@ PERF_REPORT     = -p
 all: $(FLEX)
 
 $(FLEX): .bootstrap $(OBJECTS) $(FLEXLIB)
-	$(CC) $(CFLAGS) -o $(FLEX) $(LDFLAGS) $(OBJECTS) $(FLEXLIB) $(LIBS)
+	@ECHO_LD@$(CC) $(CFLAGS) -o $(FLEX) $(LDFLAGS) $(OBJECTS) $(FLEXLIB) $(LIBS)
 
 .bootstrap: initscan.c
 	@rm -f scan.c
@@ -120,30 +126,28 @@ parse.c: parse.y
 parse.h: parse.c
 
 scan.c: scan.l
-	$(FLEX_EXEC) $(FLEX_FLAGS) $(COMPRESSION) $(srcdir)/scan.l >scan.c
-	@sed s,\"$(srcdir)/scan.l\",\"scan.l\", <scan.c >scan.tmp
-	@mv scan.tmp scan.c
+	$(SHELL) $(srcdir)/mkscan.sh $(FLEX_EXEC) $(FLEX_FLAGS) $(COMPRESSION) $(srcdir)/scan.l >scan.c
 
-scan.o: scan.c parse.h flexdef.h config.h
-yylex.o: yylex.c parse.h flexdef.h config.h
+scan$o: scan.c parse.h flexdef.h config.h
+yylex$o: yylex.c parse.h flexdef.h config.h
 
 skel.c: flex.skl mkskel.sh
 	$(SHELL) $(srcdir)/mkskel.sh $(srcdir)/flex.skl >skel.c
 
-main.o: main.c flexdef.h config.h version.h
-ccl.o: ccl.c flexdef.h config.h
-dfa.o: dfa.c flexdef.h config.h
-ecs.o: ecs.c flexdef.h config.h
-gen.o: gen.c flexdef.h config.h
-misc.o: misc.c flexdef.h config.h
-nfa.o: nfa.c flexdef.h config.h
-parse.o: parse.c flexdef.h config.h
-skel.o: skel.c flexdef.h config.h
-sym.o: sym.c flexdef.h config.h
-tblcmp.o: tblcmp.c flexdef.h config.h
+main$o: main.c flexdef.h config.h version.h
+ccl$o: ccl.c flexdef.h config.h
+dfa$o: dfa.c flexdef.h config.h
+ecs$o: ecs.c flexdef.h config.h
+gen$o: gen.c flexdef.h config.h
+misc$o: misc.c flexdef.h config.h
+nfa$o: nfa.c flexdef.h config.h
+parse$o: parse.c flexdef.h config.h
+skel$o: skel.c flexdef.h config.h
+sym$o: sym.c flexdef.h config.h
+tblcmp$o: tblcmp.c flexdef.h config.h
 
-alloca.o: alloca.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c -Dxmalloc=yy_flex_xmalloc alloca.c
+alloca$o: alloca.c
+	@SHOW_CC@$(CC) $(CPPFLAGS) $(CFLAGS) -c -Dxmalloc=yy_flex_xmalloc alloca.c
 
 alloca.c: $(srcdir)/MISC/alloca.c
 	@rm -f alloca.c
@@ -151,8 +155,7 @@ alloca.c: $(srcdir)/MISC/alloca.c
 
 test: check
 check: $(FLEX)
-	$(FLEX_EXEC) $(FLEX_FLAGS) $(COMPRESSION) $(srcdir)/scan.l \
-	| sed s,\"$(srcdir)/scan.l\",\"scan.l\", \
+	$(SHELL) $(srcdir)/mkscan.sh $(FLEX_EXEC) $(FLEX_FLAGS) $(COMPRESSION) $(srcdir)/scan.l \
 	| diff scan.c -
 	@echo "Check successful, using COMPRESSION=\"$(COMPRESSION)\""
 
@@ -215,7 +218,7 @@ mostlyclean:
 	rm -f a.out *.bak core errs scan.tmp
 
 clean: mostlyclean
-	rm -f flex parse.c parse.h *.o alloca.c *.lint lex.yy.c lex.yy.cc \
+	rm -f flex parse.c parse.h *$o alloca.c *.lint lex.yy.c lex.yy.cc \
 		$(FLEXLIB) config.log config.cache
 
 distclean: clean

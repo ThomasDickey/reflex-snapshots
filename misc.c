@@ -48,7 +48,7 @@ action_define(char *defname, int value)
 void
 add_action(const char *new_text)
 {
-    int len = strlen(new_text);
+    int len = (int) strlen(new_text);
 
     while (len + action_index >= action_size - 10 /* slop */ ) {
 	int new_size = action_size * 2;
@@ -99,13 +99,14 @@ add_ind_action(int level, const char *new_text)
 void *
 allocate_array(int size, size_t element_size)
 {
-    void *mem;
-    size_t num_bytes = element_size * size;
+    void *mem = 0;
+    if (size > 0) {
+	size_t num_bytes = element_size * (unsigned) size;
 
-    mem = flex_alloc(num_bytes);
+	mem = flex_alloc(num_bytes);
+    }
     if (!mem)
 	flexfatal(_("memory allocation failed in allocate_array()"));
-
     return mem;
 }
 
@@ -114,7 +115,7 @@ int
 all_lower(char *str)
 {
     while (*str) {
-	if (!isascii((Char) * str) || !islower(*str))
+	if (!islower((Char) * str))
 	    return 0;
 	++str;
     }
@@ -127,7 +128,7 @@ int
 all_upper(char *str)
 {
     while (*str) {
-	if (!isascii((Char) * str) || !isupper(*str))
+	if (!isupper((Char) * str))
 	    return 0;
 	++str;
     }
@@ -187,7 +188,7 @@ check_char(int c)
 Char
 clower(int c)
 {
-    return (Char) ((isascii(c) && isupper(c)) ? tolower(c) : c);
+    return (Char) ((isupper((Char) c)) ? tolower((Char) c) : c);
 }
 
 /* copy_string - returns a dynamically allocated copy of a string */
@@ -204,7 +205,7 @@ copy_string(const char *str)
 	;
     }
 
-    size = (c1 - str + 1) * sizeof(char);
+    size = (unsigned) (c1 - str + 1) * sizeof(char);
     copy = (char *) flex_alloc(size);
 
     if (copy == NULL)
@@ -342,7 +343,7 @@ htoi(Char * str)
 
     (void) sscanf((char *) str, "%x", &result);
 
-    return result;
+    return (int) result;
 }
 
 /* lerrif - report an error message formatted with one integer argument */
@@ -538,8 +539,7 @@ myesc(Char * array)
 	{			/* \<octal> */
 	    int sptr = 1;
 
-	    while (isascii(array[sptr]) &&
-		   isdigit(array[sptr])) {
+	    while (isdigit((Char) array[sptr])) {
 		/* Don't increment inside loop control
 		 * because if isdigit() is a macro it might
 		 * expand into multiple increments ...
@@ -550,7 +550,7 @@ myesc(Char * array)
 	    c = array[sptr];
 	    array[sptr] = '\0';
 
-	    esc_char = otoi(array + 1);
+	    esc_char = (Char) otoi(array + 1);
 
 	    array[sptr] = c;
 
@@ -561,8 +561,7 @@ myesc(Char * array)
 	{			/* \x<hex> */
 	    int sptr = 2;
 
-	    while (isascii(array[sptr]) &&
-		   isxdigit((char) array[sptr])) {
+	    while (isxdigit((Char) array[sptr])) {
 		/* Don't increment inside loop control
 		 * because if isdigit() is a macro it might
 		 * expand into multiple increments ...
@@ -573,7 +572,7 @@ myesc(Char * array)
 	    c = array[sptr];
 	    array[sptr] = '\0';
 
-	    esc_char = htoi(array + 2);
+	    esc_char = (Char) htoi(array + 2);
 
 	    array[sptr] = c;
 
@@ -592,7 +591,7 @@ otoi(Char * str)
     unsigned int result;
 
     (void) sscanf((char *) str, "%o", &result);
-    return result;
+    return (int) result;
 }
 
 static int indent_level = 0;	/* each level is 8 spaces */
@@ -790,7 +789,7 @@ readable_form(int c)
     } else if (c == ' ') {
 	return "' '";
     } else {
-	rform[0] = c;
+	rform[0] = (char) c;
 	rform[1] = '\0';
 
 	return rform;
@@ -801,10 +800,13 @@ readable_form(int c)
 void *
 reallocate_array(void *array, int size, size_t element_size)
 {
-    void *new_array;
-    size_t num_bytes = element_size * size;
+    void *new_array = 0;
 
-    new_array = flex_realloc(array, num_bytes);
+    if (size > 0) {
+	size_t num_bytes = element_size * (unsigned) size;
+
+	new_array = flex_realloc(array, num_bytes);
+    }
     if (!new_array)
 	flexfatal(_("attempt to increase array size failed"));
 

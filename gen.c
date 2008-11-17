@@ -99,7 +99,7 @@ gen_bu_action(void)
 void
 genctbl(void)
 {
-    register int i;
+    int i;
     int end_of_buffer_action = num_rules + 1;
 
     /* Table of verify for transition and offset to next state. */
@@ -190,7 +190,7 @@ genctbl(void)
 void
 genecs(void)
 {
-    register int i, j;
+    int i, j;
     int numrows;
 
     out_str_dec(C_int_decl, "yy_ec", csize);
@@ -341,7 +341,7 @@ gen_find_action(void)
 void
 genftbl(void)
 {
-    register int i;
+    int i;
     int end_of_buffer_action = num_rules + 1;
 
     out_str_dec(long_align ? C_long_decl : C_short_decl,
@@ -350,7 +350,7 @@ genftbl(void)
     dfaacc[end_of_buffer_state].dfaacc_state = end_of_buffer_action;
 
     for (i = 1; i <= lastdfa; ++i) {
-	register int anum = dfaacc[i].dfaacc_state;
+	int anum = dfaacc[i].dfaacc_state;
 
 	mkdata(anum);
 
@@ -373,7 +373,7 @@ genftbl(void)
 void
 gen_next_compressed_state(char *char_map)
 {
-    indent_put2s("register YY_CHAR yy_c = %s;", char_map);
+    indent_put2s("YY_CHAR yy_c = %s;", char_map);
 
     /* Save the backing-up info \before/ computing the next state
      * because we always compute one more state than needed - we
@@ -451,8 +451,8 @@ gen_next_match(void)
 
     else if (fullspd) {
 	outn("{");		/* } for vi */
-	outn("register yyconst struct yy_trans_info *yy_trans_info;\n");
-	outn("register YY_CHAR yy_c;\n");
+	outn("yyconst struct yy_trans_info *yy_trans_info;\n");
+	outn("YY_CHAR yy_c;\n");
 	indent_put2s("for (yy_c = %s;", char_map);
 	outn("      (yy_trans_info = &yy_current_state[(unsigned int) yy_c])->");
 	outn("yy_verify == yy_c;");
@@ -576,7 +576,7 @@ gen_NUL_trans(void)
 	/* We're going to need yy_cp lying around for the call
 	 * below to gen_backing_up().
 	 */
-	outn("register char *yy_cp = yy_c_buf_p;");
+	outn("char *yy_cp = yy_c_buf_p;");
 
     outc('\n');
 
@@ -594,9 +594,9 @@ gen_NUL_trans(void)
 
     else if (fullspd) {
 	do_indent();
-	out_dec("register int yy_c = %d;\n", NUL_ec);
+	out_dec("int yy_c = %d;\n", NUL_ec);
 
-	outn("register yyconst struct yy_trans_info *yy_trans_info;\n");
+	outn("yyconst struct yy_trans_info *yy_trans_info;\n");
 	outn("yy_trans_info = &yy_current_state[(unsigned int) yy_c];");
 	outn("yy_current_state += yy_trans_info->yy_nxt;");
 
@@ -827,7 +827,7 @@ gentabs(void)
 		"yy_base", total_states + 1);
 
     for (i = 1; i <= lastdfa; ++i) {
-	register int d = def[i];
+	int d = def[i];
 
 	if (base[i] == JAMSTATE)
 	    base[i] = jambase;
@@ -911,7 +911,7 @@ indent_put2s(char fmt[], char arg[])
 void
 make_tables(void)
 {
-    register int i;
+    int i;
     int did_eof_rule = false;
 
     skelout();

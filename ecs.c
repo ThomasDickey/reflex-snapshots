@@ -33,7 +33,7 @@
 /* ccl2ecl - convert character classes to set of equivalence classes */
 
 void
-ccl2ecl()
+ccl2ecl(void)
 {
     int i, ich, newlen, cclp, ccls, cclmec;
 
@@ -53,7 +53,7 @@ ccl2ecl()
 	    cclmec = ecgroup[ich];
 
 	    if (cclmec > 0) {
-		ccltbl[cclp + newlen] = cclmec;
+		ccltbl[cclp + newlen] = (Char) cclmec;
 		++newlen;
 	    }
 	}
@@ -71,8 +71,7 @@ ccl2ecl()
  */
 
 int
-cre8ecs(fwd, bck, num)
-     int fwd[], bck[], num;
+cre8ecs(int fwd[], int bck[], int num)
 {
     int i, j, numcl;
 
@@ -109,9 +108,7 @@ cre8ecs(fwd, bck, num)
  */
 
 void
-mkeccl(ccls, lenccl, fwd, bck, llsiz, NUL_mapping)
-     Char ccls[];
-     int lenccl, fwd[], bck[], llsiz, NUL_mapping;
+mkeccl(Char ccls[], int lenccl, int fwd[], int bck[], int llsiz, int NUL_mapping)
 {
     int cclp, oldec, newec;
     int cclm, i, j;
@@ -136,7 +133,7 @@ mkeccl(ccls, lenccl, fwd, bck, llsiz, NUL_mapping)
 
 	for (i = fwd[cclm]; i != NIL && i <= llsiz; i = fwd[i]) {	/* look for the symbol in the character class */
 	    for (; j < lenccl; ++j) {
-		register int ccl_char;
+		int ccl_char;
 
 		if (NUL_mapping && ccls[j] == 0)
 		    ccl_char = NUL_mapping;
@@ -198,8 +195,7 @@ mkeccl(ccls, lenccl, fwd, bck, llsiz, NUL_mapping)
 /* mkechar - create equivalence class for single character */
 
 void
-mkechar(tch, fwd, bck)
-     int tch, fwd[], bck[];
+mkechar(int tch, int fwd[], int bck[])
 {
     /* If until now the character has been a proper subset of
      * an equivalence class, break it away to create a new ec

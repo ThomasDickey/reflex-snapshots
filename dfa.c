@@ -93,12 +93,12 @@ check_for_backing_up(int ds, int state[])
 void
 check_trailing_context(int *nfa_states, int num_states, int *accset, int nacc)
 {
-    register int i, j;
+    int i, j;
 
     for (i = 1; i <= num_states; ++i) {
 	int ns = nfa_states[i];
-	register int type = state_type[ns];
-	register int ar = assoc_rule[ns];
+	int type = state_type[ns];
+	int ar = assoc_rule[ns];
 
 	if (type == STATE_NORMAL || rule_type[ar] != RULE_VARIABLE) {
 	    /* do nothing */
@@ -129,14 +129,14 @@ check_trailing_context(int *nfa_states, int num_states, int *accset, int nacc)
 void
 dump_associated_rules(FILE *file, int ds)
 {
-    register int i, j;
-    register int num_associated_rules = 0;
+    int i, j;
+    int num_associated_rules = 0;
     int rule_set[MAX_ASSOC_RULES + 1];
     int *dset = dss[ds];
     int size = dfasiz[ds];
 
     for (i = 1; i <= size; ++i) {
-	register int rule_num = rule_linenum[assoc_rule[dset[i]]];
+	int rule_num = rule_linenum[assoc_rule[dset[i]]];
 
 	for (j = 1; j <= num_associated_rules; ++j) {
 	    if (rule_num == rule_set[j])
@@ -177,7 +177,7 @@ dump_associated_rules(FILE *file, int ds)
 void
 dump_transitions(FILE *file, int state[])
 {
-    register int i, ec;
+    int i, ec;
     int out_char_set[CSIZE];
 
     for (i = 0; i < csize; ++i) {
@@ -222,7 +222,7 @@ dump_transitions(FILE *file, int state[])
 int *
 epsclosure(int *t, int *ns_addr, int accset[], int *nacc_addr, int *hv_addr)
 {
-    register int stkpos, ns, tsp;
+    int stkpos, ns, tsp;
     int numstates = *ns_addr, nacc, hashval, transsym, nfaccnum;
     int stkend, nstate;
     static int did_stk_init = false, *stk;
@@ -614,7 +614,7 @@ ntod(void)
 	}
 
 	if (caseins && !useecs) {
-	    register int j;
+	    int j;
 
 	    for (i = 'A', j = 'a'; i <= 'Z'; ++i, ++j) {
 		if (state[i] == 0 && state[j] != 0)
@@ -716,7 +716,7 @@ int
 snstods(int sns[], int numstates, int accset[], int nacc, int hashval, int *newds_addr)
 {
     int didsort = 0;
-    register int i, j;
+    int i, j;
     int newds, *oldsns;
 
     for (i = 1; i <= lastdfa; ++i) {
