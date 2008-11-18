@@ -1,3 +1,4 @@
+.\" $Id: flex.1,v 1.2 2008/11/17 21:38:37 tom Exp $
 .TH FLEX 1 "April 1995" "Version 2.5"
 .SH NAME
 flex \- fast lexical analyzer generator
@@ -1914,8 +1915,9 @@ The macro
 .B yy_set_bol(at_bol)
 can be used to control whether the current buffer's scanning
 context for the next token match is done as though at the
-beginning of a line.  A non-zero macro argument makes rules anchored with
-'^' active, while a zero argument makes '^' rules inactive.
+beginning of a line.
+A non-zero macro argument makes rules anchored with '^' active,
+while a zero argument makes '^' rules inactive.
 .PP
 The macro
 .B YY_AT_BOL()
@@ -3700,7 +3702,7 @@ scanners;
 ignores them.
 .IP -
 The name
-.bd
+.bd 1
 FLEX_SCANNER
 is #define'd so scanners may be written for use with either
 .I flex

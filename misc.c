@@ -332,7 +332,7 @@ flexfatal(const char *msg)
 {
     fprintf(stderr, _("%s: fatal internal error, %s\n"),
 	    program_name, msg);
-    exit(1);
+    exit(EXIT_FAILURE);
 }
 
 /* htoi - convert a hexadecimal digit string to an integer value */

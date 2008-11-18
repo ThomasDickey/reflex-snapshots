@@ -1,3 +1,4 @@
+/* $Id: main.c,v 1.8 2008/11/18 01:01:59 tom Exp $ */
 /* flex - tool to generate fast lexical analyzers */
 
 /*-
@@ -169,7 +170,7 @@ main(int argc, char **argv)
      */
     flexend(0);
 
-    return 0;			/* keep compilers/lint happy */
+    return EXIT_SUCCESS;	/* keep compilers/lint happy */
 }
 
 /* check_options - check user-specified options */
@@ -691,7 +692,7 @@ flexinit(int argc, char **argv)
 	    case '?':
 	    case 'h':
 		usage();
-		exit(0);
+		exit(EXIT_SUCCESS);
 
 	    case 'I':
 		interactive = true;
@@ -763,7 +764,7 @@ flexinit(int argc, char **argv)
 	    case 'V':
 		printf(_("%s version %s\n"),
 		       program_name, flex_version);
-		exit(0);
+		exit(EXIT_SUCCESS);
 
 	    case 'w':
 		nowarn = true;
@@ -782,7 +783,7 @@ flexinit(int argc, char **argv)
 			_("%s: unknown flag '%c'.  For usage, try\n\t%s --help\n"),
 			program_name, (int) arg[i],
 			program_name);
-		exit(1);
+		exit(EXIT_FAILURE);
 	    }
 
 	/* Used by -C, -S, -o, and -P flags in lieu of a "continue 2"
@@ -822,6 +823,12 @@ readin(void)
     static char yy_stdinit[] = "FILE *yyin = stdin, *yyout = stdout;";
     static char yy_nostdinit[] =
     "FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;";
+#ifndef FLEXLEXER_HDR
+#define FLEXLEXER_HDR "FlexLexer.h"
+#endif
+    if (C_plus_plus) {
+	outn("\n#include <" FLEXLEXER_HDR ">");
+    }
 
     line_directive_out((FILE *) 0, 1);
 
@@ -959,10 +966,7 @@ readin(void)
 	outn("extern int yylineno;");
 	outn("int yylineno = 1;");
     }
-
     if (C_plus_plus) {
-	outn("\n#include <FlexLexer.h>");
-
 	if (yyclass) {
 	    outn("int yyFlexLexer::yylex()");
 	    outn("\t{");

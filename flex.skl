@@ -22,9 +22,6 @@
 #ifdef __cplusplus
 
 #include <stdlib.h>
-%+
-class istream;
-%*
 #include <unistd.h>
 
 /* The "const" storage-class-modifier is valid. */
@@ -137,7 +134,7 @@ struct yy_buffer_state {
 %-
 	FILE *yy_input_file;
 %+
-	istream* yy_input_file;
+	std::istream* yy_input_file;
 %*
 
 	char *yy_ch_buf;		/* input buffer */
@@ -416,7 +413,7 @@ yy_fatal_error(yyconst char msg[])
 %+
 void yyFlexLexer::LexerError(yyconst char msg[])
 {
-	cerr << msg << '\n';
+	std::cerr << msg << '\n';
 	exit(YY_EXIT_FAILURE);
 }
 %*
@@ -468,14 +465,14 @@ YY_DECL
 %-
 			yyin = stdin;
 %+
-			yyin = &cin;
+			yyin = &std::cin;
 %*
 
 		if (!yyout)
 %-
 			yyout = stdout;
 %+
-			yyout = &cout;
+			yyout = &std::cout;
 %*
 
 		if (!yy_current_buffer)
@@ -632,7 +629,7 @@ case YY_END_OF_BUFFER:
 	}				/* end of scanning one token */
 }				/* end of yylex */
 %+
-yyFlexLexer::yyFlexLexer(istream* arg_yyin, ostream* arg_yyout)
+yyFlexLexer::yyFlexLexer(std::istream* arg_yyin, std::ostream* arg_yyout)
 {
 	yyin = arg_yyin;
 	yyout = arg_yyout;
@@ -667,7 +664,7 @@ yyFlexLexer::~yyFlexLexer()
 	yy_delete_buffer(yy_current_buffer);
 }
 
-void yyFlexLexer::switch_streams(istream* new_in, ostream* new_out)
+void yyFlexLexer::switch_streams(std::istream* new_in, std::ostream* new_out)
 {
 	if (new_in) {
 		yy_delete_buffer(yy_current_buffer);
@@ -1003,7 +1000,7 @@ int yyFlexLexer::yyinput()
 void
 yyrestart(FILE *input_file)
 %+
-void yyFlexLexer::yyrestart(istream* input_file)
+void yyFlexLexer::yyrestart(std::istream* input_file)
 %*
 {
 	if (!yy_current_buffer)
@@ -1058,7 +1055,7 @@ void yyFlexLexer::yy_load_buffer_state()
 YY_BUFFER_STATE
 yy_create_buffer(FILE *file, int size)
 %+
-YY_BUFFER_STATE yyFlexLexer::yy_create_buffer(istream* file, int size)
+YY_BUFFER_STATE yyFlexLexer::yy_create_buffer(std::istream* file, int size)
 %*
 {
 	YY_BUFFER_STATE b;
@@ -1103,17 +1100,10 @@ void yyFlexLexer::yy_delete_buffer(YY_BUFFER_STATE b)
 }
 
 %-
-#ifndef YY_ALWAYS_INTERACTIVE
-#ifndef YY_NEVER_INTERACTIVE
-extern int isatty(int);
-#endif
-#endif
-
 void
 yy_init_buffer(YY_BUFFER_STATE b, FILE *file)
 %+
-extern "C" int isatty(int);
-void yyFlexLexer::yy_init_buffer(YY_BUFFER_STATE b, istream* file)
+void yyFlexLexer::yy_init_buffer(YY_BUFFER_STATE b, std::istream* file)
 %*
 {
 	yy_flush_buffer(b);

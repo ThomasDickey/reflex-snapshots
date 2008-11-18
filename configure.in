@@ -3,6 +3,9 @@ dnl
 AC_INIT(initscan.c)
 AC_CONFIG_HEADER(config.h:conf.in)
 
+# This can be overridden, but makes --program-prefix default to "re", so
+# it will install as "reflex".
+program_prefix=re
 AC_ARG_PROGRAM
 CF_PROG_EXT
 
