@@ -1,3 +1,4 @@
+# $Id: Makefile.in,v 1.15 2008/11/18 00:19:29 tom Exp $
 # @(#) @Header: /home/daffy/u0/vern/flex/RCS/Makefile.in,v 1.45 96/09/10 16:59:04 vern Exp @ (LBL)
 
 @SET_MAKE@
@@ -15,9 +16,8 @@
 # additional info.
 
 CFLAGS          = @CFLAGS@
-CPPFLAGS        = @CPPFLAGS@
 DEFS            = @DEFS@
-LDFLAGS         =
+LDFLAGS         = @LDFLAGS@
 LIBS            = @LIBS@
 
 o		= .@OBJEXT@
@@ -49,9 +49,11 @@ LIBRARY_ROOT	= fl
 FLEX            = $(PROGRAM_ROOT)$x
 FLEXLIB         = lib$(LIBRARY_ROOT).a
 
-actual_FLEX     = `echo $(PROGRAM_ROOT)| sed '$(transform)'`
-actual_FLEXLIB  = lib`echo $(LIBRARY_ROOT)| sed '$(transform)'`.a
+actual_PROGRAM  = `echo $(PROGRAM_ROOT)| sed '$(transform)'`
+actual_LIBROOT  = `echo $(LIBRARY_ROOT)| sed '$(transform)'`
 actual_HEADER	= `echo FlexLexer|sed '$(transform)'`.h
+
+actual_LIBNAME  = lib$(actual_LIBROOT).a
 
 INSTALLMAN      = man
 
@@ -73,7 +75,9 @@ EXTRA_CFLAGS	= @EXTRA_CFLAGS@
 # You normally do not need to modify anything below this point.
 # ------------------------------------------------------------
 
-CPPFLAGS        = -I. -I$(srcdir)
+CPPFLAGS        = -I. -I$(srcdir) \
+		$(DEFS) @CPPFLAGS@ \
+		-DFLEXLEXER_HDR=\"$(actual_HEADER)\"
 
 .c$o:
 @RULE_CC@
@@ -178,29 +182,47 @@ $(FLEX).man: flex.1
 	cd $(srcdir) && nroff -man flex.1 >$(FLEX).man
 
 install: $(FLEX) $(FLEXLIB) installdirs install.$(INSTALLMAN)
-	$(INSTALL_PROGRAM) $(FLEX) $(bindir)/$(actual_FLEX)
-	@rm -f $(bindir)/$(actual_FLEX)++
-	cd $(bindir) && $(LN_S) $(actual_FLEX) $(actual_FLEX)++
-	$(INSTALL_DATA) $(FLEXLIB) $(libdir)/$(actual_FLEXLIB)
-	-cd $(libdir) && $(RANLIB) $(actual_FLEXLIB)
-	$(INSTALL_DATA) $(srcdir)/FlexLexer.h $(includedir)/$(actual_HEADER)
+	$(INSTALL_PROGRAM) $(FLEX) $(bindir)/$(actual_PROGRAM)
+	@rm -f $(bindir)/$(actual_PROGRAM)++
+	cd $(bindir) && $(LN_S) $(actual_PROGRAM) $(actual_PROGRAM)++
+	$(INSTALL_DATA) $(FLEXLIB) $(libdir)/$(actual_LIBNAME)
+	-cd $(libdir) && $(RANLIB) $(actual_LIBNAME)
+	$(SHELL) $(srcdir)/rename.sh \
+		$(srcdir)/FlexLexer.h \
+		$(includedir)/$(actual_HEADER) \
+		$(actual_PROGRAM) \
+		$(actual_HEADER) \
+		$(actual_LIBROOT) \
+		$(INSTALL_DATA)
 
 install.man: flex.1
-	$(INSTALL_DATA) $(srcdir)/flex.1 $(mandir)/$(actual_FLEX).$(manext)
+	$(SHELL) $(srcdir)/rename.sh \
+		$(srcdir)/flex.1 \
+		$(mandir)/$(actual_PROGRAM).$(manext) \
+		$(actual_PROGRAM) \
+		$(actual_HEADER) \
+		$(actual_LIBROOT) \
+		$(INSTALL_DATA)
 
 install.cat: $(FLEX).man
-	$(INSTALL_DATA) $(srcdir)/$(FLEX).man $(mandir)/$(actual_FLEX).$(manext)
+	$(SHELL) $(srcdir)/rename.sh \
+		$(srcdir)/flex.man \
+		$(mandir)/$(actual_PROGRAM).$(manext) \
+		$(actual_PROGRAM) \
+		$(actual_HEADER) \
+		$(actual_LIBROOT) \
+		$(INSTALL_DATA)
 
 installdirs:
 	$(SHELL) $(srcdir)/mkinstalldirs \
 	  $(bindir) $(libdir) $(includedir) $(mandir)
 
 uninstall:
-	rm -f $(bindir)/$(actual_FLEX)
-	rm -f $(bindir)/$(actual_FLEX)++
-	rm -f $(libdir)/$(actual_FLEXLIB)
+	rm -f $(bindir)/$(actual_PROGRAM)
+	rm -f $(bindir)/$(actual_PROGRAM)++
+	rm -f $(libdir)/$(actual_LIBNAME)
 	rm -f $(includedir)/$(actual_HEADER)
-	rm -f $(mandir)/$(actual_FLEX).$(manext)
+	rm -f $(mandir)/$(actual_PROGRAM).$(manext)
 
 tags: $(SOURCES)
 	ctags $(SOURCES)

@@ -1,7 +1,17 @@
+-- $Id: NEWS,v 1.14 2008/11/17 23:13:50 tom Exp $
 -------------------------------------------------------------------------------
 -- Changes by Thomas E. Dickey
 -- vile:txtmode
 -------------------------------------------------------------------------------
+
+2008/11/17
+	modify makefile rules and runtime handling of skeleton to make the
+	C++ header file work using the same program prefix.
+
+	update FlexLexer.h to C++ standard header and namespace.
+
+	change default for --program-prefix option, to "re", making this
+	install as "reflex".
 
 2008/11/16
 	add a missing ifdef for YY_NO_INPUT, needed to make the function

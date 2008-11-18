@@ -253,7 +253,6 @@ extern char *yytext;
 static yy_state_type yy_get_previous_state(void);
 static yy_state_type yy_try_NUL_trans(yy_state_type current_state);
 static int yy_get_next_buffer(void);
-static void yy_fatal_error(yyconst char msg[]);
 
 /* Done after the current pattern has been matched and before the
  * corresponding action - sets up yytext.
@@ -1312,7 +1311,7 @@ static void add_off_action(int, int *, const char *);
 #define OPTION 17
 #define LINEDIR 18
 
-#line 1316 "scan.c"
+#line 1315 "scan.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -1432,10 +1431,22 @@ YY_MALLOC_DECL
 #define YY_START_STACK_INCR 25
 #endif
 
+#ifndef YY_EXIT_FAILURE
+#define YY_EXIT_FAILURE 2
+#endif
+
 /* Report a fatal error. */
 #ifndef YY_FATAL_ERROR
+/* if the macro is defined, this function is unused */
+static void
+yy_fatal_error(yyconst char msg[])
+{
+    (void) fprintf(stderr, "%s\n", msg);
+    exit(YY_EXIT_FAILURE);
+}
 #define YY_FATAL_ERROR(msg) yy_fatal_error(msg)
 #endif
+
 
 /* Default declaration of generated scanner - a define so the user can
  * easily add parameters.
@@ -1478,7 +1489,7 @@ YY_DECL
 	Char nmdef[MAXLINE];
 
 
-#line 1482 "scan.c"
+#line 1493 "scan.c"
 
     if (yy_init) {
 	yy_init = 0;
@@ -2703,7 +2714,7 @@ YY_DECL
 #line 645 "scan.l"
 	    YY_FATAL_ERROR("flex scanner jammed");
 	    YY_BREAK
-#line 2707 "scan.c"
+#line 2718 "scan.c"
 	case YY_STATE_EOF(INITIAL):
 	case YY_STATE_EOF(SECT2):
 	case YY_STATE_EOF(CODEBLOCK):
@@ -3050,6 +3061,7 @@ yyunput(int c, char *yy_bp)
 }
 #endif /* ifndef YY_NO_UNPUT */
 
+#ifndef YY_NO_INPUT
 #ifdef __cplusplus
 static int
 yyinput()
@@ -3121,6 +3133,7 @@ input(void)
 
     return c;
 }
+#endif /* ifndef YY_NO_INPUT */
 
 void
 yyrestart(FILE *input_file)
@@ -3204,12 +3217,6 @@ yy_delete_buffer(YY_BUFFER_STATE b)
 
     yy_flex_free((void *) b);
 }
-
-#ifndef YY_ALWAYS_INTERACTIVE
-#ifndef YY_NEVER_INTERACTIVE
-extern int isatty(int);
-#endif
-#endif
 
 void
 yy_init_buffer(YY_BUFFER_STATE b, FILE *file)
@@ -3377,18 +3384,6 @@ yy_top_state(void)
     return yy_start_stack[yy_start_stack_ptr - 1];
 }
 #endif
-
-#ifndef YY_EXIT_FAILURE
-#define YY_EXIT_FAILURE 2
-#endif
-
-static void
-yy_fatal_error(yyconst char msg[])
-{
-    (void) fprintf(stderr, "%s\n", msg);
-    exit(YY_EXIT_FAILURE);
-}
-
 
 /* Redefine yyless() so it works in section 3 code. */
 

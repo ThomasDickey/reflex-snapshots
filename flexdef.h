@@ -57,7 +57,7 @@
 #include <sys/types.h>
 #endif
 
-#ifdef HAVE_MALLOC_H
+#if defined(HAVE_MALLOC_H) && !defined(STDC_HEADERS)
 #include <malloc.h>
 #endif
 
