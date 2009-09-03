@@ -56,7 +56,7 @@
 	return NAME;
 
 #define PUT_BACK_STRING(str, start) \
-	for (i = strlen(str) - 1; i >= start; --i) \
+	for (i = (int) strlen(str) - 1; i >= start; --i) \
 	    unput((str)[i])
 
 #define CHECK_REJECT(str) \
@@ -193,7 +193,7 @@ LEXOPT		[aceknopr]
 			strcpy((char *) nmdef, yytext);
 
 			/* Skip trailing whitespace. */
-			for (i = strlen((char *) nmdef) - 1;
+			for (i = (int) strlen((char *) nmdef) - 1;
 			      i >= 0 && (nmdef[i] == ' ' || nmdef[i] == '\t');
 			      --i) {
 			    ;
@@ -447,7 +447,7 @@ LEXOPT		[aceknopr]
 
 			else {
 			    /* push back name surrounded by ()'s */
-			    int len = strlen((char *) nmdefptr);
+			    int len = (int) strlen((char *) nmdefptr);
 
 			    if (lex_compat || nmdefptr[0] == '^' ||
 				(len > 0 && nmdefptr[len - 1] == '$')) {
