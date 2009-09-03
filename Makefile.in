@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.15 2008/11/18 00:19:29 tom Exp $
+# $Id: Makefile.in,v 1.16 2009/09/02 21:34:15 tom Exp $
 # @(#) @Header: /home/daffy/u0/vern/flex/RCS/Makefile.in,v 1.45 96/09/10 16:59:04 vern Exp @ (LBL)
 
 @SET_MAKE@
@@ -99,7 +99,7 @@ LINTSRCS = ccl.c dfa.c ecs.c gen.c main.c misc.c nfa.c parse.c \
 DISTFILES = README NEWS COPYING INSTALL FlexLexer.h \
 	configure.in conf.in Makefile.in mkskel.sh flex.skl \
 	$(HEADERS) $(SOURCES) $(LIBSRCS) MISC \
-	flex.1 scan.c install.sh mkinstalldirs configure
+	flex.1 scan.c install-sh mkdirs.sh configure
 
 DIST_NAME       = flex
 
@@ -214,7 +214,7 @@ install.cat: $(FLEX).man
 		$(INSTALL_DATA)
 
 installdirs:
-	$(SHELL) $(srcdir)/mkinstalldirs \
+	$(SHELL) $(srcdir)/mkdirs.sh \
 	  $(bindir) $(libdir) $(includedir) $(mandir)
 
 uninstall:

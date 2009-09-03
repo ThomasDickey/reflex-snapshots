@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.8 2008/11/18 01:01:59 tom Exp $ */
+/* $Id: main.c,v 1.9 2009/09/02 23:49:06 tom Exp $ */
 /* flex - tool to generate fast lexical analyzers */
 
 /*-
@@ -43,6 +43,7 @@ char copyright[] =
 #endif
 
 static char flex_version[] = FLEX_VERSION;
+static char flex_patched[] = FLEX_PATCHED;
 
 /* declare functions that have forward references */
 
@@ -386,8 +387,8 @@ flexend(int exit_status)
     }
 
     if (printstats) {
-	fprintf(stderr, _("%s version %s usage statistics:\n"),
-		program_name, flex_version);
+	fprintf(stderr, _("%s version %s (%s) usage statistics:\n"),
+		program_name, flex_version, flex_patched);
 
 	fprintf(stderr, _("  scanner options: -"));
 
@@ -762,8 +763,8 @@ flexinit(int argc, char **argv)
 		break;
 
 	    case 'V':
-		printf(_("%s version %s\n"),
-		       program_name, flex_version);
+		printf(_("%s version %s (%s)\n"),
+		       program_name, flex_version, flex_patched);
 		exit(EXIT_SUCCESS);
 
 	    case 'w':
