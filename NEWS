@@ -1,11 +1,17 @@
--- $Id: NEWS,v 1.15 2009/09/02 21:24:35 tom Exp $
+-- $Id: NEWS,v 1.17 2009/09/02 23:52:50 tom Exp $
 -------------------------------------------------------------------------------
 -- Changes by Thomas E. Dickey
 -- vile:txtmode
 -------------------------------------------------------------------------------
 
-2009/09/??
+2009/09/02
+	add patch-date to version message.
+
 	modify generated code to eliminate gcc -Wconversion warnings.
+
+	update utility scripts, using install-sh and mkdirs.sh
+
+	update config.guess, config.sub
 
 2008/11/17
 	modify makefile rules and runtime handling of skeleton to make the
