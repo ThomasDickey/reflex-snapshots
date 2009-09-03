@@ -373,7 +373,7 @@ genftbl(void)
 void
 gen_next_compressed_state(char *char_map)
 {
-    indent_put2s("YY_CHAR yy_c = %s;", char_map);
+    indent_put2s("YY_CHAR yy_c = (YY_CHAR) %s;", char_map);
 
     /* Save the backing-up info \before/ computing the next state
      * because we always compute one more state than needed - we
@@ -399,15 +399,14 @@ gen_next_compressed_state(char *char_map)
 	out_dec("if (yy_current_state >= %d)\n", lastdfa + 2);
 
 	indent_up();
-	outn("yy_c = yy_meta[(unsigned int) yy_c];");
+	outn("yy_c = (YY_CHAR) yy_meta[(unsigned int) yy_c];");
 	indent_down();
     }
 
     indent_down();
     outn("}");
 
-    outn("yy_current_state = (yy_nxt[yy_base[yy_current_state]");
-    outn("                           + (unsigned int) yy_c]);");
+    outn("yy_current_state = (yy_nxt[yy_base[yy_current_state] + yy_c]);");
 }
 
 /* Generate the code to find the next match. */
@@ -453,10 +452,10 @@ gen_next_match(void)
 	outn("{");		/* } for vi */
 	outn("yyconst struct yy_trans_info *yy_trans_info;\n");
 	outn("YY_CHAR yy_c;\n");
-	indent_put2s("for (yy_c = %s;", char_map);
+	indent_put2s("for (yy_c = (YY_CHAR) %s;", char_map);
 	outn("      (yy_trans_info = &yy_current_state[(unsigned int) yy_c])->");
 	outn("yy_verify == yy_c;");
-	indent_put2s("      yy_c = %s)", char_map_2);
+	indent_put2s("      yy_c = (YY_CHAR) %s)", char_map_2);
 
 	indent_up();
 
@@ -1135,7 +1134,7 @@ make_tables(void)
     set_indent(2);
     if (!C_plus_plus) {
 	if (use_read) {
-	    outn("if ((result = read(fileno(yyin), (char *) buf, max_size )) < 0) \\");
+	    outn("if ((result = read(fileno(yyin), (char *) buf, (size_t) max_size )) < 0) \\");
 	    outn("\tYY_FATAL_ERROR(\"input in flex scanner failed\");");
 	}
 
@@ -1152,10 +1151,15 @@ make_tables(void)
 	    outn("\t\t\tYY_FATAL_ERROR(\"input in flex scanner failed\"); \\");
 	    outn("\t\tresult = n; \\");
 	    outn("\t} \\");
-	    outn("else if (((result = fread(buf, 1, max_size, yyin)) == 0) \\");
-	    outn("          && ferror(yyin)) \\");
+	    outn("else \\");
 	    outn("\t{ \\");
-	    outn("\t\tYY_FATAL_ERROR(\"input in flex scanner failed\"); \\");
+	    outn("\t\tsize_t readresult; \\");
+	    outn("\t\tif (((readresult = fread(buf, 1, (size_t) max_size, yyin)) == 0) \\");
+	    outn("\t          && ferror(yyin)) \\");
+	    outn("\t\t{ \\");
+	    outn("\t\t\tYY_FATAL_ERROR(\"input in flex scanner failed\"); \\");
+	    outn("\t\t} \\");
+	    outn("\t\tresult = (int) readresult; \\");
 	    outn("\t}");
 	}
     }

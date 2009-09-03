@@ -220,7 +220,7 @@ void yy_init_buffer(YY_BUFFER_STATE b, FILE *file);
 void yy_flush_buffer(YY_BUFFER_STATE b);
 #define YY_FLUSH_BUFFER yy_flush_buffer(yy_current_buffer)
 
-YY_BUFFER_STATE yy_scan_buffer(char *base, yy_size_t size);
+YY_BUFFER_STATE yy_scan_buffer(char *bbase, yy_size_t size);
 YY_BUFFER_STATE yy_scan_string(yyconst char *yy_str);
 YY_BUFFER_STATE yy_scan_bytes(yyconst char *bytes, int len);
 
@@ -1277,7 +1277,7 @@ char *yytext;
 	return NAME;
 
 #define PUT_BACK_STRING(str, start) \
-	for (i = strlen(str) - 1; i >= start; --i) \
+	for (i = (int) strlen(str) - 1; i >= start; --i) \
 	    unput((str)[i])
 
 #define CHECK_REJECT(str) \
@@ -1393,7 +1393,7 @@ YY_MALLOC_DECL
 /* This used to be an fputs(), but since the string might contain NUL's,
  * we now use fwrite().
  */
-#define ECHO (void) fwrite(yytext, yyleng, 1, yyout)
+#define ECHO (void) fwrite(yytext, (size_t) yyleng, 1, yyout)
 #endif
 
 /* Gets input and stuffs it into "buf".  number of characters read, or YY_NULL,
@@ -1413,10 +1413,15 @@ YY_MALLOC_DECL
 		    YY_FATAL_ERROR("input in flex scanner failed"); \
 		result = n; \
 	    } \
-	else if (((result = fread(buf, 1, max_size, yyin)) == 0) \
-		  && ferror(yyin)) \
+	else \
 	    { \
-		YY_FATAL_ERROR("input in flex scanner failed"); \
+		size_t readresult; \
+		if (((readresult = fread(buf, 1, (size_t) max_size, yyin)) == 0) \
+		      && ferror(yyin)) \
+		{ \
+		    YY_FATAL_ERROR("input in flex scanner failed"); \
+		} \
+		result = (int) readresult; \
 	    }
 #endif
 
@@ -1491,7 +1496,7 @@ YY_DECL
 	Char nmdef[MAXLINE];
 
 
-#line 1495 "scan.c"
+#line 1500 "scan.c"
 
     if (yy_init) {
 	yy_init = 0;
@@ -1532,7 +1537,7 @@ YY_DECL
 	yy_current_state += YY_AT_BOL();
 	yy_match:
 	do {
-	    YY_CHAR yy_c = yy_ec[YY_SC_TO_UI(*yy_cp)];
+	    YY_CHAR yy_c = (YY_CHAR) yy_ec[YY_SC_TO_UI(*yy_cp)];
 	    if (yy_accept[yy_current_state]) {
 		yy_last_accepting_state = yy_current_state;
 		yy_last_accepting_cpos = yy_cp;
@@ -1540,10 +1545,9 @@ YY_DECL
 	    while (yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state) {
 		yy_current_state = (int) yy_def[yy_current_state];
 		if (yy_current_state >= 769)
-		    yy_c = yy_meta[(unsigned int) yy_c];
+		    yy_c = (YY_CHAR) yy_meta[(unsigned int) yy_c];
 	    }
-	    yy_current_state = (yy_nxt[yy_base[yy_current_state]
-				       + (unsigned int) yy_c]);
+	    yy_current_state = (yy_nxt[yy_base[yy_current_state] + yy_c]);
 	    ++yy_cp;
 	}
 	while (yy_base[yy_current_state] != 2716);
@@ -1762,7 +1766,7 @@ YY_DECL
 		strcpy((char *) nmdef, yytext);
 
 		/* Skip trailing whitespace. */
-		for (i = strlen((char *) nmdef) - 1;
+		for (i = (int) strlen((char *) nmdef) - 1;
 		i >= 0 && (nmdef[i] == ' ' || nmdef[i] == '\t');
 		--i) {
 		    ;
@@ -2292,7 +2296,7 @@ YY_DECL
 
 		else {
 		    /* push back name surrounded by ()'s */
-		    int len = strlen((char *) nmdefptr);
+		    int len = (int) strlen((char *) nmdefptr);
 
 		    if (lex_compat || nmdefptr[0] == '^' ||
 		    (len > 0 && nmdefptr[len - 1] == '$')) {
@@ -2716,7 +2720,7 @@ YY_DECL
 #line 645 "scan.l"
 	    YY_FATAL_ERROR("flex scanner jammed");
 	    YY_BREAK
-#line 2720 "scan.c"
+#line 2724 "scan.c"
 	case YY_STATE_EOF(INITIAL):
 	case YY_STATE_EOF(SECT2):
 	case YY_STATE_EOF(CODEBLOCK):
@@ -2899,7 +2903,7 @@ yy_get_next_buffer(void)
 	yy_current_buffer->yy_n_chars = yy_n_chars = 0;
 
     else {
-	int num_to_read = yy_current_buffer->yy_buf_size - number_to_move - 1;
+	int num_to_read = (int) ((long) yy_current_buffer->yy_buf_size - (long) number_to_move - 1);
 
 	while (num_to_read <= 0) {
 	    /* Not enough room in the buffer - grow it. */
@@ -2913,7 +2917,7 @@ yy_get_next_buffer(void)
 	    int yy_c_buf_p_offset = (int) (yy_c_buf_p - b->yy_ch_buf);
 
 	    if (b->yy_is_our_buffer) {
-		int new_size = b->yy_buf_size * 2;
+		int new_size = (int) (b->yy_buf_size * 2);
 
 		if (new_size <= 0)
 		    b->yy_buf_size += b->yy_buf_size / 8;
@@ -2933,7 +2937,7 @@ yy_get_next_buffer(void)
 
 	    yy_c_buf_p = &b->yy_ch_buf[yy_c_buf_p_offset];
 
-	    num_to_read = yy_current_buffer->yy_buf_size - number_to_move - 1;
+	    num_to_read = (int) ((long) yy_current_buffer->yy_buf_size - (long) number_to_move - 1);
 #endif
 	}
 
@@ -2980,7 +2984,7 @@ yy_get_previous_state(void)
     yy_current_state += YY_AT_BOL();
 
     for (yy_cp = yytext_ptr + YY_MORE_ADJ; yy_cp < yy_c_buf_p; ++yy_cp) {
-	YY_CHAR yy_c = (*yy_cp ? yy_ec[YY_SC_TO_UI(*yy_cp)] : 1);
+	YY_CHAR yy_c = (YY_CHAR) (*yy_cp ? yy_ec[YY_SC_TO_UI(*yy_cp)] : 1);
 	if (yy_accept[yy_current_state]) {
 	    yy_last_accepting_state = yy_current_state;
 	    yy_last_accepting_cpos = yy_cp;
@@ -2988,10 +2992,9 @@ yy_get_previous_state(void)
 	while (yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state) {
 	    yy_current_state = (int) yy_def[yy_current_state];
 	    if (yy_current_state >= 769)
-		yy_c = yy_meta[(unsigned int) yy_c];
+		yy_c = (YY_CHAR) yy_meta[(unsigned int) yy_c];
 	}
-	yy_current_state = (yy_nxt[yy_base[yy_current_state]
-				   + (unsigned int) yy_c]);
+	yy_current_state = (yy_nxt[yy_base[yy_current_state] + yy_c]);
     }
 
     return yy_current_state;
@@ -3009,7 +3012,7 @@ yy_try_NUL_trans(yy_state_type yy_current_state)
     int yy_is_jam;
     char *yy_cp = yy_c_buf_p;
 
-    YY_CHAR yy_c = 1;
+    YY_CHAR yy_c = (YY_CHAR) 1;
     if (yy_accept[yy_current_state]) {
 	yy_last_accepting_state = yy_current_state;
 	yy_last_accepting_cpos = yy_cp;
@@ -3017,10 +3020,9 @@ yy_try_NUL_trans(yy_state_type yy_current_state)
     while (yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state) {
 	yy_current_state = (int) yy_def[yy_current_state];
 	if (yy_current_state >= 769)
-	    yy_c = yy_meta[(unsigned int) yy_c];
+	    yy_c = (YY_CHAR) yy_meta[(unsigned int) yy_c];
     }
-    yy_current_state = (yy_nxt[yy_base[yy_current_state]
-			       + (unsigned int) yy_c]);
+    yy_current_state = (yy_nxt[yy_base[yy_current_state] + yy_c]);
     yy_is_jam = (yy_current_state == 768);
 
     return yy_is_jam ? 0 : yy_current_state;
@@ -3049,7 +3051,7 @@ yyunput(int c, char *yy_bp)
 	yy_cp += (int) (dest - source);
 	yy_bp += (int) (dest - source);
 	yy_current_buffer->yy_n_chars =
-	    yy_n_chars = yy_current_buffer->yy_buf_size;
+	    yy_n_chars = (int) yy_current_buffer->yy_buf_size;
 
 	if (yy_cp < yy_current_buffer->yy_ch_buf + 2)
 	    YY_FATAL_ERROR("flex scanner push-back overflow");
@@ -3189,7 +3191,7 @@ yy_create_buffer(FILE *file, int size)
     if (!b)
 	YY_FATAL_ERROR("out of dynamic memory in yy_create_buffer()");
 
-    b->yy_buf_size = size;
+    b->yy_buf_size = (yy_size_t) size;
 
     /* yy_ch_buf has to be 2 characters longer than the size given because
      * we need to put in 2 end-of-buffer characters.
@@ -3265,13 +3267,13 @@ yy_flush_buffer(YY_BUFFER_STATE b)
 
 #ifndef YY_NO_SCAN_BUFFER
 YY_BUFFER_STATE
-yy_scan_buffer(char *base, yy_size_t size)
+yy_scan_buffer(char *bbase, yy_size_t size)
 {
     YY_BUFFER_STATE b;
 
     if (size < 2 ||
-	base[size - 2] != YY_END_OF_BUFFER_CHAR ||
-	base[size - 1] != YY_END_OF_BUFFER_CHAR)
+	bbase[size - 2] != YY_END_OF_BUFFER_CHAR ||
+	bbase[size - 1] != YY_END_OF_BUFFER_CHAR)
 	/* They forgot to leave room for the EOB's. */
 	return 0;
 
@@ -3280,10 +3282,10 @@ yy_scan_buffer(char *base, yy_size_t size)
 	YY_FATAL_ERROR("out of dynamic memory in yy_scan_buffer()");
 
     b->yy_buf_size = size - 2;	/* "- 2" to take care of EOB's */
-    b->yy_buf_pos = b->yy_ch_buf = base;
+    b->yy_buf_pos = b->yy_ch_buf = bbase;
     b->yy_is_our_buffer = 0;
     b->yy_input_file = 0;
-    b->yy_n_chars = b->yy_buf_size;
+    b->yy_n_chars = (int) b->yy_buf_size;
     b->yy_is_interactive = 0;
     b->yy_at_bol = 1;
     b->yy_fill_buffer = 0;
@@ -3318,7 +3320,7 @@ yy_scan_bytes(yyconst char *bytes, int len)
     int i;
 
     /* Get memory for full buffer, including space for trailing EOB's. */
-    n = len + 2;
+    n = (yy_size_t) (len + 2);
     buf = (char *) yy_flex_alloc(n);
     if (!buf)
 	YY_FATAL_ERROR("out of dynamic memory in yy_scan_bytes()");
@@ -3349,7 +3351,7 @@ yy_push_state(int new_state)
 	yy_size_t new_size;
 
 	yy_start_stack_depth += YY_START_STACK_INCR;
-	new_size = yy_start_stack_depth * sizeof(int);
+	new_size = (yy_size_t) yy_start_stack_depth * sizeof(int);
 
 	if (!yy_start_stack)
 	    yy_start_stack = (int *) yy_flex_alloc(new_size);
