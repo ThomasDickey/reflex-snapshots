@@ -1,8 +1,12 @@
--- $Id: NEWS,v 1.17 2009/09/02 23:52:50 tom Exp $
+-- $Id: NEWS,v 1.18 2009/09/04 23:40:34 tom Exp $
 -------------------------------------------------------------------------------
 -- Changes by Thomas E. Dickey
 -- vile:txtmode
 -------------------------------------------------------------------------------
+
+2009/09/0?
+	change ccltbl[] to array of structs holding the reason why a character
+	was added to a character class in addition to the character.
 
 2009/09/02
 	add patch-date to version message.

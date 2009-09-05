@@ -259,10 +259,10 @@ copy_unsigned_string(Char * str)
  *   n - number of elements of v to be sorted
  */
 void
-cshell(Char * v, int n, int special_case_0)
+cshell(CCLTBL * v, int n, int special_case_0)
 {
     int gap, i, j, jg;
-    Char k;
+    CCLTBL k;
 
     for (gap = n / 2; gap > 0; gap = gap / 2) {
 	for (i = gap; i < n; ++i) {
@@ -270,11 +270,11 @@ cshell(Char * v, int n, int special_case_0)
 		jg = j + gap;
 
 		if (special_case_0) {
-		    if (v[jg] == 0)
+		    if (v[jg].ch == 0)
 			break;
-		    else if (v[j] != 0 && v[j] <= v[jg])
+		    else if (v[j].ch != 0 && v[j].ch <= v[jg].ch)
 			break;
-		} else if (v[j] <= v[jg]) {
+		} else if (v[j].ch <= v[jg].ch) {
 		    break;
 		}
 

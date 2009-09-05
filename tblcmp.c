@@ -658,7 +658,7 @@ void
 mktemplate(int state[], int statenum, int comstate)
 {
     int i, numdiff, tmpbase, tmp[CSIZE + 1];
-    Char transset[CSIZE + 1];
+    CCLTBL transset[CSIZE + 1];
     int tsptr;
 
     ++numtemps;
@@ -685,7 +685,8 @@ mktemplate(int state[], int statenum, int comstate)
 	if (state[i] == 0) {
 	    tnxt[tmpbase + i] = 0;
 	} else {
-	    transset[tsptr++] = (Char) i;
+	    transset[tsptr++].ch = (Char) i;
+	    transset[tsptr].why = cCnone;
 	    tnxt[tmpbase + i] = comstate;
 	}
     }
