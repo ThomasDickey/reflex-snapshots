@@ -31,10 +31,10 @@
 #include "flexdef.h"
 
 /* declare functions that have forward references */
-void dump_associated_rules (FILE *, int);
-void dump_transitions (FILE *, int[]);
-void sympartition (int[], int, int[], int[]);
-int symfollowset (int[], int, int, int[]);
+void dump_associated_rules(FILE *, int);
+void dump_transitions(FILE *, int[]);
+void sympartition(int[], int, int[], int[]);
+int symfollowset(int[], int, int, int[]);
 
 /* check_for_backing_up - check a DFA state for backing up
  *
@@ -854,7 +854,7 @@ symfollowset(int ds[], int dsize, int transsym, int nset[])
 		    /* Loop through negated character
 		     * class.
 		     */
-		    ch = ccltbl[ccllist + j];
+		    ch = ccltbl[ccllist + j].ch;
 
 		    if (ch == 0)
 			ch = NUL_ec;
@@ -875,7 +875,7 @@ symfollowset(int ds[], int dsize, int transsym, int nset[])
 		nset[++numstates] = tsp;
 	    } else {
 		for (j = 0; j < lenccl; ++j) {
-		    ch = ccltbl[ccllist + j];
+		    ch = ccltbl[ccllist + j].ch;
 
 		    if (ch == 0)
 			ch = NUL_ec;
@@ -955,7 +955,7 @@ sympartition(int ds[], int numstates, int symlist[], int duplist[])
 		    j = 0;
 
 		    for (k = 0; k < lenccl; ++k) {
-			ich = ccltbl[cclp + k];
+			ich = ccltbl[cclp + k].ch;
 
 			if (ich == 0)
 			    ich = NUL_ec;
@@ -968,7 +968,7 @@ sympartition(int ds[], int numstates, int symlist[], int duplist[])
 			symlist[j] = 1;
 		} else {
 		    for (k = 0; k < lenccl; ++k) {
-			ich = ccltbl[cclp + k];
+			ich = ccltbl[cclp + k].ch;
 
 			if (ich == 0)
 			    ich = NUL_ec;

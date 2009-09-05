@@ -49,11 +49,12 @@ ccl2ecl(void)
 	cclp = cclmap[i];
 
 	for (ccls = 0; ccls < ccllen[i]; ++ccls) {
-	    ich = ccltbl[cclp + ccls];
+	    ich = ccltbl[cclp + ccls].ch;
 	    cclmec = ecgroup[ich];
 
 	    if (cclmec > 0) {
-		ccltbl[cclp + newlen] = (Char) cclmec;
+		ccltbl[cclp + newlen].ch = (Char) cclmec;
+		ccltbl[cclp + newlen].why = ccltbl[cclp + ccls].why;
 		++newlen;
 	    }
 	}
@@ -108,7 +109,7 @@ cre8ecs(int fwd[], int bck[], int num)
  */
 
 void
-mkeccl(Char ccls[], int lenccl, int fwd[], int bck[], int llsiz, int NUL_mapping)
+mkeccl(CCLTBL ccls[], int lenccl, int fwd[], int bck[], int llsiz, int NUL_mapping)
 {
     int cclp, oldec, newec;
     int cclm, i, j;
@@ -121,7 +122,7 @@ mkeccl(Char ccls[], int lenccl, int fwd[], int bck[], int llsiz, int NUL_mapping
     cclp = 0;
 
     while (cclp < lenccl) {
-	cclm = ccls[cclp];
+	cclm = ccls[cclp].ch;
 
 	if (NUL_mapping && cclm == 0)
 	    cclm = NUL_mapping;
@@ -135,10 +136,10 @@ mkeccl(Char ccls[], int lenccl, int fwd[], int bck[], int llsiz, int NUL_mapping
 	    for (; j < lenccl; ++j) {
 		int ccl_char;
 
-		if (NUL_mapping && ccls[j] == 0)
+		if (NUL_mapping && ccls[j].ch == 0)
 		    ccl_char = NUL_mapping;
 		else
-		    ccl_char = ccls[j];
+		    ccl_char = ccls[j].ch;
 
 		if (ccl_char > i)
 		    break;

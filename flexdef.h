@@ -614,7 +614,31 @@ extern int end_of_buffer_state;
 
 extern int lastccl, *cclmap, *ccllen, *cclng, cclreuse;
 extern int current_maxccls, current_max_ccl_tbl_size;
-extern Char *ccltbl;
+
+#define iBIT(n) (1 << (n))
+
+typedef enum {
+    cCnone = iBIT(0)
+    , cCisalnum = iBIT(1)
+    , cCisalpha = iBIT(2)
+    , cCisblank = iBIT(3)
+    , cCiscntrl = iBIT(4)
+    , cCisdigit = iBIT(5)
+    , cCisgraph = iBIT(6)
+    , cCislower = iBIT(7)
+    , cCisprint = iBIT(8)
+    , cCispunct = iBIT(9)
+    , cCisspace = iBIT(10)
+    , cCisupper = iBIT(11)
+    , cCisxdigit = iBIT(12)
+} CCLWHY;
+
+typedef struct {
+    Char ch;
+    CCLWHY why;
+} CCLTBL;
+
+extern CCLTBL *ccltbl;
 
 
 /* Variables for miscellaneous information:
@@ -649,44 +673,53 @@ void *flex_alloc (size_t);
 void *flex_realloc (void*, size_t);
 void flex_free (void*);
 
+#define AllocArray(type,size) \
+	(type *) allocate_array( size, sizeof( type ) )
+
+#define ReallocArray(type,array,size) \
+	(type *) reallocate_array( (void *) array, size, sizeof( type ) )
+
 #define allocate_integer_array(size) \
-	(int *) allocate_array( size, sizeof( int ) )
+	AllocArray(int, size)
 
 #define reallocate_integer_array(array,size) \
-	(int *) reallocate_array( (void *) array, size, sizeof( int ) )
+	ReallocArray(int, array, size)
 
 #define allocate_int_ptr_array(size) \
-	(int **) allocate_array( size, sizeof( int * ) )
+	AllocArray(int *, size)
 
 #define allocate_char_ptr_array(size) \
-	(char **) allocate_array( size, sizeof( char * ) )
+	AllocArray(char *, size)
 
 #define allocate_dfaacc_union(size) \
-	(union dfaacc_union *) \
-		allocate_array( size, sizeof( union dfaacc_union ) )
+	AllocArray(union dfaacc_union, size)
 
 #define reallocate_int_ptr_array(array,size) \
-	(int **) reallocate_array( (void *) array, size, sizeof( int * ) )
+	ReallocArray(int *, array, size)
 
 #define reallocate_char_ptr_array(array,size) \
-	(char **) reallocate_array( (void *) array, size, sizeof( char * ) )
+	ReallocArray(char *, array, size)
 
 #define reallocate_dfaacc_union(array, size) \
-	(union dfaacc_union *) \
-	reallocate_array( (void *) array, size, sizeof( union dfaacc_union ) )
+	ReallocArray(union dfaacc_union, array, size)
 
 #define allocate_character_array(size) \
-	(char *) allocate_array( size, sizeof( char ) )
+	AllocArray(char, size)
 
 #define reallocate_character_array(array,size) \
-	(char *) reallocate_array( (void *) array, size, sizeof( char ) )
+	ReallocArray(char, array, size)
 
 #define allocate_Character_array(size) \
-	(Char *) allocate_array( size, sizeof( Char ) )
+	AllocArray(Char, size)
 
 #define reallocate_Character_array(array,size) \
-	(Char *) reallocate_array( (void *) array, size, sizeof( Char ) )
+	ReallocArray(Char, array, size)
 
+#define allocate_CCLTBL_array(size) \
+	AllocArray(CCLTBL, size)
+
+#define reallocate_CCLTBL_array(array,size) \
+	ReallocArray(CCLTBL, array, size)
 
 /* Used to communicate between scanner and parser.  The type should really
  * be YYSTYPE, but we can't easily get our hands on it.
@@ -699,7 +732,7 @@ extern int yylval;
 
 /* from file ccl.c */
 
-extern void ccladd (int, int);	/* add a single character to a ccl */
+extern void ccladd (int, int, CCLWHY);	/* add a single character to a ccl */
 extern int cclinit (void);	/* make an empty ccl */
 extern void cclnegate (int);	/* negate a ccl */
 
@@ -736,7 +769,7 @@ extern void ccl2ecl (void);
 extern int cre8ecs (int[], int[], int);
 
 /* Update equivalence classes based on character class transitions. */
-extern void mkeccl (Char[], int, int[], int[], int, int);
+extern void mkeccl (CCLTBL[], int, int[], int[], int, int);
 
 /* Create equivalence class for single character. */
 extern void mkechar (int, int[], int[]);
@@ -820,7 +853,7 @@ extern char *copy_string (const char *);
 extern Char *copy_unsigned_string (Char *);
 
 /* Shell sort a character array. */
-extern void cshell (Char [], int, int);
+extern void cshell (CCLTBL [], int, int);
 
 /* Finish up a block of data declarations. */
 extern void dataend (void);

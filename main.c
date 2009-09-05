@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.9 2009/09/02 23:49:06 tom Exp $ */
+/* $Id: main.c,v 1.10 2009/09/04 23:34:18 tom Exp $ */
 /* flex - tool to generate fast lexical analyzers */
 
 /*-
@@ -96,7 +96,7 @@ int *accsiz, *dhash, numas;
 int numsnpairs, jambase, jamstate;
 int lastccl, *cclmap, *ccllen, *cclng, cclreuse;
 int current_maxccls, current_max_ccl_tbl_size;
-Char *ccltbl;
+CCLTBL *ccltbl;
 char nmstr[MAXLINE];
 int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
@@ -1042,7 +1042,7 @@ set_up_initial_allocations(void)
     cclng = allocate_integer_array(current_maxccls);
 
     current_max_ccl_tbl_size = INITIAL_MAX_CCL_TBL_SIZE;
-    ccltbl = allocate_Character_array(current_max_ccl_tbl_size);
+    ccltbl = allocate_CCLTBL_array(current_max_ccl_tbl_size);
 
     current_max_dfa_size = INITIAL_MAX_DFA_SIZE;
 

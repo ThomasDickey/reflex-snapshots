@@ -92,11 +92,13 @@ int previous_continued_action;	/* whether the previous rule's action was '|' */
 	int c; \
 	for ( c = 0; c < csize; ++c ) \
 		if ( func(c) ) \
-			ccladd( currccl, c ); \
+			ccladd( currccl, c, cC##func ); \
 	}
 
 /* While POSIX defines isblank(), it's not ANSI C. */
-#define IS_BLANK(c) ((c) == ' ' || (c) == '\t')
+#ifndef isblank
+#define isblank(c) ((c) == ' ' || (c) == '\t')
+#endif
 
 /* On some over-ambitious machines, such as DEC Alpha's, the default
  * token type is "long" instead of "int"; this leads to problems with
@@ -618,7 +620,7 @@ singleton	:  singleton '*'
 				{
 				/* Create the '.' character class. */
 				anyccl = cclinit();
-				ccladd( anyccl, '\n' );
+				ccladd( anyccl, '\n', cCnone );
 				cclnegate( anyccl );
 
 				if ( useecs )
@@ -702,7 +704,7 @@ ccl		:  ccl CHAR '-' CHAR
 			else
 				{
 				for ( i = $2; i <= $4; ++i )
-					ccladd( $1, i );
+					ccladd( $1, i, cCnone );
 
 				/* Keep track if this ccl is staying in
 				 * alphabetical order.
@@ -719,7 +721,7 @@ ccl		:  ccl CHAR '-' CHAR
 			if ( caseins && $2 >= 'A' && $2 <= 'Z' )
 				$2 = clower( $2 );
 
-			ccladd( $1, $2 );
+			ccladd( $1, $2, cCnone );
 			cclsorted = cclsorted && ($2 > lastchar);
 			lastchar = $2;
 			$$ = $1;
@@ -742,7 +744,7 @@ ccl		:  ccl CHAR '-' CHAR
 
 ccl_expr:	   CCE_ALNUM	{ CCL_EXPR(isalnum) }
 		|  CCE_ALPHA	{ CCL_EXPR(isalpha) }
-		|  CCE_BLANK	{ CCL_EXPR(IS_BLANK) }
+		|  CCE_BLANK	{ CCL_EXPR(isblank) }
 		|  CCE_CNTRL	{ CCL_EXPR(iscntrl) }
 		|  CCE_DIGIT	{ CCL_EXPR(isdigit) }
 		|  CCE_GRAPH	{ CCL_EXPR(isgraph) }

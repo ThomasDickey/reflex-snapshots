@@ -33,7 +33,7 @@
 /* ccladd - add a single character to a ccl */
 
 void
-ccladd(int cclp, int ch)
+ccladd(int cclp, int ch, CCLWHY why)
 {
     int ind, len, newpos, i;
 
@@ -44,9 +44,12 @@ ccladd(int cclp, int ch)
 
     /* check to see if the character is already in the ccl */
 
-    for (i = 0; i < len; ++i)
-	if (ccltbl[ind + i] == ch)
+    for (i = 0; i < len; ++i) {
+	if (ccltbl[ind + i].ch == ch) {
+	    ccltbl[ind + i].why = (CCLWHY) ((unsigned) ccltbl[ind + i].why | (unsigned) why);
 	    return;
+	}
+    }
 
     newpos = ind + len;
 
@@ -55,12 +58,12 @@ ccladd(int cclp, int ch)
 
 	++num_reallocs;
 
-	ccltbl = reallocate_Character_array(ccltbl,
-					    current_max_ccl_tbl_size);
+	ccltbl = reallocate_CCLTBL_array(ccltbl, current_max_ccl_tbl_size);
     }
 
     ccllen[cclp] = len + 1;
-    ccltbl[newpos] = (Char) ch;
+    ccltbl[newpos].ch = (Char) ch;
+    ccltbl[newpos].why = why;
 }
 
 /* cclinit - return an empty ccl */
