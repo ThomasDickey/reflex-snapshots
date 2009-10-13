@@ -33,6 +33,10 @@
 
 #include "config.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef __TURBOC__
 #define HAVE_STRING_H 1
 #define MS_DOS 1
@@ -419,7 +423,7 @@ extern int yymore_really_used, reject_really_used;
 
 extern int datapos, dataline, linenum, out_linenum;
 extern FILE *skelfile, *yyin, *backing_up_file;
-extern const char *skel[];
+extern const char *const skel[];
 extern int skel_ind;
 extern char *infilename, *outfilename;
 extern int did_outfilename;
@@ -777,41 +781,6 @@ extern void mkechar (int, int[], int[]);
 
 /* from file gen.c */
 
-/* Generate the code to keep backing-up information. */
-extern void gen_backing_up (void);
-
-/* Generate the code to perform the backing up. */
-extern void gen_bu_action (void);
-
-/* Generate full speed compressed transition table. */
-extern void genctbl (void);
-
-/* Generate the code to find the action number. */
-extern void gen_find_action (void);
-
-extern void genftbl (void);	/* generate full transition table */
-
-/* Generate the code to find the next compressed-table state. */
-extern void gen_next_compressed_state (char*);
-
-/* Generate the code to find the next match. */
-extern void gen_next_match (void);
-
-/* Generate the code to find the next state. */
-extern void gen_next_state (int);
-
-/* Generate the code to make a NUL transition. */
-extern void gen_NUL_trans (void);
-
-/* Generate the code to find the start state. */
-extern void gen_start_state (void);
-
-/* Generate data statements for the transition tables. */
-extern void gentabs (void);
-
-/* Write out a formatted string at the current indentation level. */
-extern void indent_put2s (char[], char[]);
-
 extern void make_tables (void);	/* generate transition tables */
 
 
@@ -825,7 +794,7 @@ extern void usage (void);
 /* from file misc.c */
 
 /* Add a #define to the action file. */
-extern void action_define ( char *defname, int value );
+extern void action_define ( const char *defname, int value );
 
 /* Add the given text to the stored actions. */
 extern void add_action ( const char *new_text );
@@ -923,7 +892,7 @@ extern void do_indent (void);	/* indent to the current level */
 /* Return a printable version of the given character, which might be
  * 8-bit.
  */
-extern char *readable_form (int);
+extern const char *readable_form (int);
 
 /* Write out one section of the skeleton file. */
 extern void skelout (void);
@@ -986,22 +955,22 @@ extern void new_rule (void);	/* initialize for a new rule */
 extern void build_eof_action (void);
 
 /* Write out a message formatted with one string, pinpointing its location. */
-extern void format_pinpoint_message (char[], char[]);
+extern void format_pinpoint_message (const char[], const char[]);
 
 /* Write out a message, pinpointing its location. */
-extern void pinpoint_message (char[]);
+extern void pinpoint_message (const char[]);
 
 /* Write out a warning, pinpointing it at the given line. */
-extern void line_warning ( char[], int );
+extern void line_warning ( const char[], int );
 
 /* Write out a message, pinpointing it at the given line. */
-extern void line_pinpoint ( char[], int );
+extern void line_pinpoint ( const char[], int );
 
 /* Report a formatted syntax error. */
-extern void format_synerr (char [], char[]);
-extern void synerr (char []);	/* report a syntax error */
-extern void format_warn (char [], char[]);
-extern void warn (char []);	/* report a warning */
+extern void format_synerr (const char [], char[]);
+extern void synerr (const char []);	/* report a syntax error */
+extern void format_warn (const char [], char[]);
+extern void warn (const char []);	/* report a warning */
 extern void yyerror (char []);	/* report a parse error */
 extern int yyparse (void);	/* the YACC parser */
 
@@ -1071,3 +1040,7 @@ extern void stack1 (int, int, int, int);
 /* from file yylex.c */
 
 extern int yylex (void);
+
+#ifdef __cplusplus
+}
+#endif

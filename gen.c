@@ -30,25 +30,30 @@
 
 #include "flexdef.h"
 
-/* declare functions that have forward references */
-
-void gen_next_state(int);
-void genecs(void);
-void indent_put2s(char[], char[]);
-
 /* Almost everything is done in terms of arrays starting at 1, so provide
  * a null entry for the zero element of all C arrays.  (The exception
  * to this is that the fast table representation generally uses the
  * 0 elements of its arrays, too.)
  */
-static char C_int_decl[] = "static yyconst int %s[%d] =\n    {   0,\n";
-static char C_short_decl[] = "static yyconst short int %s[%d] =\n    {   0,\n";
-static char C_long_decl[] = "static yyconst long int %s[%d] =\n    {   0,\n";
-static char C_state_decl[] =
+static const char C_int_decl[] = "static yyconst int %s[%d] =\n    {   0,\n";
+static const char C_short_decl[] = "static yyconst short int %s[%d] =\n    {   0,\n";
+static const char C_long_decl[] = "static yyconst long int %s[%d] =\n    {   0,\n";
+static const char C_state_decl[] =
 "static yyconst yy_state_type %s[%d] =\n    {   0,\n";
 
+/* Write out a formatted string (with a secondary string argument) at the
+ * current indentation level, adding a final newline.
+ */
+static void
+indent_put2s(const char fmt[], const char arg[])
+{
+    do_indent();
+    out_str(fmt, arg);
+    outc('\n');
+}
+
 /* Generate the code to keep backing-up information. */
-void
+static void
 gen_backing_up(void)
 {
     if (reject || num_backing_up == 0)
@@ -67,7 +72,7 @@ gen_backing_up(void)
 }
 
 /* Generate the code to perform the backing up. */
-void
+static void
 gen_bu_action(void)
 {
     if (reject || num_backing_up == 0)
@@ -95,8 +100,80 @@ gen_bu_action(void)
     indent_down();
 }
 
+/* Generate character-class tables */
+static void
+genccl(void)
+{
+    int i, j, mapped;
+    unsigned mask, bits;
+
+    if (trace) {
+	fputs(_("\n\nCharacter Classes:\n\n"), stderr);
+
+	for (i = 1; i < lastccl; ++i) {
+	    fprintf(stderr, "%d size %d\n", i, ccllen[i]);
+
+	    mapped = cclmap[i];
+	    mask = 0;
+	    for (j = 0; j < ccllen[i]; ++j) {
+		mask |= ccltbl[j + mapped].why;
+	    }
+	    for (bits = 1; bits <= mask; bits <<= 1) {
+		if (bits & mask) {
+		    fprintf(stderr, "class %#x \"", bits);
+		    for (j = 0; j < ccllen[i]; ++j) {
+			if (bits & ccltbl[j + mapped].why) {
+			    fprintf(stderr, "%s",
+				    readable_form(ccltbl[j + mapped].ch));
+			}
+		    }
+		    fprintf(stderr, "\"\n");
+		}
+	    }
+	}
+    }
+}
+
+/* Generate equivalence-class tables. */
+static void
+genecs(void)
+{
+    int i, j;
+    int numrows;
+
+    genccl();
+    out_str_dec(C_int_decl, "yy_ec", csize);
+
+    for (i = 1; i < csize; ++i) {
+	if (caseins && (i >= 'A') && (i <= 'Z'))
+	    ecgroup[i] = ecgroup[clower(i)];
+
+	ecgroup[i] = ABS(ecgroup[i]);
+	mkdata(ecgroup[i]);
+    }
+
+    dataend();
+
+    if (trace) {
+	fputs(_("\n\nEquivalence Classes:\n\n"), stderr);
+
+	numrows = csize / 8;
+
+	for (j = 0; j < numrows; ++j) {
+	    for (i = j; i < csize; i = i + numrows) {
+		fprintf(stderr, "%4s = %-2d",
+			readable_form(i), ecgroup[i]);
+
+		putc(' ', stderr);
+	    }
+
+	    putc('\n', stderr);
+	}
+    }
+}
+
 /* genctbl - generates full speed compressed transition table */
-void
+static void
 genctbl(void)
 {
     int i;
@@ -186,45 +263,8 @@ genctbl(void)
 	genecs();
 }
 
-/* Generate equivalence-class tables. */
-void
-genecs(void)
-{
-    int i, j;
-    int numrows;
-
-    out_str_dec(C_int_decl, "yy_ec", csize);
-
-    for (i = 1; i < csize; ++i) {
-	if (caseins && (i >= 'A') && (i <= 'Z'))
-	    ecgroup[i] = ecgroup[clower(i)];
-
-	ecgroup[i] = ABS(ecgroup[i]);
-	mkdata(ecgroup[i]);
-    }
-
-    dataend();
-
-    if (trace) {
-	fputs(_("\n\nEquivalence Classes:\n\n"), stderr);
-
-	numrows = csize / 8;
-
-	for (j = 0; j < numrows; ++j) {
-	    for (i = j; i < csize; i = i + numrows) {
-		fprintf(stderr, "%4s = %-2d",
-			readable_form(i), ecgroup[i]);
-
-		putc(' ', stderr);
-	    }
-
-	    putc('\n', stderr);
-	}
-    }
-}
-
 /* Generate the code to find the action number. */
-void
+static void
 gen_find_action(void)
 {
     if (fullspd)
@@ -338,7 +378,7 @@ gen_find_action(void)
 }
 
 /* genftbl - generate full transition table */
-void
+static void
 genftbl(void)
 {
     int i;
@@ -370,7 +410,7 @@ genftbl(void)
 }
 
 /* Generate the code to find the next compressed-table state. */
-void
+static void
 gen_next_compressed_state(char *char_map)
 {
     indent_put2s("YY_CHAR yy_c = (YY_CHAR) %s;", char_map);
@@ -409,20 +449,76 @@ gen_next_compressed_state(char *char_map)
     outn("yy_current_state = (yy_nxt[yy_base[yy_current_state] + yy_c]);");
 }
 
+/* Generate the code to find the next state. */
+static void
+gen_next_state(int worry_about_NULs)
+{				/* NOTE - changes in here should be reflected in gen_next_match() */
+    char char_map[256];
+
+    if (worry_about_NULs && !nultrans) {
+	if (useecs)
+	    (void) sprintf(char_map,
+			   "(*yy_cp ? yy_ec[YY_SC_TO_UI(*yy_cp)] : %d)",
+			   NUL_ec);
+	else
+	    (void) sprintf(char_map,
+			   "(*yy_cp ? YY_SC_TO_UI(*yy_cp) : %d)", NUL_ec);
+    }
+
+    else
+	strcpy(char_map, useecs ?
+	       "yy_ec[YY_SC_TO_UI(*yy_cp)]" : "YY_SC_TO_UI(*yy_cp)");
+
+    if (worry_about_NULs && nultrans) {
+	if (!fulltbl && !fullspd)
+	    /* Compressed tables back up *before* they match. */
+	    gen_backing_up();
+
+	outn("if (*yy_cp) {");	/* } for vi */
+	indent_up();
+    }
+
+    if (fulltbl)
+	indent_put2s("yy_current_state = yy_nxt[yy_current_state][%s];",
+		     char_map);
+
+    else if (fullspd)
+	indent_put2s("yy_current_state += yy_current_state[%s].yy_nxt;",
+		     char_map);
+
+    else
+	gen_next_compressed_state(char_map);
+
+    if (worry_about_NULs && nultrans) {
+	/* { for vi */
+	indent_down();
+	outn("} else");
+	indent_up();
+	outn("yy_current_state = yy_NUL_trans[yy_current_state];");
+	indent_down();
+    }
+
+    if (fullspd || fulltbl)
+	gen_backing_up();
+
+    if (reject)
+	outn("*yy_state_ptr++ = yy_current_state;");
+}
+
 /* Generate the code to find the next match. */
-void
+static void
 gen_next_match(void)
 {
     /* NOTE - changes in here should be reflected in gen_next_state() and
      * gen_NUL_trans().
      */
-    char *char_map = useecs ?
-    "yy_ec[YY_SC_TO_UI(*yy_cp)]" :
-    "YY_SC_TO_UI(*yy_cp)";
+    const char *char_map = (useecs
+			    ? "yy_ec[YY_SC_TO_UI(*yy_cp)]"
+			    : "YY_SC_TO_UI(*yy_cp)");
 
-    char *char_map_2 = useecs ?
-    "yy_ec[YY_SC_TO_UI(*++yy_cp)]" :
-    "YY_SC_TO_UI(*++yy_cp)";
+    const char *char_map_2 = (useecs
+			      ? "yy_ec[YY_SC_TO_UI(*++yy_cp)]"
+			      : "YY_SC_TO_UI(*++yy_cp)");
 
     if (fulltbl) {
 	indent_put2s("while ((yy_current_state = yy_nxt[yy_current_state][%s]) > 0)",
@@ -505,64 +601,8 @@ gen_next_match(void)
     }
 }
 
-/* Generate the code to find the next state. */
-void
-gen_next_state(int worry_about_NULs)
-{				/* NOTE - changes in here should be reflected in gen_next_match() */
-    char char_map[256];
-
-    if (worry_about_NULs && !nultrans) {
-	if (useecs)
-	    (void) sprintf(char_map,
-			   "(*yy_cp ? yy_ec[YY_SC_TO_UI(*yy_cp)] : %d)",
-			   NUL_ec);
-	else
-	    (void) sprintf(char_map,
-			   "(*yy_cp ? YY_SC_TO_UI(*yy_cp) : %d)", NUL_ec);
-    }
-
-    else
-	strcpy(char_map, useecs ?
-	       "yy_ec[YY_SC_TO_UI(*yy_cp)]" : "YY_SC_TO_UI(*yy_cp)");
-
-    if (worry_about_NULs && nultrans) {
-	if (!fulltbl && !fullspd)
-	    /* Compressed tables back up *before* they match. */
-	    gen_backing_up();
-
-	outn("if (*yy_cp) {");	/* } for vi */
-	indent_up();
-    }
-
-    if (fulltbl)
-	indent_put2s("yy_current_state = yy_nxt[yy_current_state][%s];",
-		     char_map);
-
-    else if (fullspd)
-	indent_put2s("yy_current_state += yy_current_state[%s].yy_nxt;",
-		     char_map);
-
-    else
-	gen_next_compressed_state(char_map);
-
-    if (worry_about_NULs && nultrans) {
-	/* { for vi */
-	indent_down();
-	outn("} else");
-	indent_up();
-	outn("yy_current_state = yy_NUL_trans[yy_current_state];");
-	indent_down();
-    }
-
-    if (fullspd || fulltbl)
-	gen_backing_up();
-
-    if (reject)
-	outn("*yy_state_ptr++ = yy_current_state;");
-}
-
 /* Generate the code to make a NUL transition. */
-void
+static void
 gen_NUL_trans(void)
 {				/* NOTE - changes in here should be reflected in gen_next_match() */
     /* Only generate a definition for "yy_cp" if we'll generate code
@@ -638,7 +678,7 @@ gen_NUL_trans(void)
 }
 
 /* Generate the code to find the start state. */
-void
+static void
 gen_start_state(void)
 {
     if (fullspd) {
@@ -661,7 +701,7 @@ gen_start_state(void)
 }
 
 /* gentabs - generate data statements for the transition tables */
-void
+static void
 gentabs(void)
 {
     int i, j, k, *accset, nacc, *acc_array, total_states;
@@ -894,17 +934,6 @@ gentabs(void)
     out_str("/* %s */\n", "*INDENT-ON*");
 }
 
-/* Write out a formatted string (with a secondary string argument) at the
- * current indentation level, adding a final newline.
- */
-void
-indent_put2s(char fmt[], char arg[])
-{
-    do_indent();
-    out_str(fmt, arg);
-    outc('\n');
-}
-
 /* make_tables - generate transition tables and finishes generating output file
  */
 void
@@ -961,9 +990,11 @@ make_tables(void)
 	 * enough to hold the biggest offset.
 	 */
 	int total_table_size = tblend + numecs + 1;
-	char *trans_offset_type =
-	(total_table_size >= MAX_SHORT || long_align) ?
-	"long" : "short";
+	const char *trans_offset_type = (
+					    (total_table_size >= MAX_SHORT
+					     || long_align)
+					    ? "long"
+					    : "short");
 
 	set_indent(0);
 	outn("struct yy_trans_info");

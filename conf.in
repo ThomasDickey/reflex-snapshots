@@ -30,4 +30,6 @@
 /* Define if platform-specific command line handling is necessary.  */
 #undef NEED_ARGV_FIXUP
 
-/* vile:cmode */
+/*
+ * vile:cmode
+ */

@@ -34,12 +34,13 @@
 
 /* yylex - scan for a regular expression token */
 
+extern char *yytext;
+
 int
 yylex(void)
 {
     int toktype;
     static int beglin = false;
-    extern char *yytext;
 
     if (eofseen)
 	toktype = EOF;

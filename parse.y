@@ -77,7 +77,7 @@ char *alloca ();
 /* Bletch, ^^^^ that was ugly! */
 
 
-int pat, scnum, eps, headcnt, trailcnt, anyccl, lastchar, i, rulelen;
+int pat, scnum, eps, headcnt, trailcnt, anyccl, lastchar, rulelen;
 int trlcontxt, xcluflg, currccl, cclsorted, varlength, variable_trail_rule;
 
 int *scon_stk;
@@ -113,7 +113,7 @@ int previous_continued_action;	/* whether the previous rule's action was '|' */
 %%
 goal		:  initlex sect1 sect1end sect2 initforrule
 			{ /* add default rule */
-			int def_rule;
+			int def_rule, i;
 
 			pat = cclinit();
 			cclnegate( pat );
@@ -220,7 +220,8 @@ initforrule	:
 		;
 
 flexrule	:  '^' rule
-			{
+			{ int i;
+
 			pat = $2;
 			finish_rule( pat, variable_trail_rule,
 				headcnt, trailcnt );
@@ -256,7 +257,8 @@ flexrule	:  '^' rule
 			}
 
 		|  rule
-			{
+			{ int i;
+
 			pat = $1;
 			finish_rule( pat, variable_trail_rule,
 				headcnt, trailcnt );
@@ -280,7 +282,8 @@ flexrule	:  '^' rule
 			}
 
 		|  EOF_OP
-			{
+			{ int i;
+
 			if ( scon_stk_ptr > 0 )
 				build_eof_action();
 
@@ -314,7 +317,8 @@ scon		:  '<' scon_stk_ptr namelist2 '>'
 			{ $$ = $2; }
 
 		|  '<' '*' '>'
-			{
+			{ int i;
+
 			$$ = scon_stk_ptr;
 
 			for ( i = 1; i <= lastsc; ++i )
@@ -343,7 +347,8 @@ namelist2	:  namelist2 ',' sconname
 		;
 
 sconname	:  NAME
-			{
+			{ int i;
+
 			if ( (scnum = sclookup( nmstr )) == 0 )
 				format_pinpoint_message(
 					"undeclared start condition %s",
@@ -689,7 +694,8 @@ fullccl		:  '[' ccl ']'
 		;
 
 ccl		:  ccl CHAR '-' CHAR
-			{
+			{ int i;
+
 			if ( caseins )
 				{
 				if ( $2 >= 'A' && $2 <= 'Z' )
@@ -813,7 +819,7 @@ void build_eof_action(void)
 
 /* format_synerr - write out formatted syntax error */
 
-void format_synerr(char msg[], char arg[])
+void format_synerr(const char msg[], char arg[])
 {
 	char errmsg[MAXLINE];
 
@@ -823,7 +829,7 @@ void format_synerr(char msg[], char arg[])
 
 /* synerr - report a syntax error */
 
-void synerr(char str[])
+void synerr(const char str[])
 {
 	syntaxerror = true;
 	pinpoint_message( str );
@@ -831,7 +837,7 @@ void synerr(char str[])
 
 /* format_warn - write out formatted warning */
 
-void format_warn(char msg[], char arg[])
+void format_warn(const char msg[], char arg[])
 {
 	char warn_msg[MAXLINE];
 
@@ -841,7 +847,7 @@ void format_warn(char msg[], char arg[])
 
 /* warn - report a warning, unless -w was given */
 
-void warn(char str[])
+void warn(const char str[])
 {
 	line_warning( str, linenum );
 }
@@ -850,7 +856,7 @@ void warn(char str[])
  *			     pinpointing its location
  */
 
-void format_pinpoint_message(char msg[], char arg[])
+void format_pinpoint_message(const char msg[], const char arg[])
 {
 	char errmsg[MAXLINE];
 
@@ -860,14 +866,14 @@ void format_pinpoint_message(char msg[], char arg[])
 
 /* pinpoint_message - write out a message, pinpointing its location */
 
-void pinpoint_message(char str[])
+void pinpoint_message(const char str[])
 {
 	line_pinpoint( str, linenum );
 }
 
 /* line_warning - report a warning at a given line, unless -w was given */
 
-void line_warning(char str[], int line)
+void line_warning(const char str[], int line)
 {
 	char warning[MAXLINE];
 
@@ -879,7 +885,7 @@ void line_warning(char str[], int line)
 
 /* line_pinpoint - write out a message, pinpointing it at the given line */
 
-void line_pinpoint(char str[], int line)
+void line_pinpoint(const char str[], int line)
 {
 	fprintf( stderr, "\"%s\", line %d: %s\n", infilename, line, str );
 }

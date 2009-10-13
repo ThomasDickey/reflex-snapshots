@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.10 2009/09/04 23:34:18 tom Exp $ */
+/* $Id: main.c,v 1.11 2009/10/13 09:09:13 tom Exp $ */
 /* flex - tool to generate fast lexical analyzers */
 
 /*-
@@ -112,11 +112,11 @@ int num_input_files;
 char *program_name = "flex";
 
 #ifndef SHORT_FILE_NAMES
-static char *outfile_template = "lex.%s.%s";
-static char *backing_name = "lex.backup";
+static const char *outfile_template = "lex.%s.%s";
+static const char *backing_name = "lex.backup";
 #else
-static char *outfile_template = "lex%s.%s";
-static char *backing_name = "lex.bck";
+static const char *outfile_template = "lex%s.%s";
+static const char *backing_name = "lex.bck";
 #endif
 
 #ifdef THINK_C
@@ -270,7 +270,7 @@ check_options(void)
 	FILE *prev_stdout;
 
 	if (!did_outfilename) {
-	    char *suffix;
+	    const char *suffix;
 
 	    if (C_plus_plus)
 		suffix = "cc";
@@ -572,7 +572,7 @@ flexinit(int argc, char **argv)
     do_yywrap = gen_line_dirs = usemecs = useecs = true;
     performance_report = 0;
     did_outfilename = 0;
-    prefix = "yy";
+    prefix = copy_string("yy");
     yyclass = 0;
     use_read = use_stdout = false;
 

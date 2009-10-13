@@ -1,10 +1,13 @@
--- $Id: NEWS,v 1.18 2009/09/04 23:40:34 tom Exp $
+-- $Id: NEWS,v 1.19 2009/10/13 09:15:27 tom Exp $
 -------------------------------------------------------------------------------
 -- Changes by Thomas E. Dickey
 -- vile:txtmode
 -------------------------------------------------------------------------------
 
-2009/09/0?
+2009/10/13
+	more gcc warning fixes, including workaround for defective
+	implementation of atttribute warn_unused_result.
+
 	change ccltbl[] to array of structs holding the reason why a character
 	was added to a character class in addition to the character.
 

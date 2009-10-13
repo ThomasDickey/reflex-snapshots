@@ -375,17 +375,17 @@ static yyconst int yy_ec[256] =
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,   25,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+       25,    1,    1,    1,    1,   25,    1,    1,    1,    1,
+        1,   25,   25,   25,   25,   25,   25,   25,   25,   25,
 
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1
+       25,   25,   25,   25,   25,   25,   25,   25,   25,   25,
+       25,   25,   25,   25,    1,   25,   25,   25,   25,   25,
+       25,   25,   25,   25,   25,   25,   25,   25,   25,   25,
+       25,   25,   25,   25,   25,   25,   25,   25,   25,   25,
+       25,   25,   25,   25,   25,   25,    1,   25,   25,   25,
+       25,   25,   25,   25,   25
     } ;
 static yyconst int yy_meta[59] =
     {   0,
@@ -1387,13 +1387,20 @@ YY_MALLOC_DECL
 #define YY_READ_BUF_SIZE 8192
 #endif
 
+/* workaround for defective implementation of gcc attribute warn_unused_result */
+#if defined(__GNUC__) && defined(_FORTIFY_SOURCE)
+#define YY_IGNORE_RC(func) do { if (func != 0) {} } while(0)
+#else
+#define YY_IGNORE_RC(func) (void) func
+#endif /* gcc workaround */
+
 /* Copy whatever the last rule matched to the standard output. */
 
 #ifndef ECHO
 /* This used to be an fputs(), but since the string might contain NUL's,
  * we now use fwrite().
  */
-#define ECHO (void) fwrite(yytext, (size_t) yyleng, 1, yyout)
+#define ECHO YY_IGNORE_RC(fwrite(yytext, (size_t) yyleng, 1, yyout))
 #endif
 
 /* Gets input and stuffs it into "buf".  number of characters read, or YY_NULL,
@@ -1496,7 +1503,7 @@ YY_DECL
 	Char nmdef[MAXLINE];
 
 
-#line 1500 "scan.c"
+#line 1507 "scan.c"
 
     if (yy_init) {
 	yy_init = 0;
@@ -2720,7 +2727,7 @@ YY_DECL
 #line 645 "scan.l"
 	    YY_FATAL_ERROR("flex scanner jammed");
 	    YY_BREAK
-#line 2724 "scan.c"
+#line 2731 "scan.c"
 	case YY_STATE_EOF(INITIAL):
 	case YY_STATE_EOF(SECT2):
 	case YY_STATE_EOF(CODEBLOCK):

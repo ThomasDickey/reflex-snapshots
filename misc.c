@@ -31,7 +31,7 @@
 #include "flexdef.h"
 
 void
-action_define(char *defname, int value)
+action_define(const char *defname, int value)
 {
     char buf[MAXLINE];
 
@@ -757,7 +757,7 @@ outn(const char *str)
  *
  * The returned string is in static storage.
  */
-char *
+const char *
 readable_form(int c)
 {
     static char rform[10];

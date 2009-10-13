@@ -32,8 +32,8 @@
 
 /* declare functions that have forward references */
 
-int dupmachine (int);
-void mkxtion (int, int);
+int dupmachine(int);
+void mkxtion(int, int);
 
 /* add_accept - add an accepting state to a machine
  *
@@ -218,10 +218,11 @@ finish_rule(int mach, int variable_trail_rule, int headcnt, int trailcnt)
 	    /* Do trailing context magic to not match the trailing
 	     * characters.
 	     */
-	    char *scanner_cp = "yy_c_buf_p = yy_cp";
-	    char *scanner_bp = "yy_bp";
+	    const char *scanner_cp = "yy_c_buf_p = yy_cp";
+	    const char *scanner_bp = "yy_bp";
 
-	    add_ind_action(3, "*yy_cp = yy_hold_char;\t/* undo effects of setting up yytext */\n");
+	    add_ind_action(3,
+			   "*yy_cp = yy_hold_char;\t/* undo effects of setting up yytext */\n");
 
 	    if (headcnt > 0) {
 		sprintf(action_text, "%s = %s + %d;\n",
@@ -235,7 +236,8 @@ finish_rule(int mach, int variable_trail_rule, int headcnt, int trailcnt)
 		add_ind_action(3, action_text);
 	    }
 
-	    add_ind_action(3, "YY_DO_BEFORE_ACTION;\t/* set up yytext again */\n");
+	    add_ind_action(3,
+			   "YY_DO_BEFORE_ACTION;\t/* set up yytext again */\n");
 	}
     }
 
