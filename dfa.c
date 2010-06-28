@@ -465,10 +465,10 @@ ntod(void)
 	 */
     }
 
-    if (fullspd) {
-	for (i = 0; i <= numecs; ++i)
-	    state[i] = 0;
+    memset(state, 0, sizeof(state));
+    memset(targstate, 0, sizeof(targstate));
 
+    if (fullspd) {
 	place_state(state, 0, 0);
 	dfaacc[0].dfaacc_state = 0;
     } else if (fulltbl) {

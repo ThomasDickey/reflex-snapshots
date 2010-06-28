@@ -1,3 +1,4 @@
+/* $Id: sym.c,v 1.7 2010/06/27 17:47:05 tom Exp $ */
 /* sym - symbol table routines */
 
 /*-
@@ -32,7 +33,7 @@
 
 /* declare functions that have forward references */
 
-int hashfunct (char[], int);
+int hashfunct(char[], int);
 
 struct hash_entry *ndtbl[NAME_TABLE_HASH_SIZE];
 struct hash_entry *sctbl[START_COND_HASH_SIZE];
@@ -65,6 +66,8 @@ addsym(char sym[], char *str_def, int int_def, hash_table table, int table_size)
 
     if (new_entry == NULL)
 	flexfatal(_("symbol table memory allocation failed"));
+
+    assert(new_entry != NULL);
 
     if ((successor = table[hash_val]) != 0) {
 	new_entry->next = successor;
@@ -185,7 +188,7 @@ scextend(void)
  *    The start condition is "exclusive" if xcluflg is true.
  */
 void
-scinstal(char str[], int xcluflg)
+scinstal(const char *str, int xcluflg)
 {
 
     /* Generate start condition definition, for use in BEGIN et al. */
