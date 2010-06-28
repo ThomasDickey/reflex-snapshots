@@ -894,6 +894,7 @@ void line_pinpoint(const char str[], int line)
  *	     currently, messages are ignore
  */
 
-void yyerror(char msg[])
+void yyerror(const char *msg)
 {
+	(void) msg;
 }

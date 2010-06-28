@@ -1,66 +1,93 @@
--- $Id: NEWS,v 1.19 2009/10/13 09:15:27 tom Exp $
+-- $Id: NEWS,v 1.28 2010/06/27 19:06:30 tom Exp $
 -------------------------------------------------------------------------------
 -- Changes by Thomas E. Dickey
 -- vile:txtmode
 -------------------------------------------------------------------------------
 
-2009/10/13
-	more gcc warning fixes, including workaround for defective
-	implementation of atttribute warn_unused_result.
+2010/06/27
+	+ improve rename.sh, handling "FLEX" and "Flex" cases.
 
-	change ccltbl[] to array of structs holding the reason why a character
-	was added to a character class in addition to the character.
+	+ add configure checks for lint and tags programs.
+
+	+ add $DESTDIR to makefile.
+
+	+ drop mkdirs.sh, use "mkdir -p"
+
+	+ add build-scripts for RPM and Debian packages.
+
+	+ updates to configure script macros:
+	  + CF_ADD_CFLAGS, CF_ARG_OPTION, CF_INTEL_COMPILER, CF_POSIX_C_SOURCE,
+	    CF_XOPEN_SOURCE quoted params of ifelse()
+	  + CF_GCC_WARNINGS, change logic for warning options, to work with c89
+	    wrapper for gcc
+	  + CF_GCC_VERSION, discard stderr, to work with c89 wrapper for gcc
+	  + CF_DISABLE_ECHO, uses different
+	    indent
+
+	+ updated config.guess, config.sub
+
+2009/10/27
+	+ add configure macro CF_XOPEN_SOURCE, to enable use of fileno() when
+	  compiling byacc output with c99.
+
+2009/10/13
+	+ more gcc warning fixes, including workaround for defective
+	  implementation of atttribute warn_unused_result.
+
+	+ change ccltbl[] to array of structs holding the reason why a
+	  character was added to a character class in addition to the
+	  character.
 
 2009/09/02
-	add patch-date to version message.
+	+ add patch-date to version message.
 
-	modify generated code to eliminate gcc -Wconversion warnings.
+	+ modify generated code to eliminate gcc -Wconversion warnings.
 
-	update utility scripts, using install-sh and mkdirs.sh
+	+ update utility scripts, using install-sh and mkdirs.sh
 
-	update config.guess, config.sub
+	+ updated config.guess, config.sub
 
 2008/11/17
-	modify makefile rules and runtime handling of skeleton to make the
-	C++ header file work using the same program prefix.
+	+ modify makefile rules and runtime handling of skeleton to make the
+	  C++ header file work using the same program prefix.
 
-	update FlexLexer.h to C++ standard header and namespace.
+	+ update FlexLexer.h to C++ standard header and namespace.
 
-	change default for --program-prefix option, to "re", making this
-	install as "reflex".
+	+ change default for --program-prefix option, to "re", making this
+	  install as "reflex".
 
 2008/11/16
-	add a missing ifdef for YY_NO_INPUT, needed to make the function
-	actually removed.
+	+ add a missing ifdef for YY_NO_INPUT, needed to make the function
+	  actually removed.
 
-	move C-code supporting YY_FATAL_ERROR() in skeleton so that if the
-	macro is overridden, then the support-code will not be compiled.
-	That eliminates unused-code warnings.
+	+ move C-code supporting YY_FATAL_ERROR() in skeleton so that if the
+	  macro is overridden, then the support-code will not be compiled.
+	  That eliminates unused-code warnings.
 
-	modify makefile rule for "make check" to ensure that it uses POSIX
-	locale, since the reference file is generated that way.
+	+ modify makefile rule for "make check" to ensure that it uses POSIX
+	  locale, since the reference file is generated that way.
 
-	eliminate use of isascii(), which prevented flex from parsing according
-	to 8-bit locales.
+	+ eliminate use of isascii(), which prevented flex from parsing
+	  according to 8-bit locales.
 
-	modify makefile to work with AC_EXEEXT and AC_OBJEXT macros.
+	+ modify makefile to work with AC_EXEEXT and AC_OBJEXT macros.
 
-	add configure --disable-echo and --enable-warnings options.
+	+ add configure --disable-echo and --enable-warnings options.
 
-	eliminate register keyword.
+	+ eliminate register keyword.
 
 2008/11/14
-	modify skeleton and code-generator to improve indentation of generated
-	file for better readability.
+	+ modify skeleton and code-generator to improve indentation of generated
+	  file for better readability.
 
 2008/11/12
-	update configure script, adding ability to rename executable during
-	install, e.g., as "reflex".
+	+ update configure script, adding ability to rename executable during
+	  install, e.g., as "reflex".
 
 2008/07/26
-	eliminate PROTO(), YY_PROTO and YY_USE_PROTOS macros.
-	ANSIfy'd all of the C files.
-	indent'd all of the C files.
+	+ eliminate PROTO(), YY_PROTO and YY_USE_PROTOS macros.
+	+ ANSIfy'd all of the C files.
+	+ indent'd all of the C files.
 
 -------------------------------------------------------------------------------
 -- Changes by Verne Paxson

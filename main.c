@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.11 2009/10/13 09:09:13 tom Exp $ */
+/* $Id: main.c,v 1.12 2010/06/27 17:33:32 tom Exp $ */
 /* flex - tool to generate fast lexical analyzers */
 
 /*-
@@ -67,9 +67,11 @@ FILE *skelfile = NULL;
 int skel_ind = 0;
 char *action_array;
 int action_size, defs1_offset, prolog_offset, action_offset, action_index;
-char *infilename = NULL, *outfilename = NULL;
+char *infilename = NULL;
+const char *outfilename = NULL;
 int did_outfilename;
-char *prefix, *yyclass;
+const char *prefix;
+char *yyclass;
 int do_stdinit, use_stdout;
 int onestate[ONE_STACK_SIZE], onesym[ONE_STACK_SIZE];
 int onenext[ONE_STACK_SIZE], onedef[ONE_STACK_SIZE], onesp;
@@ -109,7 +111,7 @@ int num_input_files;
 /* Make sure program_name is initialized so we don't crash if writing
  * out an error message before getting the program name from argv[0].
  */
-char *program_name = "flex";
+const char *program_name = "flex";
 
 #ifndef SHORT_FILE_NAMES
 static const char *outfile_template = "lex.%s.%s";
@@ -129,7 +131,7 @@ extern unsigned _stklen = 16384;
 
 static char outfile_path[MAXLINE];
 static int outfile_created = 0;
-static char *skelname = NULL;
+static const char *skelname = NULL;
 
 int
 main(int argc, char **argv)
@@ -561,7 +563,7 @@ void
 flexinit(int argc, char **argv)
 {
     int i, sawcmpflag;
-    char *arg;
+    const char *arg;
 
     printstats = syntaxerror = trace = spprdflt = caseins = false;
     lex_compat = C_plus_plus = backing_up_report = ddebug = fulltbl = false;

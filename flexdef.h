@@ -1,3 +1,4 @@
+/* $Id: flexdef.h,v 1.22 2010/06/27 17:49:36 tom Exp $ */
 /* flexdef - definitions file for flex */
 
 /*-
@@ -72,6 +73,8 @@ extern "C" {
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+
+#include <assert.h>
 
 /* As an aid for the internationalization patch to flex, which
  * is maintained outside this distribution for copyright reasons.
@@ -425,13 +428,15 @@ extern int datapos, dataline, linenum, out_linenum;
 extern FILE *skelfile, *yyin, *backing_up_file;
 extern const char *const skel[];
 extern int skel_ind;
-extern char *infilename, *outfilename;
+extern char *infilename;
+extern const char *outfilename;
 extern int did_outfilename;
-extern char *prefix, *yyclass;
+extern const char *prefix;
+extern char *yyclass;
 extern int do_stdinit, use_stdout;
 extern char **input_files;
 extern int num_input_files;
-extern char *program_name;
+extern const char *program_name;
 
 extern char *action_array;
 extern int action_size;
@@ -670,8 +675,8 @@ extern int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 extern int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
 extern int num_backing_up, bol_needed;
 
-void *allocate_array (int, size_t);
-void *reallocate_array (void*, int, size_t);
+void *allocate_array (long, size_t);
+void *reallocate_array (void*, long, size_t);
 
 void *flex_alloc (size_t);
 void *flex_realloc (void*, size_t);
@@ -681,7 +686,7 @@ void flex_free (void*);
 	(type *) allocate_array( size, sizeof( type ) )
 
 #define ReallocArray(type,array,size) \
-	(type *) reallocate_array( (void *) array, size, sizeof( type ) )
+	(type *) reallocate_array( (void *) array, (long) size, sizeof( type ) )
 
 #define allocate_integer_array(size) \
 	AllocArray(int, size)
@@ -971,7 +976,7 @@ extern void format_synerr (const char [], char[]);
 extern void synerr (const char []);	/* report a syntax error */
 extern void format_warn (const char [], char[]);
 extern void warn (const char []);	/* report a warning */
-extern void yyerror (char []);	/* report a parse error */
+extern void yyerror (const char *);	/* report a parse error */
 extern int yyparse (void);	/* the YACC parser */
 
 
@@ -1006,7 +1011,7 @@ extern Char *ndlookup (char[]);	/* lookup a name definition */
 
 /* Increase maximum number of SC's. */
 extern void scextend (void);
-extern void scinstal (char[], int);	/* make a start condition */
+extern void scinstal (const char *, int);	/* make a start condition */
 
 /* Lookup the number associated with a start condition. */
 extern int sclookup (char[]);

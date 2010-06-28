@@ -1,3 +1,4 @@
+/* $Id: misc.c,v 1.17 2010/06/27 17:46:56 tom Exp $ */
 /* misc - miscellaneous flex routines */
 
 /*-
@@ -97,11 +98,11 @@ add_ind_action(int level, const char *new_text)
 
 /* allocate_array - allocate memory for an integer array of the given size */
 void *
-allocate_array(int size, size_t element_size)
+allocate_array(long size, size_t element_size)
 {
     void *mem = 0;
     if (size > 0) {
-	size_t num_bytes = element_size * (unsigned) size;
+	size_t num_bytes = element_size * (size_t) size;
 
 	mem = flex_alloc(num_bytes);
     }
@@ -211,6 +212,8 @@ copy_string(const char *str)
     if (copy == NULL)
 	flexfatal(_("dynamic memory failure in copy_string()"));
 
+    assert(copy != NULL);
+
     for (c2 = copy; (*c2++ = *str++) != 0;) {
 	;
     }
@@ -232,7 +235,7 @@ copy_unsigned_string(Char * str)
 	;
     }
 
-    copy = allocate_Character_array(c - str + 1);
+    copy = allocate_Character_array((long) (c - str + 1));
 
     for (c = copy; (*c++ = *str++) != 0;) {
 	;
@@ -370,7 +373,8 @@ void
 line_directive_out(FILE *output_file, int do_infile)
 {
     char directive[MAXLINE], filename[MAXLINE];
-    char *s1, *s2, *s3;
+    const char *s1;
+    char *s2, *s3;
     static char line_fmt[] = "#line %d \"%s\"\n";
 
     if (!gen_line_dirs)
@@ -798,7 +802,7 @@ readable_form(int c)
 
 /* reallocate_array - increase the size of a dynamic array */
 void *
-reallocate_array(void *array, int size, size_t element_size)
+reallocate_array(void *array, long size, size_t element_size)
 {
     void *new_array = 0;
 
@@ -823,15 +827,15 @@ void
 skelout(void)
 {
     char buf_storage[MAXLINE];
-    char *buf = buf_storage;
+    const char *buf = buf_storage;
     int do_copy = 1;
 
     /* Loop pulling lines either from the skelfile, if we're using
      * one, or from the skel[] array.
      */
     while (skelfile ?
-	   (fgets(buf, MAXLINE, skelfile) != NULL) :
-	   ((buf = (char *) skel[skel_ind++]) != 0)) {
+	   ((buf = fgets(buf_storage, MAXLINE, skelfile)) != NULL) :
+	   ((buf = skel[skel_ind++]) != 0)) {
 	/* copy from skel array */
 	if (buf[0] == '%') {
 	    switch (buf[1]) {
