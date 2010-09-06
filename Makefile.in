@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.19 2010/06/27 16:59:21 tom Exp $
+# $Id: Makefile.in,v 1.20 2010/09/04 20:48:23 tom Exp $
 # @(#) @Header: /home/daffy/u0/vern/flex/RCS/Makefile.in,v 1.45 96/09/10 16:59:04 vern Exp @ (LBL)
 
 @SET_MAKE@
@@ -38,10 +38,10 @@ libdir          = @libdir@
 includedir      = @includedir@
 mandir          = @mandir@
 
-BINDIR		= $(DESTDIR)/$(bindir)
-LIBDIR		= $(DESTDIR)/$(libdir)
-INCLUDEDIR	= $(DESTDIR)/$(includedir)
-MANDIR		= $(DESTDIR)/$(mandir)
+BINDIR		= $(DESTDIR)$(bindir)
+LIBDIR		= $(DESTDIR)$(libdir)
+INCLUDEDIR	= $(DESTDIR)$(includedir)
+MANDIR		= $(DESTDIR)$(mandir)
 
 manext          = 1
 mansubdir       = $(MANDIR)/man$(manext)

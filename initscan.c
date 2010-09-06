@@ -123,11 +123,31 @@ extern FILE *yyin, *yyout;
 
 #define unput(c) yyunput(c, yytext_ptr)
 
+#ifdef YY_MALLOC_DECL
+YY_MALLOC_DECL
+#else
+#if __STDC__
+#ifndef __cplusplus
+#include <stdlib.h>
+#define YY_SIZE_T size_t
+#endif
+#else
+/* Just try to get by without declaring the routines.  This will fail
+ * miserably on non-ANSI systems for which sizeof(size_t) != sizeof(int)
+ * or sizeof(void*) != sizeof(int).
+ */
+#endif
+#endif
+
 /* The following is because we cannot portably get our hands on size_t
  * (without autoconf's help, which isn't available because we want
  * flex-generated scanners to compile on their own).
  */
-typedef unsigned int yy_size_t;
+#ifndef YY_SIZE_T
+#define YY_SIZE_T unsigned
+#endif
+
+typedef YY_SIZE_T yy_size_t;
 
 struct yy_buffer_state {
     FILE *yy_input_file;
@@ -1313,7 +1333,7 @@ static void add_off_action(int, int *, const char *);
 #define OPTION 17
 #define LINEDIR 18
 
-#line 1317 "scan.c"
+#line 1337 "scan.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -1367,21 +1387,6 @@ static int yy_top_state(void);
 #define YY_NO_TOP_STATE 1
 #endif
 
-#ifdef YY_MALLOC_DECL
-YY_MALLOC_DECL
-#else
-#if __STDC__
-#ifndef __cplusplus
-#include <stdlib.h>
-#endif
-#else
-/* Just try to get by without declaring the routines.  This will fail
- * miserably on non-ANSI systems for which sizeof(size_t) != sizeof(int)
- * or sizeof(void*) != sizeof(int).
- */
-#endif
-#endif
-
 /* Amount of stuff to slurp up with each read. */
 #ifndef YY_READ_BUF_SIZE
 #define YY_READ_BUF_SIZE 8192
@@ -1400,7 +1405,7 @@ YY_MALLOC_DECL
 /* This used to be an fputs(), but since the string might contain NUL's,
  * we now use fwrite().
  */
-#define ECHO YY_IGNORE_RC(fwrite(yytext, (size_t) yyleng, 1, yyout))
+#define ECHO YY_IGNORE_RC(fwrite(yytext, (size_t) yyleng, (size_t) 1, yyout))
 #endif
 
 /* Gets input and stuffs it into "buf".  number of characters read, or YY_NULL,
@@ -1423,7 +1428,7 @@ YY_MALLOC_DECL
 	else \
 	    { \
 		size_t readresult; \
-		if (((readresult = fread(buf, 1, (size_t) max_size, yyin)) == 0) \
+		if (((readresult = fread(buf, (size_t) 1, (size_t) max_size, yyin)) == 0) \
 		      && ferror(yyin)) \
 		{ \
 		    YY_FATAL_ERROR("input in flex scanner failed"); \
@@ -1503,7 +1508,7 @@ YY_DECL
 	Char nmdef[MAXLINE];
 
 
-#line 1507 "scan.c"
+#line 1512 "scan.c"
 
     if (yy_init) {
 	yy_init = 0;
@@ -2727,7 +2732,7 @@ YY_DECL
 #line 645 "scan.l"
 	    YY_FATAL_ERROR("flex scanner jammed");
 	    YY_BREAK
-#line 2731 "scan.c"
+#line 2736 "scan.c"
 	case YY_STATE_EOF(INITIAL):
 	case YY_STATE_EOF(SECT2):
 	case YY_STATE_EOF(CODEBLOCK):

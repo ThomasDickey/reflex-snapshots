@@ -1185,7 +1185,7 @@ make_tables(void)
 	    outn("else \\");
 	    outn("\t{ \\");
 	    outn("\t\tsize_t readresult; \\");
-	    outn("\t\tif (((readresult = fread(buf, 1, (size_t) max_size, yyin)) == 0) \\");
+	    outn("\t\tif (((readresult = fread(buf, (size_t) 1, (size_t) max_size, yyin)) == 0) \\");
 	    outn("\t          && ferror(yyin)) \\");
 	    outn("\t\t{ \\");
 	    outn("\t\t\tYY_FATAL_ERROR(\"input in flex scanner failed\"); \\");
