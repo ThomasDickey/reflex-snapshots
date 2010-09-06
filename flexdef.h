@@ -1,4 +1,4 @@
-/* $Id: flexdef.h,v 1.22 2010/06/27 17:49:36 tom Exp $ */
+/* $Id: flexdef.h,v 1.23 2010/09/06 12:20:04 tom Exp $ */
 /* flexdef - definitions file for flex */
 
 /*-
@@ -675,7 +675,7 @@ extern int sectnum, nummt, hshcol, dfaeql, numeps, eps2, num_reallocs;
 extern int tmpuses, totnst, peakpairs, numuniq, numdup, hshsave;
 extern int num_backing_up, bol_needed;
 
-void *allocate_array (long, size_t);
+void *allocate_array (size_t, size_t);
 void *reallocate_array (void*, long, size_t);
 
 void *flex_alloc (size_t);
@@ -683,7 +683,7 @@ void *flex_realloc (void*, size_t);
 void flex_free (void*);
 
 #define AllocArray(type,size) \
-	(type *) allocate_array( size, sizeof( type ) )
+	(type *) allocate_array( (size_t) size, sizeof( type ) )
 
 #define ReallocArray(type,array,size) \
 	(type *) reallocate_array( (void *) array, (long) size, sizeof( type ) )

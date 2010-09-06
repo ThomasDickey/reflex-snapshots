@@ -1,3 +1,9 @@
+reflex (20100906) unstable; urgency=high
+
+  * Strict compiler warning fixes for size_t.
+
+ -- Thomas E. Dickey <dickey@invisible-island.net>  Mon, 06 Sep 2010 10:06:21 -0400
+
 reflex (20100627) unstable; urgency=high
 
   * Initial package release

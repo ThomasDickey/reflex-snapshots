@@ -1,4 +1,4 @@
-/* $Id: misc.c,v 1.17 2010/06/27 17:46:56 tom Exp $ */
+/* $Id: misc.c,v 1.18 2010/09/06 12:20:22 tom Exp $ */
 /* misc - miscellaneous flex routines */
 
 /*-
@@ -98,11 +98,11 @@ add_ind_action(int level, const char *new_text)
 
 /* allocate_array - allocate memory for an integer array of the given size */
 void *
-allocate_array(long size, size_t element_size)
+allocate_array(size_t size, size_t element_size)
 {
     void *mem = 0;
     if (size > 0) {
-	size_t num_bytes = element_size * (size_t) size;
+	size_t num_bytes = element_size * size;
 
 	mem = flex_alloc(num_bytes);
     }
@@ -199,7 +199,7 @@ copy_string(const char *str)
     const char *c1;
     char *c2;
     char *copy;
-    unsigned int size;
+    size_t size;
 
     /* find length */
     for (c1 = str; *c1; ++c1) {
