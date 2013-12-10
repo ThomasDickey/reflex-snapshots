@@ -1,8 +1,15 @@
--- $Id: NEWS,v 1.30 2010/09/06 13:23:19 tom Exp $
+-- $Id: NEWS,v 1.32 2013/12/10 02:03:35 tom Exp $
 -------------------------------------------------------------------------------
 -- Changes by Thomas E. Dickey
 -- vile:txtmode
 -------------------------------------------------------------------------------
+
+2013/12/09
+	+ minor compiler-warning fixes for the skeleton.
+
+	+ update configure macros, e.g., for clang and MingW
+
+	+ updated config.guess, config.sub
 
 2010/09/06
 	+ fix stricter compiler warnings, e.g., for 64-bits and gcc 4.1.2

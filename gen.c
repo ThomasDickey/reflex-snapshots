@@ -1165,7 +1165,7 @@ make_tables(void)
     set_indent(2);
     if (!C_plus_plus) {
 	if (use_read) {
-	    outn("if ((result = read(fileno(yyin), (char *) buf, (size_t) max_size )) < 0) \\");
+	    outn("if ((result = (int) read(fileno(yyin), (char *) buf, (size_t) max_size )) < 0) \\");
 	    outn("\tYY_FATAL_ERROR(\"input in flex scanner failed\");");
 	}
 

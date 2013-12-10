@@ -1,4 +1,4 @@
-/* $Id: misc.c,v 1.18 2010/09/06 12:20:22 tom Exp $ */
+/* $Id: misc.c,v 1.19 2013/12/09 23:56:12 tom Exp $ */
 /* misc - miscellaneous flex routines */
 
 /*-
@@ -827,7 +827,7 @@ void
 skelout(void)
 {
     char buf_storage[MAXLINE];
-    const char *buf = buf_storage;
+    const char *buf = 0;
     int do_copy = 1;
 
     /* Loop pulling lines either from the skelfile, if we're using
