@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.20 2010/09/04 20:48:23 tom Exp $
+# $Id: Makefile.in,v 1.21 2013/12/09 22:15:24 tom Exp $
 # @(#) @Header: /home/daffy/u0/vern/flex/RCS/Makefile.in,v 1.45 96/09/10 16:59:04 vern Exp @ (LBL)
 
 @SET_MAKE@
@@ -36,6 +36,7 @@ exec_prefix     = @exec_prefix@
 bindir          = @bindir@
 libdir          = @libdir@
 includedir      = @includedir@
+datarootdir     = @datarootdir@
 mandir          = @mandir@
 
 BINDIR		= $(DESTDIR)$(bindir)

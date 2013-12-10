@@ -981,7 +981,7 @@ const char *const skel[] =
     "\t\t\t*yy_c_buf_p = '\\0';",
     "",
     "\t\telse {\t\t\t/* need more input */",
-    "\t\t\tint offset = yy_c_buf_p - yytext_ptr;",
+    "\t\t\tint offset = (int) (yy_c_buf_p - yytext_ptr);",
     "\t\t\t++yy_c_buf_p;",
     "",
     "\t\t\tswitch (yy_get_next_buffer()) {",
