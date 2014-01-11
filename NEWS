@@ -1,8 +1,13 @@
--- $Id: NEWS,v 1.32 2013/12/10 02:03:35 tom Exp $
+-- $Id: NEWS,v 1.33 2014/01/11 13:46:25 tom Exp $
 -------------------------------------------------------------------------------
 -- Changes by Thomas E. Dickey
 -- vile:txtmode
 -------------------------------------------------------------------------------
+
+2014/??/??
+	+ add "docs" rule to manpage
+
+	+ updated config.guess, config.sub
 
 2013/12/09
 	+ minor compiler-warning fixes for the skeleton.

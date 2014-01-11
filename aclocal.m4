@@ -1,7 +1,7 @@
 dnl reflex's local definitions for autoconf -TD
-dnl $Id: aclocal.m4,v 1.10 2013/12/09 22:22:04 tom Exp $
+dnl $Id: aclocal.m4,v 1.11 2014/01/11 13:47:38 tom Exp $
 dnl ---------------------------------------------------------------------------
-dnl Copyright 2008-2010,2013 Thomas E. Dickey
+dnl Copyright 2008-2013,2014 Thomas E. Dickey
 dnl 
 dnl Permission is hereby granted, free of charge, to any person obtaining a
 dnl copy of this software and associated documentation files (the
@@ -630,6 +630,60 @@ AC_TRY_LINK([#include <locale.h>],
 	])
 AC_MSG_RESULT($cf_cv_locale)
 test $cf_cv_locale = yes && { ifelse($1,,AC_DEFINE(LOCALE,1,[Define to 1 if we have locale support]),[$1]) }
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_MAKE_DOCS version: 3 updated: 2014/01/05 13:21:25
+dnl ------------
+dnl $1 = name(s) to generate rules for
+dnl $2 = suffix of corresponding manpages used as input.
+define([CF_MAKE_DOCS],[
+test -z "$cf_make_docs" && cf_make_docs=0
+
+cf_output=makefile
+test -f "$cf_output" || cf_output=Makefile
+
+if test "$cf_make_docs" = 0
+then
+cat >>$cf_output <<"CF_EOF"
+################################################################################
+.SUFFIXES : .html .$2 .man .ps .pdf .txt
+
+.$2.html :
+	GROFF_NO_SGR=stupid [$](SHELL) -c "tbl [$]*.$2 | groff -P -o0 -I$*_ -Thtml -man" >[$]@
+
+.$2.ps :
+	[$](SHELL) -c "tbl [$]*.$2 | groff -man" >[$]@
+
+.$2.txt :
+	GROFF_NO_SGR=stupid [$](SHELL) -c "tbl [$]*.$2 | nroff -Tascii -man | col -bx" >[$]@
+
+.ps.pdf :
+	ps2pdf [$]*.ps
+
+CF_EOF
+	cf_make_docs=1
+fi
+
+for cf_name in $1
+do
+cat >>$cf_output <<CF_EOF
+################################################################################
+docs-$cf_name \\
+docs :: $cf_name.html \\
+	$cf_name.pdf \\
+	$cf_name.ps \\
+	$cf_name.txt
+
+clean \\
+docs-clean ::
+	rm -f $cf_name.html $cf_name.pdf $cf_name.ps $cf_name.txt
+
+$cf_name.html : $cf_name.\$2
+$cf_name.pdf : $cf_name.ps
+$cf_name.ps : $cf_name.\$2
+$cf_name.txt : $cf_name.\$2
+CF_EOF
+done
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_MAKE_TAGS version: 6 updated: 2010/10/23 15:52:32

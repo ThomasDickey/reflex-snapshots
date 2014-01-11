@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 dnl
-AC_REVISION($Revision: 1.8 $)
+AC_REVISION($Revision: 1.9 $)
 AC_PREREQ(2.52.20011201)
 
 AC_INIT(initscan.c)
@@ -42,3 +42,4 @@ esac
 
 AC_OUTPUT(Makefile,
 [test -z "$CONFIG_HEADERS" || echo timestamp > stamp-h])
+CF_MAKE_DOCS(flex,1)
