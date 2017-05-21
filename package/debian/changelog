@@ -1,3 +1,9 @@
+reflex (20170521) unstable; urgency=low
+
+  * maintenance updates
+
+ -- Thomas E. Dickey <dickey@invisible-island.net>  Sun, 21 May 2017 10:50:55 -0400
+
 reflex (20131209) unstable; urgency=low
 
   * update configure script

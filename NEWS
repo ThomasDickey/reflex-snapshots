@@ -1,11 +1,26 @@
--- $Id: NEWS,v 1.33 2014/01/11 13:46:25 tom Exp $
+-- $Id: NEWS,v 1.36 2017/05/21 17:03:32 tom Exp $
 -------------------------------------------------------------------------------
 -- Changes by Thomas E. Dickey
 -- vile:txtmode
 -------------------------------------------------------------------------------
 
-2014/??/??
+2017/05/21
+	+ amend mkscan.sh script to work with "make test" when building from
+	  other directories than the source-directory (report by Michael
+	  Tiernan)
+
+	+ add configure check for "ar" flags
+
+	+ add configure --with-man2html option
+
 	+ add "docs" rule to manpage
+
+	+ update configure macros, e.g., for clang and MingW
+	  CF_ACVERSION_CHECK, CF_ADD_CFLAGS, CF_ARG_OPTION, CF_CC_ENV_FLAGS,
+	  CF_DISABLE_ECHO, CF_GCC_ATTRIBUTES, CF_GCC_WARNINGS, CF_GNU_SOURCE,
+	  CF_INTEL_COMPILER, CF_MAKE_DOCS, CF_MIXEDCASE_FILENAMES,
+	  CF_POSIX_C_SOURCE, CF_PROG_CC, CF_PROG_EXT, CF_PROG_LINT,
+	  CF_XOPEN_SOURCE
 
 	+ updated config.guess, config.sub
 
