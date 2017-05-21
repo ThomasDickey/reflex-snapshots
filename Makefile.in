@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.22 2014/01/11 13:48:53 tom Exp $
+# $Id: Makefile.in,v 1.25 2017/05/21 17:06:08 tom Exp $
 # @(#) @Header: /home/daffy/u0/vern/flex/RCS/Makefile.in,v 1.45 96/09/10 16:59:04 vern Exp @ (LBL)
 
 @SET_MAKE@
@@ -72,7 +72,8 @@ VPATH           = @srcdir@
 LN_S            = @LN_S@
 YACC            = @YACC@
 CC              = @CC@
-AR              = ar
+AR              = @AR@
+ARFLAGS         = @ARFLAGS@
 RANLIB          = @RANLIB@
 INSTALL         = @INSTALL@
 INSTALL_DATA    = @INSTALL_DATA@
@@ -187,7 +188,7 @@ bigcheck:
 	@echo "All checks successful"
 
 $(FLEXLIB): $(LIBOBJS)
-	$(AR) cru $(FLEXLIB) $(LIBOBJS)
+	$(AR) $(ARFLAGS) $(FLEXLIB) $(LIBOBJS)
 	-$(RANLIB) $(FLEXLIB)
 
 $(FLEX).man: flex.1
@@ -256,8 +257,8 @@ clean :: mostlyclean
 		$(FLEXLIB) config.log config.cache
 
 distclean :: clean
-	rm -f .bootstrap $(FLEX) scan.c tags TAGS Makefile config.status \
-		config.h stamp-h config.log config.cache
+	rm -f .bootstrap $(FLEX) scan.c tags TAGS Makefile man2html.tmp \
+		config.status config.h stamp-h config.log config.cache
 
 maintainer-clean: distclean
 	@echo "This command is intended for maintainers to use;"
@@ -288,8 +289,6 @@ Makefile: $(srcdir)/Makefile.in config.status
 	CONFIG_FILES=$@ CONFIG_HEADERS= ./config.status
 config.status: configure
 	./config.status --recheck
-configure: configure.in
-	cd $(srcdir) && autoconf
 config.h: stamp-h
 stamp-h: conf.in config.status
 	CONFIG_FILES= CONFIG_HEADERS=config.h:conf.in ./config.status
