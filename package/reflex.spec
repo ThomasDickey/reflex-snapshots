@@ -1,7 +1,7 @@
 Summary: reflex - fast lexical analyzer generator
 %define AppProgram reflex
-%define AppVersion 20170521
-# $XTermId: reflex.spec,v 1.6 2017/05/21 14:50:55 tom Exp $
+%define AppVersion 20171111
+# $XTermId: reflex.spec,v 1.8 2017/11/11 23:00:30 tom Exp $
 Name: %{AppProgram}
 Version: %{AppVersion}
 Release: 1
@@ -26,6 +26,8 @@ This is based on flex 2.5.4a, and unlike so-called "new" flex,
 remains compatible with POSIX lex.
 
 %prep
+
+%define debug_package %{nil}
 
 %setup -q -n %{AppProgram}-%{AppVersion}
 
@@ -62,6 +64,9 @@ strip $RPM_BUILD_ROOT%{_bindir}/%{AppProgram}
 
 %changelog
 # each patch should add its ChangeLog entries here
+
+* Sat Nov 11 2017 Thomas Dickey
+- disable debug-build
 
 * Sun Jun 27 2010 Thomas Dickey
 - initial version

@@ -1,2 +1,2 @@
 #define FLEX_VERSION "2.5.4"
-#define FLEX_PATCHED "20170521"
+#define FLEX_PATCHED "20171111"

@@ -1,8 +1,11 @@
--- $Id: NEWS,v 1.36 2017/05/21 17:03:32 tom Exp $
+-- $Id: NEWS,v 1.37 2017/11/11 22:58:12 tom Exp $
 -------------------------------------------------------------------------------
 -- Changes by Thomas E. Dickey
 -- vile:txtmode
 -------------------------------------------------------------------------------
+
+2017/11/11
+	+ build-fix for rpms with Fedora 26.
 
 2017/05/21
 	+ amend mkscan.sh script to work with "make test" when building from
