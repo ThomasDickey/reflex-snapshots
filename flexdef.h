@@ -1,4 +1,4 @@
-/* $Id: flexdef.h,v 1.23 2010/09/06 12:20:04 tom Exp $ */
+/* $Id: flexdef.h,v 1.24 2017/12/31 15:21:04 tom Exp $ */
 /* flexdef - definitions file for flex */
 
 /*-
@@ -388,6 +388,7 @@ extern int gen_line_dirs, performance_report, backing_up_report;
 extern int C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap;
 extern int csize;
 extern int yymore_used, reject, real_reject, continued_action, in_rule;
+extern int fallthru_action;
 
 extern int yymore_really_used, reject_really_used;
 

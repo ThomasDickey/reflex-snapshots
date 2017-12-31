@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.12 2010/06/27 17:33:32 tom Exp $ */
+/* $Id: main.c,v 1.13 2017/12/31 15:22:40 tom Exp $ */
 /* flex - tool to generate fast lexical analyzers */
 
 /*-
@@ -61,6 +61,7 @@ int interactive, caseins, lex_compat, do_yylineno, useecs, fulltbl, usemecs;
 int fullspd, gen_line_dirs, performance_report, backing_up_report;
 int C_plus_plus, long_align, use_read, yytext_is_array, do_yywrap, csize;
 int yymore_used, reject, real_reject, continued_action, in_rule;
+int fallthru_action;
 int yymore_really_used, reject_really_used;
 int datapos, dataline, linenum, out_linenum;
 FILE *skelfile = NULL;

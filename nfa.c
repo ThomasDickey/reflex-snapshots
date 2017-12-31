@@ -194,8 +194,12 @@ finish_rule(int mach, int variable_trail_rule, int headcnt, int trailcnt)
     /* If this is a continued action, then the line-number has already
      * been updated, giving us the wrong number.
      */
-    if (continued_action)
+    if (continued_action) {
 	--rule_linenum[num_rules];
+    }
+    if (fallthru_action) {
+	add_ind_action(3, "/* FALLTHRU */\n");
+    }
 
     sprintf(action_text, "case %d:\n", num_rules);
     add_ind_action(2, action_text);
@@ -246,10 +250,12 @@ finish_rule(int mach, int variable_trail_rule, int headcnt, int trailcnt)
      * to do any user action.  But don't do it for continued actions,
      * as that'll result in multiple YY_RULE_SETUP's.
      */
-    if (!continued_action)
+    if (!continued_action) {
 	add_ind_action(3, "YY_RULE_SETUP\n");
+    }
 
     line_directive_out((FILE *) 0, 1);
+    fallthru_action = (!variable_trail_rule) && (headcnt > 0 || trailcnt > 0);
 }
 
 /* link_machines - connect two machines together

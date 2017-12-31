@@ -1,8 +1,17 @@
--- $Id: NEWS,v 1.37 2017/11/11 22:58:12 tom Exp $
+-- $Id: NEWS,v 1.39 2017/12/31 15:02:19 tom Exp $
 -------------------------------------------------------------------------------
 -- Changes by Thomas E. Dickey
 -- vile:txtmode
 -------------------------------------------------------------------------------
+
+2017/12/31
+	+ add a "FALLTHRU" comment to quiet compiler warning in vile's
+	  dcl-filt.l
+
+	+ update configure macros:
+	  CF_CC_ENV_FLAGS, CF_WITH_MAN2HTML     
+
+	+ updated config.guess, config.sub
 
 2017/11/11
 	+ build-fix for rpms with Fedora 26.
