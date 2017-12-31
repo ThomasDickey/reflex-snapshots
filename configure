@@ -5677,26 +5677,14 @@ else
 	GROFF_NOTE=
 fi
 
-echo "$as_me:5680: checking for program to convert manpage to html" >&5
-echo $ECHO_N "checking for program to convert manpage to html... $ECHO_C" >&6
-
-# Check whether --with-man2html or --without-man2html was given.
-if test "${with_man2html+set}" = set; then
-  withval="$with_man2html"
-  cf_man2html=$withval
-else
-  cf_man2html=$GROFF_PATH
-fi;
-
-cf_with_groff=no
-
-case $cf_man2html in
-(yes)
-	echo "$as_me:5695: result: man2html" >&5
-echo "${ECHO_T}man2html" >&6
+case "x${with_man2html}" in
+(xno)
+	cf_man2html=no
+	;;
+(x|xyes)
 	# Extract the first word of "man2html", so it can be a program name with args.
 set dummy man2html; ac_word=$2
-echo "$as_me:5699: checking for $ac_word" >&5
+echo "$as_me:5687: checking for $ac_word" >&5
 echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
 if test "${ac_cv_path_cf_man2html+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
@@ -5713,7 +5701,7 @@ for ac_dir in $ac_dummy; do
   test -z "$ac_dir" && ac_dir=.
   if $as_executable_p "$ac_dir/$ac_word"; then
    ac_cv_path_cf_man2html="$ac_dir/$ac_word"
-   echo "$as_me:5716: found $ac_dir/$ac_word" >&5
+   echo "$as_me:5704: found $ac_dir/$ac_word" >&5
    break
 fi
 done
@@ -5725,10 +5713,85 @@ fi
 cf_man2html=$ac_cv_path_cf_man2html
 
 if test -n "$cf_man2html"; then
-  echo "$as_me:5728: result: $cf_man2html" >&5
+  echo "$as_me:5716: result: $cf_man2html" >&5
 echo "${ECHO_T}$cf_man2html" >&6
 else
-  echo "$as_me:5731: result: no" >&5
+  echo "$as_me:5719: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+	case "x$cf_man2html" in
+	(x/*)
+		echo "$as_me:5725: checking for the modified Earl Hood script" >&5
+echo $ECHO_N "checking for the modified Earl Hood script... $ECHO_C" >&6
+		if ( $cf_man2html -help 2>&1 | grep 'Make an index of headers at the end' >/dev/null )
+		then
+			cf_man2html_ok=yes
+		else
+			cf_man2html=no
+			cf_man2html_ok=no
+		fi
+		echo "$as_me:5734: result: $cf_man2html_ok" >&5
+echo "${ECHO_T}$cf_man2html_ok" >&6
+		;;
+	(*)
+		cf_man2html=no
+		;;
+	esac
+esac
+
+echo "$as_me:5743: checking for program to convert manpage to html" >&5
+echo $ECHO_N "checking for program to convert manpage to html... $ECHO_C" >&6
+
+# Check whether --with-man2html or --without-man2html was given.
+if test "${with_man2html+set}" = set; then
+  withval="$with_man2html"
+  cf_man2html=$withval
+else
+  cf_man2html=$cf_man2html
+fi;
+
+cf_with_groff=no
+
+case $cf_man2html in
+(yes)
+	echo "$as_me:5758: result: man2html" >&5
+echo "${ECHO_T}man2html" >&6
+	# Extract the first word of "man2html", so it can be a program name with args.
+set dummy man2html; ac_word=$2
+echo "$as_me:5762: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_path_cf_man2html+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $cf_man2html in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_cf_man2html="$cf_man2html" # Let the user override the test with a path.
+  ;;
+  *)
+  ac_save_IFS=$IFS; IFS=$ac_path_separator
+ac_dummy="$PATH"
+for ac_dir in $ac_dummy; do
+  IFS=$ac_save_IFS
+  test -z "$ac_dir" && ac_dir=.
+  if $as_executable_p "$ac_dir/$ac_word"; then
+   ac_cv_path_cf_man2html="$ac_dir/$ac_word"
+   echo "$as_me:5779: found $ac_dir/$ac_word" >&5
+   break
+fi
+done
+
+  test -z "$ac_cv_path_cf_man2html" && ac_cv_path_cf_man2html="no"
+  ;;
+esac
+fi
+cf_man2html=$ac_cv_path_cf_man2html
+
+if test -n "$cf_man2html"; then
+  echo "$as_me:5791: result: $cf_man2html" >&5
+echo "${ECHO_T}$cf_man2html" >&6
+else
+  echo "$as_me:5794: result: no" >&5
 echo "${ECHO_T}no" >&6
 fi
 
@@ -5736,11 +5799,11 @@ fi
 (no|groff|*/groff*)
 	cf_with_groff=yes
 	cf_man2html=$GROFF_PATH
-	echo "$as_me:5739: result: $cf_man2html" >&5
+	echo "$as_me:5802: result: $cf_man2html" >&5
 echo "${ECHO_T}$cf_man2html" >&6
 	;;
 (*)
-	echo "$as_me:5743: result: $cf_man2html" >&5
+	echo "$as_me:5806: result: $cf_man2html" >&5
 echo "${ECHO_T}$cf_man2html" >&6
 	;;
 esac
@@ -5804,14 +5867,14 @@ case ".$cf_man2html" in
 	cf_man2html=`echo $cf_man2html | sed -e s%NONE%$cf_path_syntax%`
 	;;
 (*)
-	{ { echo "$as_me:5807: error: expected a pathname, not \"$cf_man2html\"" >&5
+	{ { echo "$as_me:5870: error: expected a pathname, not \"$cf_man2html\"" >&5
 echo "$as_me: error: expected a pathname, not \"$cf_man2html\"" >&2;}
    { (exit 1); exit 1; }; }
 	;;
 esac
 
 	MAN2HTML_PATH="$cf_man2html"
-	echo "$as_me:5814: checking for $cf_man2html top/bottom margins" >&5
+	echo "$as_me:5877: checking for $cf_man2html top/bottom margins" >&5
 echo $ECHO_N "checking for $cf_man2html top/bottom margins... $ECHO_C" >&6
 
 	# for this example, expect 3 lines of content, the remainder is head/foot
@@ -5829,10 +5892,10 @@ CF_EOF
 	cf_man2html_bot=`expr $cf_man2html_bot - 2 - $cf_man2html_top`
 	cf_man2html_top_bot="-topm=$cf_man2html_top -botm=$cf_man2html_bot"
 
-	echo "$as_me:5832: result: $cf_man2html_top_bot" >&5
+	echo "$as_me:5895: result: $cf_man2html_top_bot" >&5
 echo "${ECHO_T}$cf_man2html_top_bot" >&6
 
-	echo "$as_me:5835: checking for pagesize to use" >&5
+	echo "$as_me:5898: checking for pagesize to use" >&5
 echo $ECHO_N "checking for pagesize to use... $ECHO_C" >&6
 	for cf_block in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
 	do
@@ -5857,7 +5920,7 @@ CF_EOF
 	test "$cf_man2html_page" -gt 100 && cf_man2html_page=99999
 
 	rm -rf conftest*
-	echo "$as_me:5860: result: $cf_man2html_page" >&5
+	echo "$as_me:5923: result: $cf_man2html_page" >&5
 echo "${ECHO_T}$cf_man2html_page" >&6
 
 	cat >>$MAN2HTML_TEMP <<CF_EOF
@@ -5957,7 +6020,7 @@ DEFS=-DHAVE_CONFIG_H
 : ${CONFIG_STATUS=./config.status}
 ac_clean_files_save=$ac_clean_files
 ac_clean_files="$ac_clean_files $CONFIG_STATUS"
-{ echo "$as_me:5960: creating $CONFIG_STATUS" >&5
+{ echo "$as_me:6023: creating $CONFIG_STATUS" >&5
 echo "$as_me: creating $CONFIG_STATUS" >&6;}
 cat >$CONFIG_STATUS <<_ACEOF
 #! $SHELL
@@ -6133,7 +6196,7 @@ cat >>$CONFIG_STATUS <<\EOF
     echo "$ac_cs_version"; exit 0 ;;
   --he | --h)
     # Conflict between --help and --header
-    { { echo "$as_me:6136: error: ambiguous option: $1
+    { { echo "$as_me:6199: error: ambiguous option: $1
 Try \`$0 --help' for more information." >&5
 echo "$as_me: error: ambiguous option: $1
 Try \`$0 --help' for more information." >&2;}
@@ -6152,7 +6215,7 @@ Try \`$0 --help' for more information." >&2;}
     ac_need_defaults=false;;
 
   # This is an error.
-  -*) { { echo "$as_me:6155: error: unrecognized option: $1
+  -*) { { echo "$as_me:6218: error: unrecognized option: $1
 Try \`$0 --help' for more information." >&5
 echo "$as_me: error: unrecognized option: $1
 Try \`$0 --help' for more information." >&2;}
@@ -6190,7 +6253,7 @@ do
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
   "default" ) CONFIG_COMMANDS="$CONFIG_COMMANDS default" ;;
   "config.h" ) CONFIG_HEADERS="$CONFIG_HEADERS config.h:conf.in" ;;
-  *) { { echo "$as_me:6193: error: invalid argument: $ac_config_target" >&5
+  *) { { echo "$as_me:6256: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
    { (exit 1); exit 1; }; };;
   esac
@@ -6457,7 +6520,7 @@ done; }
   esac
 
   if test x"$ac_file" != x-; then
-    { echo "$as_me:6460: creating $ac_file" >&5
+    { echo "$as_me:6523: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
     rm -f "$ac_file"
   fi
@@ -6475,7 +6538,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:6478: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:6541: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -6488,7 +6551,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:6491: error: cannot find input file: $f" >&5
+           { { echo "$as_me:6554: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;
@@ -6504,7 +6567,7 @@ cat >>$CONFIG_STATUS <<\EOF
       if test -n "$ac_seen"; then
         ac_used=`grep '@datarootdir@' $ac_item`
         if test -z "$ac_used"; then
-          { echo "$as_me:6507: WARNING: datarootdir was used implicitly but not set:
+          { echo "$as_me:6570: WARNING: datarootdir was used implicitly but not set:
 $ac_seen" >&5
 echo "$as_me: WARNING: datarootdir was used implicitly but not set:
 $ac_seen" >&2;}
@@ -6513,7 +6576,7 @@ $ac_seen" >&2;}
       fi
       ac_seen=`grep '${datarootdir}' $ac_item`
       if test -n "$ac_seen"; then
-        { echo "$as_me:6516: WARNING: datarootdir was used explicitly but not set:
+        { echo "$as_me:6579: WARNING: datarootdir was used explicitly but not set:
 $ac_seen" >&5
 echo "$as_me: WARNING: datarootdir was used explicitly but not set:
 $ac_seen" >&2;}
@@ -6550,7 +6613,7 @@ s,@INSTALL@,$ac_INSTALL,;t t
             ac_init=`egrep '[ 	]*'$ac_name'[ 	]*=' $ac_file`
             if test -z "$ac_init"; then
               ac_seen=`echo "$ac_seen" |sed -e 's,^,'$ac_file':,'`
-              { echo "$as_me:6553: WARNING: Variable $ac_name is used but was not set:
+              { echo "$as_me:6616: WARNING: Variable $ac_name is used but was not set:
 $ac_seen" >&5
 echo "$as_me: WARNING: Variable $ac_name is used but was not set:
 $ac_seen" >&2;}
@@ -6561,7 +6624,7 @@ $ac_seen" >&2;}
     egrep -n '@[A-Z_][A-Z_0-9]+@' $ac_file >>$tmp/out
     if test -s $tmp/out; then
       ac_seen=`sed -e 's,^,'$ac_file':,' < $tmp/out`
-      { echo "$as_me:6564: WARNING: Some variables may not be substituted:
+      { echo "$as_me:6627: WARNING: Some variables may not be substituted:
 $ac_seen" >&5
 echo "$as_me: WARNING: Some variables may not be substituted:
 $ac_seen" >&2;}
@@ -6610,7 +6673,7 @@ for ac_file in : $CONFIG_HEADERS; do test "x$ac_file" = x: && continue
   * )   ac_file_in=$ac_file.in ;;
   esac
 
-  test x"$ac_file" != x- && { echo "$as_me:6613: creating $ac_file" >&5
+  test x"$ac_file" != x- && { echo "$as_me:6676: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
 
   # First look for the input files in the build tree, otherwise in the
@@ -6621,7 +6684,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:6624: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:6687: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -6634,7 +6697,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:6637: error: cannot find input file: $f" >&5
+           { { echo "$as_me:6700: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;
@@ -6752,7 +6815,7 @@ cat >>$CONFIG_STATUS <<\EOF
   rm -f $tmp/in
   if test x"$ac_file" != x-; then
     if cmp -s $ac_file $tmp/config.h 2>/dev/null; then
-      { echo "$as_me:6755: $ac_file is unchanged" >&5
+      { echo "$as_me:6818: $ac_file is unchanged" >&5
 echo "$as_me: $ac_file is unchanged" >&6;}
     else
       ac_dir=`$as_expr X"$ac_file" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \

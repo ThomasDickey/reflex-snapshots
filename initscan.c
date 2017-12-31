@@ -2601,8 +2601,10 @@ YY_DECL
 		ACTION_ECHO;
 		if (bracelevel == 0 ||
 		(doing_codeblock && indented_code)) {
-		    if (doing_rule_action)
-		    add_ind_action(3, "YY_BREAK\n");
+		    if (doing_rule_action) {
+			add_ind_action(3, "YY_BREAK\n");
+			fallthru_action = false;
+		    }
 
 		    doing_rule_action = doing_codeblock = false;
 		    BEGIN(SECT2);
@@ -2614,43 +2616,45 @@ YY_DECL
 
 	case 149:
 	    YY_RULE_SETUP
-#line 594 "scan.l"
+#line 596 "scan.l"
 	    ACTION_ECHO2; ++bracelevel;
 	    YY_BREAK
 	case 150:
 	    YY_RULE_SETUP
-#line 595 "scan.l"
+#line 597 "scan.l"
 	    --bracelevel; ACTION_ECHO2; 
 	    YY_BREAK
 	case 151:
 	    YY_RULE_SETUP
-#line 596 "scan.l"
+#line 598 "scan.l"
 	    ACTION_ECHO2;
 	    YY_BREAK
 	case 152:
 	    YY_RULE_SETUP
-#line 597 "scan.l"
+#line 599 "scan.l"
 	    ACTION_ECHO2;
 	    YY_BREAK
 	case 153:
 	    YY_RULE_SETUP
-#line 598 "scan.l"
+#line 600 "scan.l"
 	    ACTION_ECHO2; /* character constant */
 	    YY_BREAK
 	case 154:
 	    YY_RULE_SETUP
-#line 599 "scan.l"
+#line 601 "scan.l"
 	    ACTION_ECHO; BEGIN(ACTION_STRING);
 	    YY_BREAK
 	case 155:
 	    YY_RULE_SETUP
-#line 600 "scan.l"
+#line 602 "scan.l"
 	    {
 		++linenum;
 		ACTION_ECHO2;
 		if (bracelevel == 0) {
-		    if (doing_rule_action)
-		    add_ind_action(3, "YY_BREAK\n");
+		    if (doing_rule_action) {
+			add_ind_action(3, "YY_BREAK\n");
+			fallthru_action = false;
+		    }
 
 		    doing_rule_action = false;
 		    BEGIN(SECT2);
@@ -2659,41 +2663,41 @@ YY_DECL
 	    YY_BREAK
 	case 156:
 	    YY_RULE_SETUP
-#line 611 "scan.l"
+#line 615 "scan.l"
 	    ACTION_ECHO2;
 	    YY_BREAK
 
 
 	case 157:
 	    YY_RULE_SETUP
-#line 615 "scan.l"
+#line 619 "scan.l"
 	    ACTION_ECHO;
 	    YY_BREAK
 	case 158:
 	    YY_RULE_SETUP
-#line 616 "scan.l"
+#line 620 "scan.l"
 	    ACTION_ECHO;
 	    YY_BREAK
 	case 159:
 	    YY_RULE_SETUP
-#line 617 "scan.l"
+#line 621 "scan.l"
 	    ++linenum; ACTION_ECHO;
 	    YY_BREAK
 	case 160:
 	    YY_RULE_SETUP
-#line 618 "scan.l"
+#line 622 "scan.l"
 	    ACTION_ECHO; BEGIN(ACTION);
 	    YY_BREAK
 	case 161:
 	    YY_RULE_SETUP
-#line 619 "scan.l"
+#line 623 "scan.l"
 	    ACTION_ECHO;
 	    YY_BREAK
 
 	case YY_STATE_EOF(COMMENT):
 	case YY_STATE_EOF(ACTION):
 	case YY_STATE_EOF(ACTION_STRING):
-#line 622 "scan.l"
+#line 626 "scan.l"
 	    {
 		synerr(_("EOF encountered inside an action"));
 		yyterminate();
@@ -2701,7 +2705,7 @@ YY_DECL
 	    YY_BREAK
 	case 162:
 	    YY_RULE_SETUP
-#line 628 "scan.l"
+#line 632 "scan.l"
 	    {
 		yylval = myesc((Char *) yytext);
 
@@ -2714,25 +2718,25 @@ YY_DECL
 
 	case 163:
 	    YY_RULE_SETUP
-#line 639 "scan.l"
+#line 643 "scan.l"
 	    ECHO;
 	    YY_BREAK
 	case YY_STATE_EOF(SECT3):
-#line 640 "scan.l"
+#line 644 "scan.l"
 	    sectnum = 0; yyterminate();
 	    YY_BREAK
 
 	case 164:
 	    YY_RULE_SETUP
-#line 643 "scan.l"
+#line 647 "scan.l"
 	    format_synerr(_("bad character: %s"), yytext);
 	    YY_BREAK
 	case 165:
 	    YY_RULE_SETUP
-#line 645 "scan.l"
+#line 649 "scan.l"
 	    YY_FATAL_ERROR("flex scanner jammed");
 	    YY_BREAK
-#line 2736 "scan.c"
+#line 2740 "scan.c"
 	case YY_STATE_EOF(INITIAL):
 	case YY_STATE_EOF(SECT2):
 	case YY_STATE_EOF(CODEBLOCK):
@@ -3474,7 +3478,7 @@ main(void)
     return 0;
 }
 #endif
-#line 645 "scan.l"
+#line 649 "scan.l"
 
 
 /*

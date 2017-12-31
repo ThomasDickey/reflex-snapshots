@@ -580,8 +580,10 @@ LEXOPT		[aceknopr]
 			ACTION_ECHO;
 			if (bracelevel == 0 ||
 			     (doing_codeblock && indented_code)) {
-				if (doing_rule_action)
+				if (doing_rule_action) {
 				    add_ind_action(3, "YY_BREAK\n");
+				    fallthru_action = false;
+				}
 
 				doing_rule_action = doing_codeblock = false;
 				BEGIN(SECT2);
@@ -601,8 +603,10 @@ LEXOPT		[aceknopr]
 			++linenum;
 			ACTION_ECHO2;
 			if (bracelevel == 0) {
-			    if (doing_rule_action)
+			    if (doing_rule_action) {
 				add_ind_action(3, "YY_BREAK\n");
+				fallthru_action = false;
+			    }
 
 			    doing_rule_action = false;
 			    BEGIN(SECT2);
