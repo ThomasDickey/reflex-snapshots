@@ -1,8 +1,24 @@
--- $Id: NEWS,v 1.39 2017/12/31 15:02:19 tom Exp $
+-- $Id: NEWS,v 1.42 2019/11/23 18:23:12 tom Exp $
 -------------------------------------------------------------------------------
 -- Changes by Thomas E. Dickey
 -- vile:txtmode
 -------------------------------------------------------------------------------
+
+2019/11/23
+	+ cleanup manual-page formatting.
+
+	+ add lower- and patch-version information to skeleton.
+
+	+ modify generated file to include unistd.h unless overridden, so that
+	  isatty() will be prototyped by default.
+
+	+ update configure macros, e.g., for clang, BSDs, etc.
+	  CF_CC_ENV_FLAGS, CF_CONST_X_STRING, CF_GCC_VERSION, CF_GCC_WARNINGS,
+	  CF_GNU_SOURCE, CF_POSIX_C_SOURCE, CF_POSIX_VISIBLE, CF_PROG_EXT,
+	  CF_PROG_GROFF, CF_PROG_LINT, CF_TRY_XOPEN_SOURCE, CF_WITH_MAN2HTML,
+	  CF_XOPEN_SOURCE
+
+	+ updated config.guess, config.sub
 
 2017/12/31
 	+ add a "FALLTHRU" comment to quiet compiler warning in vile's
