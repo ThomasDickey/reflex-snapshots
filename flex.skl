@@ -9,6 +9,8 @@
 #define FLEX_SCANNER
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 5
+#define YY_FLEX_LOWER_VERSION 4
+#define YY_FLEX_PATCH_VERSION 20191123
 
 %-
 #include <stdio.h>
@@ -24,7 +26,6 @@
 #ifdef __cplusplus
 
 #include <stdlib.h>
-#include <unistd.h>
 
 /* The "const" storage-class-modifier is valid. */
 #define YY_USE_CONST
@@ -301,6 +302,14 @@ yy_hold_char = *yy_cp; \
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
  */
+
+#ifndef YY_NO_UNISTD_H
+/*
+ * Non-POSIX systems may lack unistd.h, or provide a useless stub.
+ * Let the user decide how to deal with it.
+ */
+#include <unistd.h>
+#endif
 
 #ifndef YY_SKIP_YYWRAP
 #ifdef __cplusplus
@@ -957,7 +966,7 @@ int yyFlexLexer::yyinput()
 			*yy_c_buf_p = '\0';
 
 		else {			/* need more input */
-			int offset = yy_c_buf_p - yytext_ptr;
+			int offset = (int) (yy_c_buf_p - yytext_ptr);
 			++yy_c_buf_p;
 
 			switch (yy_get_next_buffer()) {
