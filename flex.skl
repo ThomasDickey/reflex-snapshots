@@ -10,7 +10,7 @@
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 5
 #define YY_FLEX_LOWER_VERSION 4
-#define YY_FLEX_PATCH_VERSION 20191123
+#define YY_FLEX_PATCH_VERSION 20200715
 
 %-
 #include <stdio.h>
@@ -341,6 +341,10 @@ static int yyinput();
 static int input(void);
 #endif
 %*
+#endif
+
+#ifndef YY_STACK_USED
+#define YY_STACK_USED 0
 #endif
 
 #if YY_STACK_USED
@@ -1135,9 +1139,15 @@ void yyFlexLexer::yy_init_buffer(YY_BUFFER_STATE b, std::istream* file)
 	b->yy_fill_buffer = 1;
 
 %-
+#ifndef YY_ALWAYS_INTERACTIVE
+#define YY_ALWAYS_INTERACTIVE 0
+#endif
 #if YY_ALWAYS_INTERACTIVE
 	b->yy_is_interactive = 1;
 #else
+#ifndef YY_NEVER_INTERACTIVE
+#define YY_NEVER_INTERACTIVE 0
+#endif
 #if YY_NEVER_INTERACTIVE
 	b->yy_is_interactive = 0;
 #else
@@ -1385,6 +1395,9 @@ yy_flex_free(void *ptr)
 	free(ptr);
 }
 
+#ifndef YY_MAIN
+#define YY_MAIN 0
+#endif
 #if YY_MAIN
 int
 main(void)

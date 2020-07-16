@@ -1,8 +1,17 @@
--- $Id: NEWS,v 1.42 2019/11/23 18:23:12 tom Exp $
+-- $Id: NEWS,v 1.45 2020/07/15 23:29:40 tom Exp $
 -------------------------------------------------------------------------------
 -- Changes by Thomas E. Dickey
 -- vile:txtmode
 -------------------------------------------------------------------------------
+
+2020/07/15
+	+ compiler-warning and shellcheck fixes
+
+	+ update configure macros, e.g., for clang, BSDs, etc.
+	  CF_ADD_CFLAGS, CF_AR_FLAGS, CF_CONST_X_STRING, CF_GCC_ATTRIBUTES,
+	  CF_GCC_WARNINGS, CF_PROG_CC, CF_WITHOUT_X
+
+	+ updated config.guess, config.sub
 
 2019/11/23
 	+ cleanup manual-page formatting.

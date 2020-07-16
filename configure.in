@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 dnl
-AC_REVISION($Revision: 1.11 $)
-AC_PREREQ(2.52.20011201)
+AC_REVISION($Revision: 1.12 $)
+AC_PREREQ(2.52.20200111)
 
 AC_INIT(initscan.c)
 AC_CONFIG_HEADER(config.h:conf.in)
@@ -33,6 +33,7 @@ AC_CONST
 AC_TYPE_SIZE_T
 
 CF_XOPEN_SOURCE
+CF_WITHOUT_X
 CF_LOCALE
 CF_WITH_WARNINGS
 

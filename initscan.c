@@ -11,7 +11,7 @@
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 5
 #define YY_FLEX_LOWER_VERSION 4
-#define YY_FLEX_PATCH_VERSION 20191123
+#define YY_FLEX_PATCH_VERSION 20200715
 
 #include <stdio.h>
 
@@ -1377,6 +1377,10 @@ static int input(void);
 #endif
 #endif
 
+#ifndef YY_STACK_USED
+#define YY_STACK_USED 0
+#endif
+
 #if YY_STACK_USED
 static int yy_start_stack_ptr = 0;
 static int yy_start_stack_depth = 0;
@@ -1426,7 +1430,7 @@ static int yy_top_state(void);
 	if (yy_current_buffer->yy_is_interactive) \
 	    { \
 		int c = '*', n; \
-		for (n = 0; n < max_size && \
+		for (n = 0; n < (int) max_size && \
 		     (c = getc(yyin)) != EOF && c != '\n'; ++n) \
 		    buf[n] = (char) c; \
 		if (c == '\n') \
@@ -1518,7 +1522,7 @@ YY_DECL
 	Char nmdef[MAXLINE];
 
 
-#line 1522 "scan.c"
+#line 1526 "scan.c"
 
     if (yy_init) {
 	yy_init = 0;
@@ -1569,18 +1573,18 @@ YY_DECL
 		if (yy_current_state >= 769)
 		    yy_c = (YY_CHAR) yy_meta[(unsigned int) yy_c];
 	    }
-	    yy_current_state = (yy_nxt[yy_base[yy_current_state] + yy_c]);
+	    yy_current_state = (yy_state_type) yy_nxt[yy_base[yy_current_state] + yy_c];
 	    ++yy_cp;
 	}
 	while (yy_base[yy_current_state] != 2716);
 
 	yy_find_action:
-	yy_act = yy_accept[yy_current_state];
+	yy_act = (int) yy_accept[yy_current_state];
 	if (yy_act == 0) {
 	    /* have to back up */
 	    yy_cp = yy_last_accepting_cpos;
 	    yy_current_state = yy_last_accepting_state;
-	    yy_act = yy_accept[yy_current_state];
+	    yy_act = (int) yy_accept[yy_current_state];
 	}
 
 	YY_DO_BEFORE_ACTION;
@@ -2746,7 +2750,7 @@ YY_DECL
 #line 650 "scan.l"
 	    YY_FATAL_ERROR("flex scanner jammed");
 	    YY_BREAK
-#line 2750 "scan.c"
+#line 2754 "scan.c"
 	case YY_STATE_EOF(INITIAL):
 	case YY_STATE_EOF(SECT2):
 	case YY_STATE_EOF(CODEBLOCK):
@@ -3020,7 +3024,7 @@ yy_get_previous_state(void)
 	    if (yy_current_state >= 769)
 		yy_c = (YY_CHAR) yy_meta[(unsigned int) yy_c];
 	}
-	yy_current_state = (yy_nxt[yy_base[yy_current_state] + yy_c]);
+	yy_current_state = (yy_state_type) yy_nxt[yy_base[yy_current_state] + yy_c];
     }
 
     return yy_current_state;
@@ -3048,7 +3052,7 @@ yy_try_NUL_trans(yy_state_type yy_current_state)
 	if (yy_current_state >= 769)
 	    yy_c = (YY_CHAR) yy_meta[(unsigned int) yy_c];
     }
-    yy_current_state = (yy_nxt[yy_base[yy_current_state] + yy_c]);
+    yy_current_state = (yy_state_type) yy_nxt[yy_base[yy_current_state] + yy_c];
     yy_is_jam = (yy_current_state == 768);
 
     return yy_is_jam ? 0 : yy_current_state;
@@ -3256,9 +3260,15 @@ yy_init_buffer(YY_BUFFER_STATE b, FILE *file)
     b->yy_input_file = file;
     b->yy_fill_buffer = 1;
 
+#ifndef YY_ALWAYS_INTERACTIVE
+#define YY_ALWAYS_INTERACTIVE 0
+#endif
 #if YY_ALWAYS_INTERACTIVE
     b->yy_is_interactive = 1;
 #else
+#ifndef YY_NEVER_INTERACTIVE
+#define YY_NEVER_INTERACTIVE 0
+#endif
 #if YY_NEVER_INTERACTIVE
     b->yy_is_interactive = 0;
 #else
@@ -3480,6 +3490,9 @@ yy_flex_free(void *ptr)
     free(ptr);
 }
 
+#ifndef YY_MAIN
+#define YY_MAIN 0
+#endif
 #if YY_MAIN
 int
 main(void)

@@ -878,7 +878,7 @@ void line_warning(const char str[], int line)
 	char warning[MAXLINE];
 
 	if ( ! nowarn ) {
-		sprintf( warning, "warning, %s", str );
+		sprintf( warning, "warning, %.*s", MAXLINE - 12, str );
 		line_pinpoint( warning, line );
 	}
 }

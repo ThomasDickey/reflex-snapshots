@@ -1,5 +1,5 @@
 #! /bin/sh
-# $Id: rename.sh,v 1.5 2010/06/27 18:30:34 tom Exp $
+# $Id: rename.sh,v 1.6 2020/07/15 23:29:09 tom Exp $
 # install-helper for flex/reflex
 #
 # $1 = input file
@@ -20,10 +20,10 @@ BINARY=$1; shift
 HEADER=$1; shift
 LIBNAME=$1; shift
 
-CHR_LEAD=`echo "$BINARY" | sed -e 's/^\(.\).*/\1/'`
-CHR_TAIL=`echo "$BINARY" | sed -e 's/^.//'`
-ONE_CAPS=`echo $CHR_LEAD | tr '[a-z]' '[A-Z]'`$CHR_TAIL
-ALL_CAPS=`echo "$BINARY" | tr '[a-z]' '[A-Z]'`
+CHR_LEAD=`echo "$BINARY"   | sed -e 's/^\(.\).*/\1/'`
+CHR_TAIL=`echo "$BINARY"   | sed -e 's/^.//'`
+ONE_CAPS=`echo "$CHR_LEAD" | tr '[:lower:]' '[:upper:]'`$CHR_TAIL
+ALL_CAPS=`echo "$BINARY"   | tr '[:lower:]' '[:upper:]'`
 
 sed	-e "s,FlexLexer.h,${HEADER},g" \
 	-e "s, flex\>, $BINARY,g" \
@@ -31,6 +31,6 @@ sed	-e "s,FlexLexer.h,${HEADER},g" \
 	-e "s,\-lfl\>,-l$LIBNAME,g" \
 	-e "s,\<Flex\>,$ONE_CAPS,g" \
 	-e "s,\<FLEX\>,$ALL_CAPS,g" \
-	<$SOURCE >source.tmp
-"$@" source.tmp $TARGET
+	<"$SOURCE" >source.tmp
+"$@" source.tmp "$TARGET"
 rm -f source.tmp
