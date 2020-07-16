@@ -268,10 +268,10 @@ static void
 gen_find_action(void)
 {
     if (fullspd)
-	outn("yy_act = yy_current_state[-1].yy_nxt;");
+	outn("yy_act = (int) yy_current_state[-1].yy_nxt;");
 
     else if (fulltbl)
-	outn("yy_act = yy_accept[yy_current_state];");
+	outn("yy_act = (int) yy_accept[yy_current_state];");
 
     else if (reject) {
 	outn("yy_current_state = *--yy_state_ptr;");
@@ -285,7 +285,7 @@ gen_find_action(void)
 
 	outn("if (yy_lp && yy_lp < yy_accept[yy_current_state + 1]) {");
 	indent_up();
-	outn("yy_act = yy_acclist[yy_lp];");
+	outn("yy_act = (int) yy_acclist[yy_lp];");
 
 	if (variable_trailing_context_rules) {
 	    outn("if (yy_act & YY_TRAILING_HEAD_MASK ||");
@@ -359,7 +359,7 @@ gen_find_action(void)
     }
 
     else {			/* compressed */
-	outn("yy_act = yy_accept[yy_current_state];");
+	outn("yy_act = (int) yy_accept[yy_current_state];");
 
 	if (interactive && !reject) {
 	    /* Do the guaranteed-needed backing up to figure out
@@ -370,7 +370,7 @@ gen_find_action(void)
 	    outn("/* have to back up */");
 	    outn("yy_cp = yy_last_accepting_cpos;");
 	    outn("yy_current_state = yy_last_accepting_state;");
-	    outn("yy_act = yy_accept[yy_current_state];");
+	    outn("yy_act = (int) yy_accept[yy_current_state];");
 	    indent_down();
 	    outn("}");
 	}
@@ -446,7 +446,7 @@ gen_next_compressed_state(char *char_map)
     indent_down();
     outn("}");
 
-    outn("yy_current_state = (yy_nxt[yy_base[yy_current_state] + yy_c]);");
+    outn("yy_current_state = (yy_state_type) yy_nxt[yy_base[yy_current_state] + yy_c];");
 }
 
 /* Generate the code to find the next state. */
@@ -479,7 +479,7 @@ gen_next_state(int worry_about_NULs)
     }
 
     if (fulltbl)
-	indent_put2s("yy_current_state = yy_nxt[yy_current_state][%s];",
+	indent_put2s("yy_current_state = (yy_state_type) yy_nxt[yy_current_state][%s];",
 		     char_map);
 
     else if (fullspd)
@@ -521,7 +521,7 @@ gen_next_match(void)
 			      : "YY_SC_TO_UI(*++yy_cp)");
 
     if (fulltbl) {
-	indent_put2s("while ((yy_current_state = yy_nxt[yy_current_state][%s]) > 0)",
+	indent_put2s("while ((yy_current_state = (yy_state_type) yy_nxt[yy_current_state][%s]) > 0)",
 		     char_map);
 
 	indent_up();
@@ -626,7 +626,7 @@ gen_NUL_trans(void)
 
     else if (fulltbl) {
 	do_indent();
-	out_dec("yy_current_state = yy_nxt[yy_current_state][%d];\n",
+	out_dec("yy_current_state = (yy_state_type) yy_nxt[yy_current_state][%d];\n",
 		NUL_ec);
 	outn("yy_is_jam = (yy_current_state <= 0);");
     }
@@ -1173,7 +1173,7 @@ make_tables(void)
 	    outn("if (yy_current_buffer->yy_is_interactive) \\");
 	    outn("\t{ \\");
 	    outn("\t\tint c = '*', n; \\");
-	    outn("\t\tfor (n = 0; n < max_size && \\");
+	    outn("\t\tfor (n = 0; n < (int) max_size && \\");
 	    outn("\t\t     (c = getc(yyin)) != EOF && c != '\\n'; ++n) \\");
 	    outn("\t\t\tbuf[n] = (char) c; \\");
 	    outn("\t\tif (c == '\\n') \\");
@@ -1365,7 +1365,7 @@ make_tables(void)
 	     * out the match.
 	     */
 	    outn("yy_cp = yy_last_accepting_cpos;");
-	    outn("yy_current_state = yy_last_accepting_state;");
+	    outn("yy_current_state = (yy_state_type) yy_last_accepting_state;");
 	}
 
 	else

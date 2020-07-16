@@ -1,5 +1,5 @@
 #! /bin/sh
-# $Id: mkskel.sh,v 1.5 2010/09/06 13:55:01 tom Exp $
+# $Id: mkskel.sh,v 1.6 2020/07/15 23:24:16 tom Exp $
 
 cat <<!
 /* File created from flex.skl via mkskel.sh */
@@ -10,7 +10,7 @@ const char *const skel[] =
 {
 !
 
-sed 's/\\/&&/g' $* | \
+sed 's/\\/&&/g' "$@" | \
 sed 's/"/\\"/g' | \
 sed 's/.*/    "&",/' | \
 sed 's/	/\\t/g' | \
