@@ -1,3 +1,4 @@
+/* $Id: tblcmp.c,v 1.10 2021/05/10 21:17:23 tom Exp $ */
 /* tblcmp - table compression routines */
 
 /*-
@@ -75,21 +76,6 @@ int tbldiff(int[], int, int[]);
 void
 bldtbl(int state[], int statenum, int totaltrans, int comstate, int comfreq)
 {
-    int extptr, extrct[2][CSIZE + 1];
-    int mindiff, minprot, i, d;
-
-    /* If extptr is 0 then the first array of extrct holds the result
-     * of the "best difference" to date, which is those transitions
-     * which occur in "state" but not in the proto which, to date,
-     * has the fewest differences between itself and "state".  If
-     * extptr is 1 then the second array of extrct hold the best
-     * difference.  The two arrays are toggled between so that the
-     * best difference to date can be kept around and also a difference
-     * just created by checking against a candidate "best" proto.
-     */
-
-    extptr = 0;
-
     /* If the state has too few out-transitions, don't bother trying to
      * compact its tables.
      */
@@ -98,6 +84,18 @@ bldtbl(int state[], int statenum, int totaltrans, int comstate, int comfreq)
 	mkentry(state, numecs, statenum, JAMSTATE, totaltrans);
 
     else {
+	int mindiff, minprot, i;
+	/* If extptr is 0 then the first array of extrct holds the result
+	 * of the "best difference" to date, which is those transitions
+	 * which occur in "state" but not in the proto which, to date,
+	 * has the fewest differences between itself and "state".  If
+	 * extptr is 1 then the second array of extrct hold the best
+	 * difference.  The two arrays are toggled between so that the
+	 * best difference to date can be kept around and also a difference
+	 * just created by checking against a candidate "best" proto.
+	 */
+	int extrct[2][CSIZE + 1];
+	int extptr = 0;
 	/* "checkcom" is true if we should only check "state" against
 	 * protos which have the same "comstate" value.
 	 */
@@ -145,7 +143,7 @@ bldtbl(int state[], int statenum, int totaltrans, int comstate, int comfreq)
 	     * protos.
 	     */
 	    for (i = minprot; i != NIL; i = protnext[i]) {
-		d = tbldiff(state, i, extrct[1 - extptr]);
+		int d = tbldiff(state, i, extrct[1 - extptr]);
 		if (d < mindiff) {
 		    extptr = 1 - extptr;
 		    mindiff = d;
@@ -214,7 +212,7 @@ cmptmps(void)
 {
     int tmpstorage[CSIZE + 1];
     int *tmp = tmpstorage, i, j;
-    int totaltrans, trans;
+    int trans;
 
     peakpairs = numtemps * numecs + tblend;
 
@@ -235,7 +233,7 @@ cmptmps(void)
 
     for (i = 1; i <= numtemps; ++i) {
 	/* Number of non-jam transitions out of this template. */
-	totaltrans = 0;
+	int totaltrans = 0;
 
 	for (j = 1; j <= numecs; ++j) {
 	    trans = tnxt[numecs * i + j];
@@ -315,8 +313,7 @@ find_table_space(int *state, int numtrans)
      * consecutive unused records in the chk and nxt arrays.
      */
     int i;
-    int *state_ptr, *chk_ptr;
-    int *ptr_to_last_entry_in_state;
+    int *chk_ptr;
 
     /* If there are too many out-transitions, put the state at the end of
      * nxt and chk.
@@ -343,6 +340,9 @@ find_table_space(int *state, int numtrans)
 
     while (1)			/* loops until a space is found */
     {
+	int *state_ptr;
+	int *ptr_to_last_entry_in_state;
+
 	while (i + numecs >= current_max_xpairs)
 	    expand_nxt_chk();
 
@@ -406,8 +406,6 @@ find_table_space(int *state, int numtrans)
 void
 inittbl(void)
 {
-    int i;
-
     zero_out((char *) chk, ((unsigned) current_max_xpairs * sizeof(int)));
 
     tblend = 0;
@@ -415,6 +413,8 @@ inittbl(void)
     numtemps = 0;
 
     if (usemecs) {
+	int i;
+
 	/* Set up doubly-linked meta-equivalence classes; these
 	 * are sets of equivalence classes which all have identical
 	 * transitions out of TEMPLATES.

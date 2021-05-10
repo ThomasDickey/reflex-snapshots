@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.25 2017/05/21 17:06:08 tom Exp $
+# $Id: Makefile.in,v 1.26 2021/05/10 08:25:20 tom Exp $
 # @(#) @Header: /home/daffy/u0/vern/flex/RCS/Makefile.in,v 1.45 96/09/10 16:59:04 vern Exp @ (LBL)
 
 @SET_MAKE@
@@ -82,6 +82,7 @@ INSTALL_PROGRAM = @INSTALL_PROGRAM@
 CTAGS		= @CTAGS@
 ETAGS		= @ETAGS@
 LINT		= @LINT@
+LINT_OPTS	= @LINT_OPTS@
 
 EXTRA_CFLAGS	= @EXTRA_CFLAGS@
 
@@ -247,13 +248,13 @@ tags: $(SOURCES)
 @MAKE_UPPER_TAGS@	$(ETAGS) $(SOURCES)
 
 lint: $(LINTSRCS)
-	$(LINT) $(CPPFLAGS) $(LINTSRCS) > flex.lint
+	$(LINT) $(LINT_OPTS) $(CPPFLAGS) $(LINTSRCS)
 
 mostlyclean ::
 	rm -f a.out *.bak core errs scan.tmp
 
 clean :: mostlyclean
-	rm -f flex parse.c parse.h *$o alloca.c *.lint lex.yy.c lex.yy.cc \
+	rm -f flex parse.c parse.h *$o alloca.c lex.yy.c lex.yy.cc \
 		$(FLEXLIB) config.log config.cache
 
 distclean :: clean

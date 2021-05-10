@@ -11,7 +11,7 @@
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 5
 #define YY_FLEX_LOWER_VERSION 4
-#define YY_FLEX_PATCH_VERSION 20200715
+#define YY_FLEX_PATCH_VERSION 20210510
 
 #include <stdio.h>
 
@@ -84,7 +84,9 @@
 #define YY_END_OF_BUFFER_CHAR 0
 
 /* Size of default input buffer. */
+#ifndef YY_BUF_SIZE
 #define YY_BUF_SIZE 16384
+#endif
 
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
 
@@ -1335,7 +1337,7 @@ static void add_off_action(int, int *, const char *);
 #define OPTION 17
 #define LINEDIR 18
 
-#line 1339 "scan.c"
+#line 1341 "scan.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -1522,7 +1524,7 @@ YY_DECL
 	Char nmdef[MAXLINE];
 
 
-#line 1526 "scan.c"
+#line 1528 "scan.c"
 
     if (yy_init) {
 	yy_init = 0;
@@ -2750,7 +2752,7 @@ YY_DECL
 #line 650 "scan.l"
 	    YY_FATAL_ERROR("flex scanner jammed");
 	    YY_BREAK
-#line 2754 "scan.c"
+#line 2756 "scan.c"
 	case YY_STATE_EOF(INITIAL):
 	case YY_STATE_EOF(SECT2):
 	case YY_STATE_EOF(CODEBLOCK):

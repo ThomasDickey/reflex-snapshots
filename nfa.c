@@ -1,3 +1,4 @@
+/* $Id: nfa.c,v 1.9 2021/05/10 21:17:23 tom Exp $ */
 /* nfa - NFA construction routines */
 
 /*-
@@ -85,7 +86,7 @@ copysingl(int singl, int num)
 void
 dumpnfa(int state1)
 {
-    int sym, tsp1, tsp2, anum, ns;
+    int ns;
 
     fprintf(stderr,
 	    _("\n\n********** beginning dump of nfa with start state %d\n"),
@@ -101,17 +102,19 @@ dumpnfa(int state1)
     for (ns = 1; ns <= lastnfa; ++ns) {
 	fprintf(stderr, _("state # %4d\t"), ns);
 
-	sym = transchar[ns];
-	tsp1 = trans1[ns];
-	tsp2 = trans2[ns];
-	anum = accptnum[ns];
+	{
+	    int sym = transchar[ns];
+	    int tsp1 = trans1[ns];
+	    int tsp2 = trans2[ns];
+	    int anum = accptnum[ns];
 
-	fprintf(stderr, "%3d:  %4d, %4d", sym, tsp1, tsp2);
+	    fprintf(stderr, "%3d:  %4d, %4d", sym, tsp1, tsp2);
 
-	if (anum != NIL)
-	    fprintf(stderr, "  [%d]", anum);
+	    if (anum != NIL)
+		fprintf(stderr, "  [%d]", anum);
 
-	fprintf(stderr, "\n");
+	    fprintf(stderr, "\n");
+	}
     }
 
     fprintf(stderr, _("********** end of dump\n"));
@@ -223,12 +226,12 @@ finish_rule(int mach, int variable_trail_rule, int headcnt, int trailcnt)
 	     * characters.
 	     */
 	    const char *scanner_cp = "yy_c_buf_p = yy_cp";
-	    const char *scanner_bp = "yy_bp";
 
 	    add_ind_action(3,
 			   "*yy_cp = yy_hold_char;\t/* undo effects of setting up yytext */\n");
 
 	    if (headcnt > 0) {
+		const char *scanner_bp = "yy_bp";
 		sprintf(action_text, "%s = %s + %d;\n",
 			scanner_cp, scanner_bp, headcnt);
 		add_ind_action(3, action_text);
@@ -477,15 +480,13 @@ mkor(int first, int second)
 int
 mkposcl(int state)
 {
-    int eps;
-
     if (SUPER_FREE_EPSILON(finalst[state])) {
 	mkxtion(finalst[state], state);
 	return state;
     }
 
     else {
-	eps = mkstate(SYM_EPSILON);
+	int eps = mkstate(SYM_EPSILON);
 	mkxtion(eps, state);
 	return link_machines(state, eps);
     }
@@ -505,7 +506,7 @@ mkposcl(int state)
 int
 mkrep(int mach, int lb, int ub)
 {
-    int base_mach, tail, copy, i;
+    int base_mach, copy;
 
     base_mach = copysingl(mach, lb - 1);
 
@@ -516,7 +517,8 @@ mkrep(int mach, int lb, int ub)
     }
 
     else {
-	tail = mkstate(SYM_EPSILON);
+	int i;
+	int tail = mkstate(SYM_EPSILON);
 
 	for (i = lb; i < ub; ++i) {
 	    copy = dupmachine(mach);

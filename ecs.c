@@ -1,3 +1,4 @@
+/* $Id: ecs.c,v 1.8 2021/05/10 21:17:23 tom Exp $ */
 /* ecs - equivalence class routines */
 
 /*-
@@ -35,7 +36,7 @@
 void
 ccl2ecl(void)
 {
-    int i, ich, newlen, cclp, ccls, cclmec;
+    int i;
 
     for (i = 1; i <= lastccl; ++i) {
 	/* We loop through each character class, and for each character
@@ -45,12 +46,13 @@ ccl2ecl(void)
 	 * of equivalence classes
 	 */
 
-	newlen = 0;
-	cclp = cclmap[i];
+	int newlen = 0;
+	int cclp = cclmap[i];
+	int ccls;
 
 	for (ccls = 0; ccls < ccllen[i]; ++ccls) {
-	    ich = ccltbl[cclp + ccls].ch;
-	    cclmec = ecgroup[ich];
+	    int ich = ccltbl[cclp + ccls].ch;
+	    int cclmec = ecgroup[ich];
 
 	    if (cclmec > 0) {
 		ccltbl[cclp + newlen].ch = (Char) cclmec;
@@ -186,7 +188,7 @@ mkeccl(CCLTBL ccls[], int lenccl, int fwd[], int bck[], int llsiz, int NUL_mappi
 
 	/* Find next ccl member to process. */
 
-	for (++cclp; cclflags[cclp] && cclp < lenccl; ++cclp) {
+	for (++cclp; cclp < lenccl && cclflags[cclp]; ++cclp) {
 	    /* Reset "doesn't need processing" flag. */
 	    cclflags[cclp] = 0;
 	}

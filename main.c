@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.13 2017/12/31 15:22:40 tom Exp $ */
+/* $Id: main.c,v 1.14 2021/05/10 18:40:27 tom Exp $ */
 /* flex - tool to generate fast lexical analyzers */
 
 /*-
@@ -343,8 +343,6 @@ check_options(void)
 void
 flexend(int exit_status)
 {
-    int tblsiz;
-
     if (skelfile != NULL) {
 	if (ferror(skelfile))
 	    lerrsf(_("input error reading skeleton file %s"),
@@ -390,6 +388,8 @@ flexend(int exit_status)
     }
 
     if (printstats) {
+	int tblsiz;
+
 	fprintf(stderr, _("%s version %s (%s) usage statistics:\n"),
 		program_name, flex_version, flex_patched);
 

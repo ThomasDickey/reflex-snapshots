@@ -1,3 +1,4 @@
+/* $Id: dfa.c,v 1.8 2021/05/10 21:17:23 tom Exp $ */
 /* dfa - DFA construction routines */
 
 /*-
@@ -177,11 +178,11 @@ dump_associated_rules(FILE *file, int ds)
 void
 dump_transitions(FILE *file, int state[])
 {
-    int i, ec;
+    int i;
     int out_char_set[CSIZE];
 
     for (i = 0; i < csize; ++i) {
-	ec = ABS(ecgroup[i]);
+	int ec = ABS(ecgroup[i]);
 	out_char_set[i] = state[ec];
     }
 
@@ -223,7 +224,7 @@ int *
 epsclosure(int *t, int *ns_addr, int accset[], int *nacc_addr, int *hv_addr)
 {
     int stkpos, ns, tsp;
-    int numstates = *ns_addr, nacc, hashval, transsym, nfaccnum;
+    int numstates = *ns_addr, nacc, hashval, nfaccnum;
     int stkend, nstate;
     static int did_stk_init = false, *stk;
 
@@ -295,6 +296,8 @@ epsclosure(int *t, int *ns_addr, int accset[], int *nacc_addr, int *hv_addr)
     }
 
     for (stkpos = 1; stkpos <= stkend; ++stkpos) {
+	int transsym;
+
 	ns = stk[stkpos];
 	transsym = transchar[ns];
 
@@ -361,10 +364,10 @@ void
 ntod(void)
 {
     int *accset, ds, nacc, newds;
-    int sym, hashval, numstates, dsize;
+    int sym, hashval, numstates;
     int num_full_table_rows = 0;	/* used only for -f */
-    int *nset, *dset;
-    int targptr, totaltrans, i, comstate, comfreq, targ;
+    int *nset;
+    int i, comstate, comfreq, targ;
     int symlist[CSIZE + 1];
     int num_start_states;
     int todo_head, todo_next;
@@ -540,8 +543,10 @@ ntod(void)
     }
 
     while (todo_head < todo_next) {
-	targptr = 0;
-	totaltrans = 0;
+	int *dset;
+	int dsize;
+	int targptr = 0;
+	int totaltrans = 0;
 
 	for (i = 1; i <= numecs; ++i)
 	    state[i] = 0;
@@ -912,7 +917,7 @@ symfollowset(int ds[], int dsize, int transsym, int nset[])
 void
 sympartition(int ds[], int numstates, int symlist[], int duplist[])
 {
-    int tch, i, j, k, ns, dupfwd[CSIZE + 1], lenccl, cclp, ich;
+    int i, j, k, dupfwd[CSIZE + 1], lenccl, cclp, ich;
 
     /* Partitioning is done by creating equivalence classes for those
      * characters which have out-transitions from the given state.  Thus
@@ -928,8 +933,8 @@ sympartition(int ds[], int numstates, int symlist[], int duplist[])
     dupfwd[numecs] = NIL;
 
     for (i = 1; i <= numstates; ++i) {
-	ns = ds[i];
-	tch = transchar[ns];
+	int ns = ds[i];
+	int tch = transchar[ns];
 
 	if (tch != SYM_EPSILON) {
 	    if (tch < -lastccl || tch >= csize) {

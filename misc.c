@@ -1,4 +1,4 @@
-/* $Id: misc.c,v 1.19 2013/12/09 23:56:12 tom Exp $ */
+/* $Id: misc.c,v 1.20 2021/05/10 21:16:27 tom Exp $ */
 /* misc - miscellaneous flex routines */
 
 /*-
@@ -76,8 +76,8 @@ add_action(const char *new_text)
 void
 add_ind_action(int level, const char *new_text)
 {
-    char buffer[80];
     if (level > 0) {
+	char buffer[80];
 	int cols = level * INDENT_SIZE;
 	int len = 0;
 
@@ -116,7 +116,7 @@ int
 all_lower(char *str)
 {
     while (*str) {
-	if (!islower((Char) * str))
+	if (!islower((Char) *str))
 	    return 0;
 	++str;
     }
@@ -129,7 +129,7 @@ int
 all_upper(char *str)
 {
     while (*str) {
-	if (!isupper((Char) * str))
+	if (!isupper((Char) *str))
 	    return 0;
 	++str;
     }
@@ -225,7 +225,7 @@ copy_string(const char *str)
  *    returns a dynamically allocated copy of a (potentially) unsigned string
  */
 Char *
-copy_unsigned_string(Char * str)
+copy_unsigned_string(Char *str)
 {
     Char *c;
     Char *copy;
@@ -340,7 +340,7 @@ flexfatal(const char *msg)
 
 /* htoi - convert a hexadecimal digit string to an integer value */
 int
-htoi(Char * str)
+htoi(Char *str)
 {
     unsigned int result;
 
@@ -504,7 +504,7 @@ myctoi(char *array)
 
 /* myesc - return character corresponding to escape sequence */
 Char
-myesc(Char * array)
+myesc(Char *array)
 {
     Char c, esc_char;
 
@@ -590,7 +590,7 @@ myesc(Char * array)
 
 /* otoi - convert an octal digit string to an integer value */
 int
-otoi(Char * str)
+otoi(Char *str)
 {
     unsigned int result;
 
