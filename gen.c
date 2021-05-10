@@ -1,3 +1,4 @@
+/* $Id: gen.c,v 1.32 2021/05/10 21:17:23 tom Exp $ */
 /* gen - actual generation (writing) of flex scanners */
 
 /*-
@@ -104,17 +105,19 @@ gen_bu_action(void)
 static void
 genccl(void)
 {
-    int i, j, mapped;
-    unsigned mask, bits;
-
     if (trace) {
+	int i;
+
 	fputs(_("\n\nCharacter Classes:\n\n"), stderr);
 
 	for (i = 1; i < lastccl; ++i) {
+	    int j;
+	    int mapped = cclmap[i];
+	    unsigned mask = 0;
+	    unsigned bits;
+
 	    fprintf(stderr, "%d size %d\n", i, ccllen[i]);
 
-	    mapped = cclmap[i];
-	    mask = 0;
 	    for (j = 0; j < ccllen[i]; ++j) {
 		mask |= ccltbl[j + mapped].why;
 	    }
@@ -138,8 +141,7 @@ genccl(void)
 static void
 genecs(void)
 {
-    int i, j;
-    int numrows;
+    int i;
 
     genccl();
     out_str_dec(C_int_decl, "yy_ec", csize);
@@ -155,9 +157,10 @@ genecs(void)
     dataend();
 
     if (trace) {
-	fputs(_("\n\nEquivalence Classes:\n\n"), stderr);
+	int j;
+	int numrows = csize / 8;
 
-	numrows = csize / 8;
+	fputs(_("\n\nEquivalence Classes:\n\n"), stderr);
 
 	for (j = 0; j < numrows; ++j) {
 	    for (i = j; i < csize; i = i + numrows) {
@@ -704,7 +707,7 @@ gen_start_state(void)
 static void
 gentabs(void)
 {
-    int i, j, k, *accset, nacc, *acc_array, total_states;
+    int i, k, *acc_array, total_states;
     int end_of_buffer_action = num_rules + 1;
 
     acc_array = allocate_integer_array(current_max_dfas);
@@ -725,6 +728,7 @@ gentabs(void)
 	 * array, and save the indices in the dfaacc array.
 	 */
 	int EOB_accepting_list[2];
+	int j;
 
 	/* Set up accepting structures for the End Of Buffer state. */
 	EOB_accepting_list[0] = 0;
@@ -741,8 +745,8 @@ gentabs(void)
 	    acc_array[i] = j;
 
 	    if (accsiz[i] != 0) {
-		accset = dfaacc[i].dfaacc_set;
-		nacc = accsiz[i];
+		int *accset = dfaacc[i].dfaacc_set;
+		int nacc = accsiz[i];
 
 		if (trace)
 		    fprintf(stderr,

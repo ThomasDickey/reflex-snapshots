@@ -1,3 +1,4 @@
+/* $Id: yylex.c,v 1.6 2021/05/10 21:17:23 tom Exp $ */
 /* yylex - scanner front-end for flex */
 
 /*-
@@ -40,8 +41,6 @@ int
 yylex(void)
 {
     int toktype;
-    static int beglin = false;
-
     if (eofseen)
 	toktype = EOF;
     else
@@ -61,6 +60,8 @@ yylex(void)
     }
 
     if (trace) {
+	static int beglin = false;
+
 	if (beglin) {
 	    fprintf(stderr, "%d\t", num_rules + 1);
 	    beglin = 0;
