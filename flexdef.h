@@ -1,4 +1,4 @@
-/* $Id: flexdef.h,v 1.24 2017/12/31 15:21:04 tom Exp $ */
+/* $Id: flexdef.h,v 1.26 2021/08/04 23:26:19 tom Exp $ */
 /* flexdef - definitions file for flex */
 
 /*-
@@ -31,6 +31,7 @@
 
 #include <stdio.h>
 #include <ctype.h>
+#include <stdarg.h>
 
 #include "config.h"
 
@@ -76,10 +77,18 @@ extern "C" {
 
 #include <assert.h>
 
+#ifndef GCC_PRINTFLIKE
+#if defined(GCC_PRINTF) && !defined(printf)
+#define GCC_PRINTFLIKE(fmt,var) __attribute__((format(printf,fmt,var)))
+#else
+#define GCC_PRINTFLIKE(fmt,var) /*nothing*/
+#endif
+#endif
+
 /* As an aid for the internationalization patch to flex, which
  * is maintained outside this distribution for copyright reasons.
  */
-#define _(String) (String)
+#define _(String) String
 
 /* Always be prepared to generate an 8-bit scanner. */
 #define CSIZE 256
@@ -837,10 +846,10 @@ extern void dataend (void);
 extern void dataflush (void);
 
 /* Report an error message and terminate. */
-extern void flexerror (const char[]);
+extern void flexerror (const char*, ...) GCC_PRINTFLIKE(1,2);
 
 /* Report a fatal error message and terminate. */
-extern void flexfatal (const char[]);
+extern void flexfatal (const char*, ...) GCC_PRINTFLIKE(1,2);
 
 /* Convert a hexadecimal digit string to an integer value. */
 extern int htoi (Char[]);

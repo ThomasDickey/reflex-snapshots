@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.14 2021/05/10 18:40:27 tom Exp $ */
+/* $Id: main.c,v 1.24 2021/08/05 00:11:21 tom Exp $ */
 /* flex - tool to generate fast lexical analyzers */
 
 /*-
@@ -232,7 +232,7 @@ check_options(void)
 
 	if (do_yylineno)
 	    flexerror(
-			 _("-Cf/-CF and %option yylineno are incompatible"));
+			 _("-Cf/-CF and %%option yylineno are incompatible"));
 
 	if (fulltbl && fullspd)
 	    flexerror(_("-Cf and -CF are mutually exclusive"));
@@ -559,12 +559,100 @@ flexend(int exit_status)
     exit(exit_status);
 }
 
+#define SIZEOF(v) (sizeof(v) / sizeof((v)[0]))
+
+/*
+ * Long options are provided only as a compatibility aid for scripters.
+ */
+/* *INDENT-OFF* */
+static const struct {
+    const char fake_opt[16];
+    const char yacc_arg;
+    const char real_opt;
+} long_opts[] = {
+    { "7bit",             0, '7' },
+    { "8bit",             0, '8' },
+    { "backup",           0, 'b' },
+    { "batch",            0, 'B' },
+    { "case-insensitive", 0, 'i' },
+    { "debug",            0, 'd' },
+    { "help",             0, 'h' },
+    { "interactive",      0, 'I' },
+    { "lex-compat",       0, 'l' },
+    { "nodefault",        0, 's' },
+    { "noline",           0, 'L' },
+    { "nowarn",           0, 'w' },
+    { "outfile",          0, 'o' },
+    { "perf-report",      0, 'p' },
+    { "prefix",           0, 'P' },
+    { "skel",             0, 'S' },
+    { "stdout",           0, 't' },
+    { "trace",            0, 'T' },
+    { "version",          0, 'V' },
+};
+
+static const struct {
+    const char option;
+    const char param_type;	/* 0=none, 1=string, 2=file */
+    const char is_program;	/* 0=none, 1=program */
+    const char help_text[80];
+} normal_opts[] = {
+    { '+', 0, 0,  _("generate C++ scanner class") },
+    { '?', 0, 0,  _("produce this help message") },
+    { '7', 0, 0,  _("generate 7-bit scanner") },
+    { '8', 0, 0,  _("generate 8-bit scanner") },
+    { 'B', 0, 0,  _("generate batch scanner (opposite of -I)") },
+    { 'b', 0, 3,  _("generate backing-up information to %s") },
+    { 'c', 0, 0,  _("do-nothing POSIX option") },
+    { 'C',-1, 0,  _("specify degree of table compression (default is -Cem)") },
+    { 'd', 0, 0,  _("turn on debug mode in generated scanner") },
+    { 'f', 0, 0,  _("generate fast, large scanner") },
+    { 'F', 0, 0,  _("use alternative fast scanner representation") },
+    { 'h', 0, 0,  _("produce this help message") },
+    { 'i', 0, 0,  _("generate case-insensitive scanner") },
+    { 'I', 0, 0,  _("generate interactive scanner (opposite of -B)") },
+    { 'l', 0, 0,  _("maximal compatibility with original lex") },
+    { 'L', 0, 0,  _("suppress #line directives in scanner") },
+    { 'n', 0, 0,  _("do-nothing POSIX option") },
+    { 'o', 2, 0,  _("specify output filename") },
+    { 'p', 0, 0,  _("generate performance report to stderr") },
+    { 'P', 1, 0,  _("specify scanner prefix other than \"yy\"") },
+    { 's', 0, 0,  _("suppress default rule to ECHO unmatched text") },
+    { 'S', 2, 0,  _("specify skeleton file") },
+    { 'T', 0, 1,  _("%s should run in trace mode") },
+    { 't', 0, 2,  _("write generated scanner on stdout instead of %s") },
+    { 'v', 0, 0,  _("write summary of scanner statistics to stderr") },
+    { 'V', 0, 1,  _("report %s version") },
+    { 'w', 0, 0,  _("do not generate warnings") },
+};
+
+static const struct {
+    const char option;
+    const char help_text[80];
+} compress_opts[] = {
+    { 'a', _("trade off larger tables for better memory alignment") },
+    { 'e', _("construct equivalence classes") },
+    { 'f', _("do not compress scanner tables; use -f representation") },
+    { 'F', _("do not compress scanner tables; use -F representation") },
+    { 'm', _("construct meta-equivalence classes") },
+    { 'r', _("use read() instead of stdio for scanner input") },
+};
+/* *INDENT-ON* */
+
+static void
+invalid_option(const char *arg)
+{
+    fprintf(stderr, _("invalid option: %s"), arg);
+    usage();
+    exit(EXIT_FAILURE);
+}
+
 /* flexinit - initialize flex */
 void
 flexinit(int argc, char **argv)
 {
     int i, sawcmpflag;
-    const char *arg;
+    char *arg;
 
     printstats = syntaxerror = trace = spprdflt = caseins = false;
     lex_compat = C_plus_plus = backing_up_report = ddebug = fulltbl = false;
@@ -594,28 +682,76 @@ flexinit(int argc, char **argv)
 	C_plus_plus = true;
 
     /* read flags */
-    for (--argc, ++argv; argc; --argc, ++argv) {
+    for (--argc, ++argv; argc > 0; --argc, ++argv) {
 	arg = argv[0];
 
 	if (arg[0] != '-' || arg[1] == '\0')
 	    break;
 
-	if (arg[1] == '-') {	/* --option */
-	    if (!strcmp(arg, "--help"))
-		arg = "-h";
+	if (!strncmp(arg, "--", 2)) {
+	    char *eqls;
+	    size_t lc;
+	    size_t len;
 
-	    else if (!strcmp(arg, "--version"))
-		arg = "-V";
-
-	    else if (!strcmp(arg, "--")) {	/* end of options */
+	    if ((len = strlen(arg)) == 2) {
 		--argc;
 		++argv;
 		break;
 	    }
+
+	    if ((eqls = strchr(arg, '=')) != NULL) {
+		len = (size_t) (eqls - arg);
+		if (len == 0 || eqls[1] == '\0')
+		    invalid_option(arg);
+	    }
+
+	    for (lc = 0; lc < SIZEOF(long_opts); ++lc) {
+		if (!strncmp(long_opts[lc].fake_opt, arg + 2, len - 2)) {
+		    if (eqls != NULL && !long_opts[lc].yacc_arg)
+			invalid_option(arg);
+		    *arg++ = '-';
+		    *arg++ = long_opts[lc].real_opt;
+		    *arg = '\0';
+		    if (eqls) {
+			while ((*arg++ = *++eqls) != '\0') /* empty */ ;
+		    }
+		    break;
+		}
+	    }
+	    arg = argv[0];
+	    if (!strncmp(arg, "--", 2))
+		invalid_option(arg);
 	}
 
-	for (i = 1; arg[i] != '\0'; ++i)
-	    switch (arg[i]) {
+	for (i = 1; arg[i] != '\0'; ++i) {
+	    int ch = arg[i];
+	    size_t j;
+	    const char *option_value = NULL;
+
+	    for (j = 0; j < SIZEOF(normal_opts); ++j) {
+		if (normal_opts[j].option == ch) {
+		    if (normal_opts[j].param_type < 0) {
+			option_value = arg + i + 1;
+		    } else if (normal_opts[j].param_type != 0) {
+			if (i != 1) {
+			    flexerror(_("-%c flag must be given separately"),
+				      ch);
+			}
+			if (arg[i + 1] != '\0') {
+			    option_value = arg + i + 1;
+			} else {
+			    --argc;
+			    option_value = arg = *++argv;
+			}
+			if (option_value == NULL)
+			    flexerror(_("-%c flag has no value"), ch);
+		    }
+		    i = (int) strlen(arg) - 1;
+		    break;
+		}
+	    }
+
+	    switch (ch) {
 	    case '+':
 		C_plus_plus = true;
 		break;
@@ -632,10 +768,6 @@ flexinit(int argc, char **argv)
 		break;
 
 	    case 'C':
-		if (i != 1)
-		    flexerror(
-				 _("-C flag must be given separately"));
-
 		if (!sawcmpflag) {
 		    useecs = false;
 		    usemecs = false;
@@ -643,8 +775,8 @@ flexinit(int argc, char **argv)
 		    sawcmpflag = true;
 		}
 
-		for (++i; arg[i] != '\0'; ++i)
-		    switch (arg[i]) {
+		for (j = 0; option_value[j] != '\0'; ++j) {
+		    switch (option_value[j]) {
 		    case 'a':
 			long_align =
 			    true;
@@ -673,11 +805,11 @@ flexinit(int argc, char **argv)
 		    default:
 			lerrif(
 				  _("unknown -C option '%c'"),
-				  (int) arg[i]);
+				  (int) option_value[j]);
 			break;
 		    }
-
-		goto get_next_arg;
+		}
+		break;
 
 	    case 'd':
 		ddebug = true;
@@ -721,33 +853,21 @@ flexinit(int argc, char **argv)
 		break;
 
 	    case 'o':
-		if (i != 1)
-		    flexerror(
-				 _("-o flag must be given separately"));
-
-		outfilename = arg + i + 1;
+		outfilename = option_value;
 		did_outfilename = 1;
-		goto get_next_arg;
+		break;
 
 	    case 'P':
-		if (i != 1)
-		    flexerror(
-				 _("-P flag must be given separately"));
-
-		prefix = arg + i + 1;
-		goto get_next_arg;
+		prefix = option_value;
+		break;
 
 	    case 'p':
 		++performance_report;
 		break;
 
 	    case 'S':
-		if (i != 1)
-		    flexerror(
-				 _("-S flag must be given separately"));
-
-		skelname = arg + i + 1;
-		goto get_next_arg;
+		skelname = option_value;
+		break;
 
 	    case 's':
 		spprdflt = true;
@@ -785,17 +905,17 @@ flexinit(int argc, char **argv)
 	    default:
 		fprintf(stderr,
 			_("%s: unknown flag '%c'.  For usage, try\n\t%s --help\n"),
-			program_name, (int) arg[i],
+			program_name, ch,
 			program_name);
 		exit(EXIT_FAILURE);
 	    }
-
-	/* Used by -C, -S, -o, and -P flags in lieu of a "continue 2"
-	 * control.
-	 */
-      get_next_arg:;
+	}
     }
 
+    /*
+     * At this point, argv points to the first input-file, and argc has been
+     * adjusted to the length of the input-file list in argv.
+     */
     num_input_files = argc;
     input_files = argv;
     set_input_file(num_input_files > 0 ? input_files[0] : NULL);
@@ -909,7 +1029,7 @@ readin(void)
 			 _("REJECT cannot be used with -f or -F"));
 	else if (do_yylineno)
 	    flexerror(
-			 _("%option yylineno cannot be used with -f or -F"));
+			 _("%%option yylineno cannot be used with -f or -F"));
 	else
 	    flexerror(
 			 _("variable trailing context rules cannot be used with -f or -F"));
@@ -995,7 +1115,7 @@ readin(void)
 
 	if (yyclass)
 	    flexerror(
-			 _("%option yyclass only meaningful for C++ scanners"));
+			 _("%%option yyclass only meaningful for C++ scanners"));
     }
 
     if (useecs)
@@ -1072,24 +1192,8 @@ void
 usage(void)
 {
     FILE *f = stdout;
-
-    fprintf(f,
-	    _("%s [-bcdfhilnpstvwBFILTV78+? -C[aefFmr] -ooutput -Pprefix -Sskeleton]\n"),
-	    program_name);
-    fprintf(f, _("\t[--help --version] [file ...]\n"));
-
-    fprintf(f, _("\t-b  generate backing-up information to %s\n"),
-	    backing_name);
-    fprintf(f, _("\t-c  do-nothing POSIX option\n"));
-    fprintf(f, _("\t-d  turn on debug mode in generated scanner\n"));
-    fprintf(f, _("\t-f  generate fast, large scanner\n"));
-    fprintf(f, _("\t-h  produce this help message\n"));
-    fprintf(f, _("\t-i  generate case-insensitive scanner\n"));
-    fprintf(f, _("\t-l  maximal compatibility with original lex\n"));
-    fprintf(f, _("\t-n  do-nothing POSIX option\n"));
-    fprintf(f, _("\t-p  generate performance report to stderr\n"));
-    fprintf(f,
-	    _("\t-s  suppress default rule to ECHO unmatched text\n"));
+    size_t n;
+    const char *extra_param = NULL;
 
     if (!did_outfilename) {
 	sprintf(outfile_path, outfile_template,
@@ -1097,40 +1201,58 @@ usage(void)
 	outfilename = outfile_path;
     }
 
-    fprintf(f,
-	    _("\t-t  write generated scanner on stdout instead of %s\n"),
-	    outfilename);
+    fprintf(f, _("%s [options] [file ...]\n"), program_name);
 
-    fprintf(f,
-	    _("\t-v  write summary of scanner statistics to f\n"));
-    fprintf(f, _("\t-w  do not generate warnings\n"));
-    fprintf(f, _("\t-B  generate batch scanner (opposite of -I)\n"));
-    fprintf(f,
-	    _("\t-F  use alternative fast scanner representation\n"));
-    fprintf(f,
-	    _("\t-I  generate interactive scanner (opposite of -B)\n"));
-    fprintf(f, _("\t-L  suppress #line directives in scanner\n"));
-    fprintf(f, _("\t-T  %s should run in trace mode\n"), program_name);
-    fprintf(f, _("\t-V  report %s version\n"), program_name);
-    fprintf(f, _("\t-7  generate 7-bit scanner\n"));
-    fprintf(f, _("\t-8  generate 8-bit scanner\n"));
-    fprintf(f, _("\t-+  generate C++ scanner class\n"));
-    fprintf(f, _("\t-?  produce this help message\n"));
-    fprintf(f,
-	    _("\t-C  specify degree of table compression (default is -Cem):\n"));
-    fprintf(f,
-	    _("\t\t-Ca  trade off larger tables for better memory alignment\n"));
-    fprintf(f, _("\t\t-Ce  construct equivalence classes\n"));
-    fprintf(f,
-	    _("\t\t-Cf  do not compress scanner tables; use -f representation\n"));
-    fprintf(f,
-	    _("\t\t-CF  do not compress scanner tables; use -F representation\n"));
-    fprintf(f, _("\t\t-Cm  construct meta-equivalence classes\n"));
-    fprintf(f,
-	    _("\t\t-Cr  use read() instead of stdio for scanner input\n"));
-    fprintf(f, _("\t-o  specify output filename\n"));
-    fprintf(f, _("\t-P  specify scanner prefix other than \"yy\"\n"));
-    fprintf(f, _("\t-S  specify skeleton file\n"));
-    fprintf(f, _("\t--help     produce this help message\n"));
-    fprintf(f, _("\t--version  report %s version\n"), program_name);
+    fprintf(f, "\n");
+    fprintf(f, _("Options:\n"));
+    for (n = 0; n < SIZEOF(normal_opts); ++n) {
+	const char *param = "";
+	switch (normal_opts[n].param_type) {
+	case -1:
+	    param = "[STRING]";
+	    break;
+	case 1:
+	    param = " STRING";
+	    break;
+	case 2:
+	    param = " FILE";
+	    break;
+	}
+
+	fprintf(f, "  -%c%-9s ", normal_opts[n].option, param);
+	switch (normal_opts[n].is_program) {
+	case 1:
+	    extra_param = program_name;
+	    break;
+	case 2:
+	    extra_param = outfilename;
+	    break;
+	case 3:
+	    extra_param = backing_name;
+	    break;
+	}
+	if (extra_param) {
+	    fprintf(f, normal_opts[n].help_text, extra_param);
+	} else {
+	    fputs(normal_opts[n].help_text, f);
+	}
+	fputc('\n', f);
+    }
+
+    fprintf(f, "\n");
+    fprintf(f, _("Compression options:\n"));
+    for (n = 0; n < SIZEOF(compress_opts); ++n) {
+	fprintf(f, "  -C%c %7s %s\n",
+		compress_opts[n].option,
+		"",
+		compress_opts[n].help_text);
+    }
+
+    fprintf(f, "\n");
+    fprintf(f, _("Long options:\n"));
+    for (n = 0; n < SIZEOF(long_opts); ++n) {
+	fprintf(f, "  --%-20s-%c\n",
+		long_opts[n].fake_opt,
+		long_opts[n].real_opt);
+    }
 }

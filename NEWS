@@ -1,8 +1,14 @@
--- $Id: NEWS,v 1.49 2021/05/10 21:36:51 tom Exp $
+-- $Id: NEWS,v 1.53 2021/08/04 22:50:38 tom Exp $
 -------------------------------------------------------------------------------
 -- Changes by Thomas E. Dickey
 -- vile:txtmode
 -------------------------------------------------------------------------------
+
+2021/08/04
+	+ rewrote command-line options parsing, adding a table to map long
+	  options into the normal single-letter options.
+
+	+ updated config.guess, config.sub
 
 2021/05/10
 	+ modify skeleton to allow override of YY_BUF_SIZE
