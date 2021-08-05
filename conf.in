@@ -30,6 +30,9 @@
 /* Define if platform-specific command line handling is necessary.  */
 #undef NEED_ARGV_FIXUP
 
+/* Define to template for printf, for compiler-warnings */
+#undef GCC_PRINTFLIKE
+
 /*
  * vile:cmode
  */

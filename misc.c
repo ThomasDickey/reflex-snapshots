@@ -1,4 +1,4 @@
-/* $Id: misc.c,v 1.20 2021/05/10 21:16:27 tom Exp $ */
+/* $Id: misc.c,v 1.22 2021/08/04 23:25:11 tom Exp $ */
 /* misc - miscellaneous flex routines */
 
 /*-
@@ -323,18 +323,33 @@ dataflush(void)
 
 /* flexerror - report an error message and terminate */
 void
-flexerror(const char *msg)
+flexerror(const char *msg, ...)
 {
-    fprintf(stderr, "%s: %s\n", program_name, msg);
+    va_list ap;
+
+    fprintf(stderr, "%s: ", program_name);
+
+    va_start(ap, msg);
+    vfprintf(stderr, msg, ap);
+    va_end(ap);
+
+    fputc('\n', stderr);
     flexend(1);
 }
 
 /* flexfatal - report a fatal error message and terminate */
 void
-flexfatal(const char *msg)
+flexfatal(const char *msg, ...)
 {
-    fprintf(stderr, _("%s: fatal internal error, %s\n"),
-	    program_name, msg);
+    va_list ap;
+
+    fprintf(stderr, _("%s: fatal internal error, "), program_name);
+
+    va_start(ap, msg);
+    vfprintf(stderr, msg, ap);
+    va_end(ap);
+
+    fputc('\n', stderr);
     exit(EXIT_FAILURE);
 }
 
@@ -355,7 +370,7 @@ lerrif(const char *msg, int arg)
 {
     char errmsg[MAXLINE];
     (void) sprintf(errmsg, msg, arg);
-    flexerror(errmsg);
+    flexerror("%s", errmsg);
 }
 
 /* lerrsf - report an error message formatted with one string argument */
@@ -365,7 +380,7 @@ lerrsf(const char *msg, const char *arg)
     char errmsg[MAXLINE];
 
     (void) sprintf(errmsg, msg, arg);
-    flexerror(errmsg);
+    flexerror("%s", errmsg);
 }
 
 /* line_directive_out - spit out a "#line" statement */

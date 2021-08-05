@@ -1,5 +1,5 @@
 dnl reflex's local definitions for autoconf -TD
-dnl $Id: aclocal.m4,v 1.19 2021/05/01 21:49:36 tom Exp $
+dnl $Id: aclocal.m4,v 1.20 2021/06/07 21:39:17 tom Exp $
 dnl ---------------------------------------------------------------------------
 dnl Copyright 2008-2020,2021 Thomas E. Dickey
 dnl 
@@ -467,7 +467,7 @@ if test "x$ifelse([$2],,CLANG_COMPILER,[$2])" = "xyes" ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_CONST_X_STRING version: 6 updated: 2021/01/01 13:31:04
+dnl CF_CONST_X_STRING version: 7 updated: 2021/06/07 17:39:17
 dnl -----------------
 dnl The X11R4-X11R6 Xt specification uses an ambiguous String type for most
 dnl character-strings.
@@ -497,7 +497,7 @@ AC_TRY_COMPILE(
 #include <stdlib.h>
 #include <X11/Intrinsic.h>
 ],
-[String foo = malloc(1); (void)foo],[
+[String foo = malloc(1); free((void*)foo)],[
 
 AC_CACHE_CHECK(for X11/Xt const-feature,cf_cv_const_x_string,[
 	AC_TRY_COMPILE(
