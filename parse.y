@@ -7,6 +7,7 @@
 %token CCE_LOWER CCE_PRINT CCE_PUNCT CCE_SPACE CCE_UPPER CCE_XDIGIT
 
 %{
+
 /*-
  * Copyright (c) 1990 The Regents of the University of California.
  * All rights reserved.
@@ -35,7 +36,6 @@
 
 /* @Header: /home/daffy/u0/vern/flex/RCS/parse.y,v 2.28 95/04/21 11:51:51 vern Exp @ */
 
-
 /* Some versions of bison are broken in that they use alloca() but don't
  * declare it properly.  The following is the patented (just kidding!)
  * #ifdef chud to fix the problem, courtesy of Francois Pinard.
@@ -43,7 +43,7 @@
 #ifdef YYBISON
 /* AIX requires this to be the first thing in the file.  What a piece.  */
 # ifdef _AIX
- #pragma alloca
+#pragma alloca
 # endif
 #endif
 
@@ -62,12 +62,12 @@
 #   include <alloca.h>
 #  else
 #   ifdef __hpux
-void *alloca ();
+void *alloca();
 #   else
 #    ifdef __TURBOC__
 #     include <malloc.h>
 #    else
-char *alloca ();
+char *alloca();
 #    endif
 #   endif
 #  endif
@@ -76,14 +76,13 @@ char *alloca ();
 
 /* Bletch, ^^^^ that was ugly! */
 
-
 int pat, scnum, eps, headcnt, trailcnt, anyccl, lastchar, rulelen;
 int trlcontxt, xcluflg, currccl, cclsorted, varlength, variable_trail_rule;
 
 int *scon_stk;
 int scon_stk_ptr;
 
-static int madeany = false;  /* whether we've made the '.' character class */
+static int madeany = false;	/* whether we've made the '.' character class */
 int previous_continued_action;	/* whether the previous rule's action was '|' */
 
 /* Expand a POSIX character class expression. */
@@ -282,13 +281,14 @@ flexrule	:  '^' rule
 			}
 
 		|  EOF_OP
-			{ int i;
+			{
 
 			if ( scon_stk_ptr > 0 )
 				build_eof_action();
 
 			else
 				{
+				int i;
 				/* This EOF applies to all start conditions
 				 * which don't already have EOF actions.
 				 */
@@ -347,14 +347,15 @@ namelist2	:  namelist2 ',' sconname
 		;
 
 sconname	:  NAME
-			{ int i;
+			{
 
 			if ( (scnum = sclookup( nmstr )) == 0 )
 				format_pinpoint_message(
-					"undeclared start condition %s",
+					"undeclared start condition %.*s",
 					nmstr );
 			else
 				{
+				int i;
 				for ( i = 1; i <= scon_stk_ptr; ++i )
 					if ( scon_stk[i] == scnum )
 						{
@@ -694,7 +695,7 @@ fullccl		:  '[' ccl ']'
 		;
 
 ccl		:  ccl CHAR '-' CHAR
-			{ int i;
+			{
 
 			if ( caseins )
 				{
@@ -709,6 +710,7 @@ ccl		:  ccl CHAR '-' CHAR
 
 			else
 				{
+				int i;
 				for ( i = $2; i <= $4; ++i )
 					ccladd( $1, i, cCnone );
 
@@ -787,114 +789,124 @@ string		:  string CHAR
  *                    conditions
  */
 
-void build_eof_action(void)
+void
+build_eof_action(void)
 {
-	int ii;
-	char action_text[MAXLINE];
+    int ii;
+    char action_text[MAXLINE];
 
-	for ( ii = 1; ii <= scon_stk_ptr; ++ii ) {
-		if ( sceof[scon_stk[ii]] )
-			format_pinpoint_message(
-				"multiple <<EOF>> rules for start condition %s",
-				scname[scon_stk[ii]] );
+    for (ii = 1; ii <= scon_stk_ptr; ++ii) {
+	if (sceof[scon_stk[ii]]) {
+	    format_pinpoint_message(
+				       "multiple <<EOF>> rules for start condition %.*s",
+				       scname[scon_stk[ii]]);
 
-		else {
-			sceof[scon_stk[ii]] = true;
-			sprintf( action_text, "case YY_STATE_EOF(%s):\n",
-				scname[scon_stk[ii]] );
-			add_ind_action( 2, action_text );
-		}
+	} else {
+	    sceof[scon_stk[ii]] = true;
+	    sprintf(action_text, "case YY_STATE_EOF(%s):\n",
+		    scname[scon_stk[ii]]);
+	    add_ind_action(2, action_text);
 	}
+    }
 
-	line_directive_out( (FILE *) 0, 1 );
+    line_directive_out((FILE *) 0, 1);
 
-	/* This isn't a normal rule after all - don't count it as
-	 * such, so we don't have any holes in the rule numbering
-	 * (which make generating "rule can never match" warnings
-	 * more difficult.
-	 */
-	--num_rules;
-	++num_eof_rules;
+    /* This isn't a normal rule after all - don't count it as
+     * such, so we don't have any holes in the rule numbering
+     * (which make generating "rule can never match" warnings
+     * more difficult.
+     */
+    --num_rules;
+    ++num_eof_rules;
 }
 
 /* format_synerr - write out formatted syntax error */
 
-void format_synerr(const char msg[], char arg[])
+void
+format_synerr(const char msg[], char arg[])
 {
-	char errmsg[MAXLINE];
+    char errmsg[MAXLINE];
 
-	(void) sprintf( errmsg, msg, arg );
-	synerr( errmsg );
+    (void) sprintf(errmsg, msg, arg);
+    synerr(errmsg);
 }
 
 /* synerr - report a syntax error */
 
-void synerr(const char str[])
+void
+synerr(const char str[])
 {
-	syntaxerror = true;
-	pinpoint_message( str );
+    syntaxerror = true;
+    pinpoint_message(str);
 }
 
 /* format_warn - write out formatted warning */
 
-void format_warn(const char msg[], char arg[])
+void
+format_warn(const char msg[], char arg[])
 {
-	char warn_msg[MAXLINE];
+    char warn_msg[MAXLINE];
 
-	(void) sprintf( warn_msg, msg, arg );
-	warn( warn_msg );
+    (void) sprintf(warn_msg, msg, arg);
+    warn(warn_msg);
 }
 
 /* warn - report a warning, unless -w was given */
 
-void warn(const char str[])
+void
+warn(const char str[])
 {
-	line_warning( str, linenum );
+    line_warning(str, linenum);
 }
 
 /* format_pinpoint_message - write out a message formatted with one string,
  *			     pinpointing its location
  */
 
-void format_pinpoint_message(const char msg[], const char arg[])
+void
+format_pinpoint_message(const char msg[], const char arg[])
 {
-	char errmsg[MAXLINE];
+    char errmsg[MAXLINE];
 
-	(void) sprintf( errmsg, msg, arg );
-	pinpoint_message( errmsg );
+    (void) sprintf(errmsg, msg, MAXLINE - (int) strlen(msg), arg);
+    pinpoint_message(errmsg);
 }
 
 /* pinpoint_message - write out a message, pinpointing its location */
 
-void pinpoint_message(const char str[])
+void
+pinpoint_message(const char str[])
 {
-	line_pinpoint( str, linenum );
+    line_pinpoint(str, linenum);
 }
 
 /* line_warning - report a warning at a given line, unless -w was given */
 
-void line_warning(const char str[], int line)
+void
+line_warning(const char str[], int line)
 {
+    if (!nowarn) {
 	char warning[MAXLINE];
 
-	if ( ! nowarn ) {
-		sprintf( warning, "warning, %.*s", MAXLINE - 12, str );
-		line_pinpoint( warning, line );
-	}
+	sprintf(warning, "warning, %.*s", MAXLINE - 12, str);
+	line_pinpoint(warning, line);
+    }
 }
 
 /* line_pinpoint - write out a message, pinpointing it at the given line */
 
-void line_pinpoint(const char str[], int line)
+void
+line_pinpoint(const char str[], int line)
 {
-	fprintf( stderr, "\"%s\", line %d: %s\n", infilename, line, str );
+    fprintf(stderr, "\"%s\", line %d: %s\n", infilename, line, str);
 }
 
 /* yyerror - eat up an error message from the parser;
  *	     currently, messages are ignore
  */
 
-void yyerror(const char *msg)
+void
+yyerror(const char *msg)
 {
-	(void) msg;
+    (void) msg;
 }

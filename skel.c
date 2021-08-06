@@ -16,7 +16,7 @@ const char *const skel[] =
     "#define YY_FLEX_MAJOR_VERSION 2",
     "#define YY_FLEX_MINOR_VERSION 5",
     "#define YY_FLEX_LOWER_VERSION 4",
-    "#define YY_FLEX_PATCH_VERSION 20210804",
+    "#define YY_FLEX_PATCH_VERSION 20210806",
     "",
     "%-",
     "#include <stdio.h>",

@@ -1,4 +1,4 @@
-/* $Id: misc.c,v 1.22 2021/08/04 23:25:11 tom Exp $ */
+/* $Id: misc.c,v 1.23 2021/08/06 00:05:35 tom Exp $ */
 /* misc - miscellaneous flex routines */
 
 /*-
@@ -802,7 +802,7 @@ readable_form(int c)
 #endif
 
 	default:
-	    (void) sprintf(rform, "\\%.3o", (unsigned int) c);
+	    (void) sprintf(rform, "\\%.3o", (unsigned char) c);
 	    return rform;
 	}
     } else if (c == ' ') {

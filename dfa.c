@@ -1,4 +1,4 @@
-/* $Id: dfa.c,v 1.8 2021/05/10 21:17:23 tom Exp $ */
+/* $Id: dfa.c,v 1.11 2021/08/06 20:28:09 tom Exp $ */
 /* dfa - DFA construction routines */
 
 /*-
@@ -385,6 +385,9 @@ ntod(void)
     accset = allocate_integer_array(num_rules + 1);
     nset = allocate_integer_array(current_max_dfa_size);
 
+    targfreq[0] = 0;
+    targstate[0] = 0;
+
     /* The "todo" queue is represented by the head, which is the DFA
      * state currently being processed, and the "next", which is the
      * next DFA state number available (not in use).  We depend on the
@@ -393,6 +396,7 @@ ntod(void)
      */
     todo_head = todo_next = 0;
 
+    assert(csize >= 64);
     for (i = 0; i <= csize; ++i) {
 	duplist[i] = NIL;
 	symlist[i] = false;
@@ -563,7 +567,7 @@ ntod(void)
 
 	for (sym = 1; sym <= numecs; ++sym) {
 	    if (symlist[sym]) {
-		symlist[sym] = 0;
+		symlist[sym] = false;
 
 		if (duplist[sym] == NIL) {
 		    /* Symbol has unique out-transitions. */
@@ -946,7 +950,7 @@ sympartition(int ds[], int numstates, int symlist[], int duplist[])
 		int ec = ecgroup[tch];
 
 		mkechar(ec, dupfwd, duplist);
-		symlist[ec] = 1;
+		symlist[ec] = true;
 	    } else {
 		/* character class */
 		tch = -tch;
@@ -966,11 +970,11 @@ sympartition(int ds[], int numstates, int symlist[], int duplist[])
 			    ich = NUL_ec;
 
 			for (++j; j < ich; ++j)
-			    symlist[j] = 1;
+			    symlist[j] = true;
 		    }
 
 		    for (++j; j <= numecs; ++j)
-			symlist[j] = 1;
+			symlist[j] = true;
 		} else {
 		    for (k = 0; k < lenccl; ++k) {
 			ich = ccltbl[cclp + k].ch;
@@ -978,7 +982,7 @@ sympartition(int ds[], int numstates, int symlist[], int duplist[])
 			if (ich == 0)
 			    ich = NUL_ec;
 
-			symlist[ich] = 1;
+			symlist[ich] = true;
 		    }
 		}
 	    }

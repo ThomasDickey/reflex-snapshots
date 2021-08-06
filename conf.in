@@ -33,6 +33,9 @@
 /* Define to template for printf, for compiler-warnings */
 #undef GCC_PRINTFLIKE
 
+/* Define to template for noreturn, for compiler-warnings */
+#undef GCC_NORETURN
+
 /*
  * vile:cmode
  */

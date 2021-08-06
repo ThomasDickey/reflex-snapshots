@@ -1,4 +1,4 @@
-/* $Id: gen.c,v 1.32 2021/05/10 21:17:23 tom Exp $ */
+/* $Id: gen.c,v 1.33 2021/08/06 00:18:48 tom Exp $ */
 /* gen - actual generation (writing) of flex scanners */
 
 /*-
@@ -1400,9 +1400,11 @@ make_tables(void)
     set_indent(0);
     skelout();
     if (do_yylineno) {		/* update yylineno inside of unput() */
+	indent_up();
 	outn("if (c == '\\n')");
 	indent_up();
 	outn("--yylineno;");
+	indent_down();
 	indent_down();
     }
 
