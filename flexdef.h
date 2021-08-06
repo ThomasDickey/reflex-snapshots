@@ -1,4 +1,4 @@
-/* $Id: flexdef.h,v 1.26 2021/08/04 23:26:19 tom Exp $ */
+/* $Id: flexdef.h,v 1.29 2021/08/06 20:40:59 tom Exp $ */
 /* flexdef - definitions file for flex */
 
 /*-
@@ -83,6 +83,16 @@ extern "C" {
 #else
 #define GCC_PRINTFLIKE(fmt,var) /*nothing*/
 #endif
+#endif
+
+#if defined(HAVE_STDNORETURN_H) && HAVE_STDNORETURN_H
+#include <stdnoreturn.h>
+#undef GCC_NORETURN
+#define GCC_NORETURN _Noreturn
+#endif
+
+#ifndef GCC_NORETURN
+#define GCC_NORETURN /* nothing */
 #endif
 
 /* As an aid for the internationalization patch to flex, which
@@ -802,7 +812,7 @@ extern void make_tables (void);	/* generate transition tables */
 /* from file main.c */
 
 extern void check_options (void);
-extern void flexend (int);
+extern void GCC_NORETURN flexend (int);
 extern void usage (void);
 
 
@@ -846,19 +856,19 @@ extern void dataend (void);
 extern void dataflush (void);
 
 /* Report an error message and terminate. */
-extern void flexerror (const char*, ...) GCC_PRINTFLIKE(1,2);
+extern GCC_NORETURN void flexerror (const char*, ...) GCC_PRINTFLIKE(1,2);
 
 /* Report a fatal error message and terminate. */
-extern void flexfatal (const char*, ...) GCC_PRINTFLIKE(1,2);
+extern GCC_NORETURN void flexfatal (const char*, ...) GCC_PRINTFLIKE(1,2);
 
 /* Convert a hexadecimal digit string to an integer value. */
 extern int htoi (Char[]);
 
 /* Report an error message formatted with one integer argument. */
-extern void lerrif (const char[], int);
+extern GCC_NORETURN void lerrif (const char[], int);
 
 /* Report an error message formatted with one string argument. */
-extern void lerrsf (const char[], const char[]);
+extern GCC_NORETURN void lerrsf (const char[], const char[]);
 
 /* Spit out a "#line" statement. */
 extern void line_directive_out (FILE*, int);

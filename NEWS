@@ -1,8 +1,11 @@
--- $Id: NEWS,v 1.53 2021/08/04 22:50:38 tom Exp $
+-- $Id: NEWS,v 1.55 2021/08/06 20:53:05 tom Exp $
 -------------------------------------------------------------------------------
 -- Changes by Thomas E. Dickey
 -- vile:txtmode
 -------------------------------------------------------------------------------
+
+2021/08/06
+	+ compiler-warning fixes
 
 2021/08/04
 	+ rewrote command-line options parsing, adding a table to map long

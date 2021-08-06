@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.24 2021/08/05 00:11:21 tom Exp $ */
+/* $Id: main.c,v 1.25 2021/08/06 00:49:04 tom Exp $ */
 /* flex - tool to generate fast lexical analyzers */
 
 /*-
@@ -775,38 +775,40 @@ flexinit(int argc, char **argv)
 		    sawcmpflag = true;
 		}
 
-		for (j = 0; option_value[j] != '\0'; ++j) {
-		    switch (option_value[j]) {
-		    case 'a':
-			long_align =
-			    true;
-			break;
+		if (option_value != NULL) {
+		    for (j = 0; option_value[j] != '\0'; ++j) {
+			switch (option_value[j]) {
+			case 'a':
+			    long_align =
+				true;
+			    break;
 
-		    case 'e':
-			useecs = true;
-			break;
+			case 'e':
+			    useecs = true;
+			    break;
 
-		    case 'F':
-			fullspd = true;
-			break;
+			case 'F':
+			    fullspd = true;
+			    break;
 
-		    case 'f':
-			fulltbl = true;
-			break;
+			case 'f':
+			    fulltbl = true;
+			    break;
 
-		    case 'm':
-			usemecs = true;
-			break;
+			case 'm':
+			    usemecs = true;
+			    break;
 
-		    case 'r':
-			use_read = true;
-			break;
+			case 'r':
+			    use_read = true;
+			    break;
 
-		    default:
-			lerrif(
-				  _("unknown -C option '%c'"),
-				  (int) option_value[j]);
-			break;
+			default:
+			    lerrif(
+				      _("unknown -C option '%c'"),
+				      (int) option_value[j]);
+			    break;
+			}
 		    }
 		}
 		break;
