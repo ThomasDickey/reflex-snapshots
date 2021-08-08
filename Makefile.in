@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.27 2021/08/03 22:44:44 tom Exp $
+# $Id: Makefile.in,v 1.28 2021/08/08 22:39:34 tom Exp $
 # @(#) @Header: /home/daffy/u0/vern/flex/RCS/Makefile.in,v 1.45 96/09/10 16:59:04 vern Exp @ (LBL)
 
 @SET_MAKE@
@@ -217,6 +217,7 @@ install.man: flex.1
 		$(actual_HEADER) \
 		$(actual_LIBROOT) \
 		$(INSTALL_DATA)
+	$(SHELL) -c "cd $(mansubdir) && $(LN_S) -f $(actual_PROGRAM).$(manext).gz $(actual_PROGRAM)++.$(manext).gz"
 
 install.cat: $(FLEX).man
 	$(SHELL) $(srcdir)/rename.sh \

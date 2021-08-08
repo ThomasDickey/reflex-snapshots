@@ -11,7 +11,7 @@
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 5
 #define YY_FLEX_LOWER_VERSION 4
-#define YY_FLEX_PATCH_VERSION 20210806
+#define YY_FLEX_PATCH_VERSION 20210808
 
 #include <stdio.h>
 
@@ -1351,6 +1351,9 @@ static void add_off_action(int, int *, const char *);
 #include <unistd.h>
 #endif
 
+static int yy_init_globals (void);
+int yylex_destroy(void);
+
 #ifndef YY_SKIP_YYWRAP
 #ifdef __cplusplus
 extern "C" int yywrap();
@@ -1524,7 +1527,7 @@ YY_DECL
 	Char nmdef[MAXLINE];
 
 
-#line 1528 "scan.c"
+#line 1531 "scan.c"
 
     if (yy_init) {
 	yy_init = 0;
@@ -2752,7 +2755,7 @@ YY_DECL
 #line 650 "scan.l"
 	    YY_FATAL_ERROR("flex scanner jammed");
 	    YY_BREAK
-#line 2756 "scan.c"
+#line 2759 "scan.c"
 	case YY_STATE_EOF(INITIAL):
 	case YY_STATE_EOF(SECT2):
 	case YY_STATE_EOF(CODEBLOCK):
@@ -3441,6 +3444,38 @@ yy_top_state(void)
 		yyleng = n; \
 	    } \
 	while (0)
+
+static int yy_init_globals(void)
+{
+    /* Initialization is the same as for the non-reentrant scanner.
+     * This function is called from yylex_destroy(), so don't allocate here.
+     */
+
+
+    yy_current_buffer = 0;
+    yy_c_buf_p = (char *) 0;
+    yy_init = 1;
+    yy_start = 0;
+
+    yyin = (FILE *) 0;
+    yyout = (FILE *) 0;
+
+    return 0;
+}
+
+int yylex_destroy(void)
+{
+    if (YY_CURRENT_BUFFER) {
+	yy_delete_buffer(YY_CURRENT_BUFFER);
+	YY_CURRENT_BUFFER = NULL;
+    }
+
+    /* Reset the globals. This is important in a non-reentrant scanner so
+     * the next time yylex() is called, initialization will occur. */
+    yy_init_globals();
+
+    return 0;
+}
 
 /* Internal utility routines. */
 

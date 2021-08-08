@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.25 2021/08/06 00:49:04 tom Exp $ */
+/* $Id: main.c,v 1.26 2021/08/06 23:47:40 Boris.Kolpackov Exp $ */
 /* flex - tool to generate fast lexical analyzers */
 
 /*-
@@ -315,6 +315,7 @@ check_options(void)
 	    GEN_PREFIX("in");
 	    GEN_PREFIX("leng");
 	    GEN_PREFIX("lex");
+	    GEN_PREFIX("lex_destroy");
 	    GEN_PREFIX("out");
 	    GEN_PREFIX("restart");
 	    GEN_PREFIX("text");
