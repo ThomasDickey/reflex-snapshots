@@ -1,8 +1,15 @@
--- $Id: NEWS,v 1.55 2021/08/06 20:53:05 tom Exp $
+-- $Id: NEWS,v 1.58 2021/08/08 22:44:04 tom Exp $
 -------------------------------------------------------------------------------
 -- Changes by Thomas E. Dickey
 -- vile:txtmode
 -------------------------------------------------------------------------------
+
+2021/08/08
+	+ add symbolic link for flex++ manpage in makefile "install" rule.
+	> Boris Kolpackov:
+	+ add/use yylex_destroy() function like "new" flex which can be used to
+	  reset the lexer in order to re-execute it on different input.
+	+ fix a memory leak in gentab()
 
 2021/08/06
 	+ compiler-warning fixes

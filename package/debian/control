@@ -1,7 +1,7 @@
 Source: reflex
 Maintainer: Thomas E. Dickey <dickey@invisible-island.net>
 Section: devel
-Priority: extra
+Priority: optional
 Standards-Version: 3.8.4
 Build-Depends: debhelper (>= 5)
 Homepage: https://invisible-island.net/reflex/
