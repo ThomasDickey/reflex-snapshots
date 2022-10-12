@@ -1,14 +1,14 @@
-Summary: reflex - fast lexical analyzer generator
+Summary: fast lexical analyzer generator
 %define AppProgram reflex
-%define AppVersion 20210808
-# $XTermId: reflex.spec,v 1.18 2021/08/06 23:24:04 tom Exp $
+%define AppVersion 20221012
+# $XTermId: reflex.spec,v 1.22 2022/10/12 23:42:37 tom Exp $
 Name: %{AppProgram}
 Version: %{AppVersion}
 Release: 1
 License: BSD
 Group: Applications/Development
-URL: ftp://invisible-island.net/%{AppProgram}
-Source0: %{AppProgram}-%{AppVersion}.tgz
+URL: https://invisible-island.net/archives/%{AppProgram}
+Source0: %{URL}/%{AppProgram}-%{AppVersion}.tgz
 Packager: Thomas Dickey <dickey@invisible-island.net>
 
 %description
@@ -47,7 +47,7 @@ make
 %install
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
 
-make install                    DESTDIR=$RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT
 
 strip $RPM_BUILD_ROOT%{_bindir}/%{AppProgram}
 
@@ -58,12 +58,15 @@ strip $RPM_BUILD_ROOT%{_bindir}/%{AppProgram}
 %defattr(-,root,root)
 %{_bindir}/%{AppProgram}
 %{_bindir}/%{AppProgram}++
-%{_mandir}/man1/%{AppProgram}.*
+%{_mandir}/man1/%{AppProgram}*.*
 %{_includedir}/reFlexLexer.h
 %{_libdir}/librefl.a
 
 %changelog
 # each patch should add its ChangeLog entries here
+
+* Wed Oct 12 2022 Thomas Dickey
+- update manpage-dependency
 
 * Sat Nov 11 2017 Thomas Dickey
 - disable debug-build
