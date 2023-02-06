@@ -46,7 +46,7 @@
 #define MARK_END_OF_PROLOG mark_prolog();
 
 #define YY_DECL \
-	int flexscan()
+	int flexscan(void)
 
 #define RETURNCHAR \
 	yylval = (unsigned char) yytext[0]; \

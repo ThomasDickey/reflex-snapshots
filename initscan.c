@@ -11,7 +11,7 @@
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 5
 #define YY_FLEX_LOWER_VERSION 4
-#define YY_FLEX_PATCH_VERSION 20221012
+#define YY_FLEX_PATCH_VERSION 20230206
 
 #include <stdio.h>
 
@@ -1290,7 +1290,7 @@ char *yytext;
 #define MARK_END_OF_PROLOG mark_prolog();
 
 #define YY_DECL \
-	int flexscan()
+	int flexscan(void)
 
 #define RETURNCHAR \
 	yylval = (unsigned char) yytext[0]; \
