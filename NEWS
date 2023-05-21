@@ -1,8 +1,13 @@
--- $Id: NEWS,v 1.62 2023/02/06 09:19:47 tom Exp $
+-- $Id: NEWS,v 1.64 2023/05/21 19:26:52 tom Exp $
 -------------------------------------------------------------------------------
 -- Changes by Thomas E. Dickey
 -- vile:txtmode
 -------------------------------------------------------------------------------
+
+2023/05/21
+	+ modify configure script/makefile to detect type of compression used
+	  for manpages, and install with that format, creating an appropriate
+	  symbolic link for the "reflex++" (report by Sam James).
 
 2023/02/06
 	+ fix a few compiler-warnings for builds.

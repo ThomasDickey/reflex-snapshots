@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 dnl
-AC_REVISION($Revision: 1.13 $)
-AC_PREREQ(2.52.20200111)
+AC_REVISION($Revision: 1.15 $)
+AC_PREREQ(2.52.20230114)
 
 AC_INIT(initscan.c)
 AC_CONFIG_HEADER(config.h:conf.in)
@@ -48,7 +48,8 @@ case "$YACC" in
 esac
 
 CF_WITH_MAN2HTML     
+CF_MANPAGE_FORMAT
+CF_INSTALL_MAN
 
-AC_OUTPUT(Makefile,
-[test -z "$CONFIG_HEADERS" || echo timestamp > stamp-h])
+AC_OUTPUT(Makefile)
 CF_MAKE_DOCS(flex,1)

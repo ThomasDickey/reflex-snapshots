@@ -1,5 +1,7 @@
-.\" $Id: flex.1,v 1.6 2019/11/23 17:52:12 tom Exp $
-.TH FLEX 1 "April 1995" "Version 2.5"
+.\" $Id: flex.1,v 1.8 2023/05/21 15:59:25 tom Exp $
+.ds N Flex
+.ds n flex
+.TH FLEX 1 "2023-05-21" "Version 2.5"
 .\" Bulleted paragraph
 .de bP
 .ie n  .IP \(bu 4
@@ -10,15 +12,15 @@
 .ie \n(.g .ds '' \(rq
 .el       .ds '' ''
 .SH NAME
-flex \- fast lexical analyzer generator
+\*n \- fast lexical analyzer generator
 .SH SYNOPSIS
-.B flex
+.B \*n
 .B [\-bcdfhilnpstvwBFILTV78+? \-C[aefFmr] \-ooutput \-Pprefix \-Sskeleton]
 .B [\-\-help \-\-version]
 .I [filename ...]
 .SH OVERVIEW
 This manual describes
-.I flex,
+.I \*n,
 a tool for generating programs that perform pattern-matching on text.
 The
 manual includes both tutorial and reference sections:
@@ -32,7 +34,7 @@ manual includes both tutorial and reference sections:
     Format Of The Input File
 
     Patterns
-        the extended regular expressions used by flex
+        the extended regular expressions used by \*n
 
     How The Input Is Matched
         the rules for determining what has been matched
@@ -41,7 +43,7 @@ manual includes both tutorial and reference sections:
         how to specify what to do when a pattern is matched
 
     The Generated Scanner
-        details regarding the scanner that flex produces;
+        details regarding the scanner that \*n produces;
         how to control the input source
 
     Start Conditions
@@ -62,10 +64,10 @@ manual includes both tutorial and reference sections:
         a summary of values available to the actions
 
     Interfacing With Yacc
-        connecting flex scanners together with yacc parsers
+        connecting \*n scanners together with yacc parsers
 
     Options
-        flex command-line options, and the "%option"
+        \*n command-line options, and the "%option"
         directive
 
     Performance Considerations
@@ -76,18 +78,18 @@ manual includes both tutorial and reference sections:
         scanner classes
 
     Incompatibilities With Lex And POSIX
-        how flex differs from AT&T lex and the POSIX lex
+        how \*n differs from AT&T lex and the POSIX lex
         standard
 
     Diagnostics
-        those error messages produced by flex (or scanners
+        those error messages produced by \*n (or scanners
         it generates) whose meanings might not be apparent
 
     Files
-        files used by flex
+        files used by \*n
 
     Deficiencies / Bugs
-        known problems with flex
+        known problems with \*n
 
     See Also
         other documentation, related tools
@@ -97,18 +99,18 @@ manual includes both tutorial and reference sections:
 
 .fi
 .SH DESCRIPTION
-.I flex
+.I \*n
 is a tool for generating
 .I scanners:
 programs which recognized lexical patterns in text.
-.I flex
+.I \*n
 reads
 the given input files, or its standard input if no file names are given,
 for a description of a scanner to generate.
 The description is in
 the form of pairs
 of regular expressions and C code, called
-.I rules.  flex
+.I rules.  \*n
 generates as output a C source file,
 .B lex.yy.c,
 which defines a routine
@@ -124,9 +126,9 @@ the corresponding C code.
 .SH SOME SIMPLE EXAMPLES
 .PP
 First some simple examples to get the flavor of how one uses
-.I flex.
+.I \*n.
 The following
-.I flex
+.I \*n
 input specifies a scanner which whenever it encounters the string
 \*(``username\*('' will replace it with the user's login name:
 .nf
@@ -136,7 +138,7 @@ input specifies a scanner which whenever it encounters the string
 
 .fi
 By default, any text not matched by a
-.I flex
+.I \*n
 scanner
 is copied to the output, so the net effect of this scanner is
 to copy its input file to its output with each occurrence
@@ -246,7 +248,7 @@ The details of this example will be explained in the following
 sections.
 .SH FORMAT OF THE INPUT FILE
 The
-.I flex
+.I \*n
 input file consists of three sections, separated by a line with just
 .B %%
 in it:
@@ -308,7 +310,7 @@ by zero-or-more digits.
 The
 .I rules
 section of the
-.I flex
+.I \*n
 input contains a series of rules of the form:
 .nf
 
@@ -407,7 +409,7 @@ These are:
                  the action is executed.  So the action only
                  sees the text matched by r.  This type
                  of pattern is called trailing context".
-                 (There are some combinations of r/s that flex
+                 (There are some combinations of r/s that \*n
                  cannot match correctly; see notes in the
                  Deficiencies / Bugs section below regarding
                  "dangerous trailing context".)
@@ -417,8 +419,8 @@ These are:
     r$         an r, but only at the end of a line (i.e., just
                  before a newline).  Equivalent to "r/\\n".
 
-               Note that flex's notion of \*(``newline\*('' is exactly
-               whatever the C compiler used to compile flex
+               Note that \*n's notion of \*(``newline\*('' is exactly
+               whatever the C compiler used to compile \*n
                interprets '\\n' as; in particular, on some DOS
                systems you must either filter out \\r's in the
                input yourself, or explicitly use r/\\r\\n for "r$".
@@ -506,7 +508,7 @@ designates those characters for which
 returns true - i.e., any alphabetic or numeric.
 Some systems don't provide
 .B isblank(),
-so flex defines
+so \*n defines
 .B [:blank:]
 as a blank or a tab.
 .PP
@@ -579,7 +581,7 @@ A similar trick will work for matching a foo or a
 bar-at-the-beginning-of-a-line.
 .bP
 Character classes are evaluated when
-.I flex
+.I \*n
 processes the file, rather than at the time the resulting scanner is run.
 .SH HOW THE INPUT IS MATCHED
 When the generated scanner is run, it analyzes its input looking
@@ -591,7 +593,7 @@ though it will then be returned to the input).
 If it finds two
 or more matches of the same length, the
 rule listed first in the
-.I flex
+.I \*n
 input file is chosen.
 .PP
 Once the match is determined, the text corresponding to the match
@@ -612,7 +614,7 @@ If no match is found, then the
 is executed: the next character in the input is considered matched and
 copied to the standard output.
 Thus, the simplest legal
-.I flex
+.I \*n
 input is:
 .nf
 
@@ -629,12 +631,12 @@ can be defined in two different ways: either as a character
 or as a character
 .I array.
 You can control which definition
-.I flex
+.I \*n
 uses by including one of the special directives
 .B %pointer
 or
 .B %array
-in the first (definitions) section of your flex input.
+in the first (definitions) section of your \*n input.
 The default is
 .B %pointer,
 unless you use the
@@ -689,7 +691,7 @@ You can change
 the size by simply #define'ing
 .B YYLMAX
 to a different value in the first section of your
-.I flex
+.I \*n
 input.
 As mentioned above, with
 .B %pointer
@@ -745,7 +747,7 @@ a single blank, and throws away whitespace found at the end of a line:
 .PP
 If the action contains a '{', then the action spans till the balancing '}'
 is found, and the action may cross multiple lines.
-.I flex 
+.I \*n 
 knows about C strings and comments and won't be fooled by braces found
 within them, but also allows actions to begin with
 .B %{
@@ -804,7 +806,7 @@ and
 set up appropriately.
 It may either be one which matched as much text
 as the originally chosen rule but came later in the
-.I flex
+.I \*n
 input file, or one which matched less text.
 For example, the following will both count the
 words in the input and call the routine special()
@@ -936,7 +938,7 @@ for example), this will result in an endless loop.
 .PP
 Note that
 .B yyless
-is a macro and can only be used in the flex input file, not from
+is a macro and can only be used in the \*n input file, not from
 other source files.
 .bP
 .B unput(c)
@@ -1055,7 +1057,7 @@ It is a macro and
 may be redefined.
 .SH THE GENERATED SCANNER
 The output of
-.I flex
+.I \*n
 is the file
 .B lex.yy.c,
 which contains the scanning routine
@@ -1125,7 +1127,7 @@ to a new input file or using
 .B yyrestart()
 to do so; the latter is available for compatibility with previous versions
 of
-.I flex,
+.I \*n,
 and because it can be used to switch input files in the middle of scanning.
 It can also be used to throw away the current input buffer, by calling
 it with an argument of
@@ -1231,7 +1233,7 @@ by assigning it to some other
 .B FILE
 pointer.
 .SH START CONDITIONS
-.I flex
+.I \*N
 provides a mechanism for conditionally activating rules.
 Any rule
 whose pattern is prefixed with "<sc>" will only be active when
@@ -1286,7 +1288,7 @@ then
 rules qualified with the start condition will be active.
 A set of rules contingent on the same exclusive start condition
 describe a scanner which is independent of any of the other rules in the
-.I flex
+.I \*n
 input.
 Because of this,
 exclusive start conditions make it easy to specify \*(``mini-scanners\*(''
@@ -1511,7 +1513,7 @@ could instead be written
     comment_caller = YY_START;
 
 .fi
-Flex provides
+\*N provides
 .B YYSTATE
 as an alias for
 .B YY_START
@@ -1585,7 +1587,7 @@ not including checking for a string that's too long):
 .PP
 Often, such as in some of the examples above, you wind up writing a
 whole bunch of rules all preceded by the same start condition(s).
-Flex
+\*N
 makes this a little easier and cleaner by introducing a notion of
 start condition
 .I scope.
@@ -1655,7 +1657,7 @@ directive (see Options below).
 Some scanners (such as those which support \*(``include\*('' files)
 require reading from several input streams.
 As
-.I flex
+.I \*n
 scanners do a large amount of buffering, one cannot control
 where the next input will be read from by simply writing a
 .B YY_INPUT
@@ -1666,7 +1668,7 @@ may be a long time after scanning a statement such as an \*(``include\*(''
 which requires switching the input source.
 .PP
 To negotiate these sorts of problems,
-.I flex
+.I \*n
 provides a mechanism for creating and switching between multiple
 input buffers.
 An input buffer is created by using:
@@ -1899,7 +1901,7 @@ by doing one of four things:
 .bP
 assigning
 .I yyin
-to a new input file (in previous versions of flex, after doing the
+to a new input file (in previous versions of \*n, after doing the
 assignment you had to call the special action
 .B YY_NEW_FILE;
 this is no longer necessary);
@@ -2095,13 +2097,13 @@ holds the length of the current token.
 .bP
 .B FILE *yyin
 is the file which by default
-.I flex
+.I \*n
 reads from.
 It may be redefined but doing so only makes sense before
 scanning begins or after an EOF has been encountered.
 Changing it in
 the midst of scanning will have unexpected results since
-.I flex
+.I \*n
 buffers its input; use
 .B yyrestart()
 instead.
@@ -2142,7 +2144,7 @@ You can subsequently use this value with
 to return to that start condition.
 .SH INTERFACING WITH YACC
 One of the main uses of
-.I flex
+.I \*n
 is as a companion to the
 .I yacc
 parser-generator.
@@ -2155,7 +2157,7 @@ return the type of the next token as well as putting any associated
 value in the global
 .B yylval.
 To use
-.I flex
+.I \*n
 with
 .I yacc,
 one specifies the
@@ -2170,7 +2172,7 @@ appearing in the
 .I yacc
 input.
 This file is then included in the
-.I flex
+.I \*n
 scanner.
 For example, if one of the tokens is \*(``TOK_NUMBER\*('',
 part of the scanner might look like:
@@ -2186,7 +2188,7 @@ part of the scanner might look like:
 
 .fi
 .SH OPTIONS
-.I flex
+.I \*n
 has the following options:
 .TP
 .B \-b
@@ -2229,7 +2231,7 @@ a line of the form:
 
 .fi
 The line number refers to the location of the rule in the file
-defining the scanner (i.e., the file that was fed to flex).
+defining the scanner (i.e., the file that was fed to \*n).
 Messages
 are also generated when the scanner backs up, accepts the
 default rule, reaches the end of its input buffer (or encounters
@@ -2247,7 +2249,7 @@ This option is equivalent to
 .TP
 .B \-h
 generates a \*(``help\*('' summary of
-.I flex's
+.I \*n's
 options to
 .I stdout 
 and then exits.
@@ -2259,12 +2261,12 @@ are synonyms for
 .TP
 .B \-i
 instructs
-.I flex
+.I \*n
 to generate a
 .I case-insensitive
 scanner.
 The case of letters given in the
-.I flex
+.I \*n
 input patterns will
 be ignored, and tokens in the input will be matched regardless of case.
 The
@@ -2300,7 +2302,7 @@ POSIX compliance.
 generates a performance report to stderr.
 The report
 consists of comments regarding features of the
-.I flex
+.I \*n
 input file which will cause a serious loss of performance in the resulting
 scanner.
 If you give the flag twice, you will also get comments regarding
@@ -2332,21 +2334,21 @@ useful for finding holes in a scanner's rule set.
 .TP
 .B \-t
 instructs
-.I flex
+.I \*n
 to write the scanner it generates to standard output instead
 of
 .B lex.yy.c.
 .TP
 .B \-v
 specifies that
-.I flex
+.I \*n
 should write to
 .I stderr
 a summary of statistics regarding the scanner it generates.
 Most of the statistics are meaningless to the casual
-.I flex
+.I \*n
 user, but the first line identifies the version of
-.I flex
+.I \*n
 (same as reported by
 .B \-V),
 and the next line the flags used when generating the scanner, including
@@ -2357,7 +2359,7 @@ suppresses warning messages.
 .TP
 .B \-B
 instructs
-.I flex
+.I \*n
 to generate a
 .I batch
 scanner, the opposite of
@@ -2420,7 +2422,7 @@ It cannot be used with
 .TP
 .B \-I
 instructs
-.I flex
+.I \*n
 to generate an
 .I interactive
 scanner.
@@ -2436,7 +2438,7 @@ a newline, it is not recognized as a newline token until they enter
 .I another
 token, which often means typing in another whole line.
 .IP
-.I Flex
+.I \*N
 scanners default to
 .I interactive
 unless you use the
@@ -2447,7 +2449,7 @@ table-compression options (see below).
 That's because if you're looking
 for high-performance you should be using one of these options, so if you
 didn't,
-.I flex
+.I \*n
 assumes you'd rather trade off a bit of run-time performance for intuitive
 interactive behavior.
 Note also that you
@@ -2469,26 +2471,26 @@ be interactive by using
 .TP
 .B \-L
 instructs
-.I flex
+.I \*n
 not to generate
 .B #line
 directives.
 Without this option,
-.I flex
+.I \*n
 peppers the generated scanner
 with #line directives so error messages in the actions will be correctly
 located with respect to either the original
-.I flex
+.I \*n
 input file (if the errors are due to code in the input file), or
 .B lex.yy.c
 (if the errors are
-.I flex's
+.I \*n's
 fault -- you should report these sorts of errors to the email address
 given below).
 .TP
 .B \-T
 makes
-.I flex
+.I \*n
 run in
 .I trace
 mode.
@@ -2498,7 +2500,7 @@ concerning
 the form of the input and the resultant non-deterministic and deterministic
 finite automata.
 This option is mostly for use in maintaining
-.I flex.
+.I \*n.
 .TP
 .B \-V
 prints the version number to
@@ -2510,7 +2512,7 @@ is a synonym for
 .TP
 .B \-7
 instructs
-.I flex
+.I \*n
 to generate a 7-bit scanner, i.e., one which can only recognized 7-bit
 characters in its input.
 The advantage of using
@@ -2530,17 +2532,17 @@ table compression options, use of
 .B \-7
 will save only a small amount of table space, and make your scanner
 considerably less portable.
-.I Flex's
+.I \*N's
 default behavior is to generate an 8-bit scanner unless you use the
 .B \-Cf
 or
 .B \-CF,
 in which case
-.I flex
+.I \*n
 defaults to generating 7-bit scanners unless your site was always
 configured to generate 8-bit scanners (as will often be the case
 with non-USA sites).
-You can tell whether flex generated a 7-bit
+You can tell whether \*n generated a 7-bit
 or an 8-bit scanner by inspecting the flag summary in the
 .B \-v
 output as described above.
@@ -2550,28 +2552,28 @@ Note that if you use
 or
 .B \-CFe
 (those table compression options, but also using equivalence classes as
-discussed see below), flex still defaults to generating an 8-bit
+discussed see below), \*n still defaults to generating an 8-bit
 scanner, since usually with these compression options full 8-bit tables
 are not much more expensive than 7-bit tables.
 .TP
 .B \-8
 instructs
-.I flex
+.I \*n
 to generate an 8-bit scanner, i.e., one which can recognize 8-bit
 characters.
 This flag is only needed for scanners generated using
 .B \-Cf
 or
 .B \-CF,
-as otherwise flex defaults to generating an 8-bit scanner anyway.
+as otherwise \*n defaults to generating an 8-bit scanner anyway.
 .IP
 See the discussion of
 .B \-7
-above for flex's default behavior and the tradeoffs between 7-bit
+above for \*n's default behavior and the tradeoffs between 7-bit
 and 8-bit scanners.
 .TP
 .B \-+
-specifies that you want flex to generate a C++
+specifies that you want \*n to generate a C++
 scanner class.
 See the section on Generating C++ Scanners below for
 details.
@@ -2581,7 +2583,7 @@ controls the degree of table compression and, more generally, trade-offs
 between small scanners and fast scanners.
 .IP
 .B \-Ca
-(\*(``align\*('') instructs flex to trade off larger tables in the
+(\*(``align\*('') instructs \*n to trade off larger tables in the
 generated scanner for faster performance because the elements of
 the tables are better aligned for memory access and computation.
 On some
@@ -2592,13 +2594,13 @@ double the size of the tables used by your scanner.
 .IP
 .B \-Ce
 directs
-.I flex
+.I \*n
 to construct
 .I equivalence classes,
 i.e., sets of characters
 which have identical lexical properties (for example, if the only
 appearance of digits in the
-.I flex
+.I \*n
 input is in the character class
 "[0-9]" then the digits '0', '1', ..., '9' will all be put
 in the same equivalence class).
@@ -2611,7 +2613,7 @@ look-up per character scanned).
 specifies that the
 .I full
 scanner tables should be generated -
-.I flex
+.I \*n
 should not compress the
 tables by taking advantages of similar transition functions for
 different states.
@@ -2627,7 +2629,7 @@ This option cannot be used with
 .IP
 .B \-Cm
 directs
-.I flex
+.I \*n
 to construct
 .I meta-equivalence classes,
 which are sets of equivalence classes (or characters, if equivalence
@@ -2683,7 +2685,7 @@ may be freely mixed, and are cumulative.
 The default setting is
 .B \-Cem,
 which specifies that
-.I flex
+.I \*n
 should generate equivalence classes
 and meta-equivalence classes.
 This setting provides the highest
@@ -2714,7 +2716,7 @@ is often a good compromise between speed and size for production
 scanners.
 .TP
 .B \-ooutput
-directs flex to write the scanner to the file
+directs \*n to write the scanner to the file
 .B output
 instead of
 .B lex.yy.c.
@@ -2735,7 +2737,7 @@ option above) refer to the file
 changes the default
 .I "yy"
 prefix used by
-.I flex
+.I \*n
 for all globally-visible variable and function names to instead be
 .I prefix.
 For example,
@@ -2778,7 +2780,7 @@ and functions using either version of their name; but externally, they
 have the modified name.
 .IP
 This option lets you easily link together multiple
-.I flex
+.I \*n
 programs into the same executable.
 Note, though, that using this
 option also renames
@@ -2795,26 +2797,26 @@ no longer provides one for you by default.
 .TP
 .B \-Sskeleton_file
 overrides the default skeleton file from which
-.I flex
+.I \*n
 constructs its scanners.
 You'll never need this option unless you are doing
-.I flex
+.I \*n
 maintenance or development.
 .PP
-.I flex
+.I \*n
 also provides a mechanism for controlling options within the
-scanner specification itself, rather than from the flex command-line.
+scanner specification itself, rather than from the \*n command-line.
 This is done by including
 .B %option
 directives in the first section of the scanner specification.
 You can specify multiple options with a single
 .B %option
-directive, and multiple directives in the first section of your flex input
+directive, and multiple directives in the first section of your \*n input
 file.
 .PP
 Most options are given simply as names, optionally preceded by the
 word \*(``no\*('' (with no intervening whitespace) to negate their meaning.
-A number are equivalent to flex flags or their negation:
+A number are equivalent to \*n flags or their negation:
 .nf
 
     7bit            -7 option
@@ -2854,7 +2856,7 @@ Some
 provide features otherwise not available:
 .TP
 .B always-interactive
-instructs flex to generate a scanner which always considers its input
+instructs \*n to generate a scanner which always considers its input
 \*(``interactive\*(''.
 Normally, on each new input file the scanner calls
 .B isatty()
@@ -2865,7 +2867,7 @@ When this option is used, however, then no
 such call is made.
 .TP
 .B main
-directs flex to provide a default
+directs \*n to provide a default
 .B main()
 program for the scanner, which simply calls
 .B yylex().
@@ -2874,7 +2876,7 @@ This option implies
 (see below).
 .TP
 .B never-interactive
-instructs flex to generate a scanner which never considers its input
+instructs \*n to generate a scanner which never considers its input
 \*(``interactive\*('' (again, no call made to
 .B isatty()).
 This is the opposite of
@@ -2907,7 +2909,7 @@ to be compile-time constant.
 .TP
 .B yylineno
 directs
-.I flex
+.I \*n
 to generate a scanner that maintains the number of the current line
 read from its input in the global variable
 .B yylineno.
@@ -2926,7 +2928,7 @@ at a new file and calls
 .B yylex()
 again).
 .PP
-.I flex
+.I \*n
 scans your rule actions to determine whether you use the
 .B REJECT
 or
@@ -2970,13 +2972,13 @@ only applies when generating a C++ scanner (
 .B \-+
 option).
 It informs
-.I flex
+.I \*n
 that you have derived
 .B foo
 as a subclass of
 .B yyFlexLexer,
 so
-.I flex
+.I \*n
 will place your actions in the member function
 .B foo::yylex()
 instead of
@@ -3009,7 +3011,7 @@ and friends won't appear anyway unless you use
 .B %option stack).
 .SH PERFORMANCE CONSIDERATIONS
 The main design goal of
-.I flex
+.I \*n
 is that it generate high-performance scanners.
 It has been optimized
 for dealing well with large sets of rules.
@@ -3158,7 +3160,7 @@ only takes a dozen or so rules to eliminate the backing up (though
 it's easy to make a mistake and have an error rule accidentally match
 a valid token.
 A possible future
-.I flex
+.I \*n
 feature will be to automatically add rules to eliminate backing up).
 .PP
 It's important to keep in mind that you gain the benefits of eliminating
@@ -3309,7 +3311,7 @@ In particular, while
 .I we
 know that there will never be any characters in the input stream
 other than letters or newlines,
-.I flex
+.I \*n
 can't figure this out, and it will plan for possibly needing to back up
 when it has scanned a token like \*(``auto\*('' and then the next character
 is something other than a newline or a letter.
@@ -3339,11 +3341,11 @@ one which doesn't include a newline:
 Compiled with
 .B \-Cf,
 this is about as fast as one can get a
-.I flex 
+.I \*n 
 scanner to go for this particular problem.
 .PP
 A final note:
-.I flex
+.I \*n
 is slow when matching NUL's, particularly when a token contains
 multiple NUL's.
 It's best to write rules which match
@@ -3360,11 +3362,11 @@ vital, you should attempt to match \*(``large\*('' quantities of text but not
 \*(``huge\*('' quantities, where the cutoff between the two is at about 8K
 characters/token.
 .SH GENERATING C++ SCANNERS
-.I flex
+.I \*n
 provides two different ways to generate scanners for use with C++.
 The
 first way is to simply compile a scanner generated by
-.I flex
+.I \*n
 using a C++ compiler instead of a C compiler.
 You should not encounter
 any compilations errors (please report any you find to the email address
@@ -3382,15 +3384,15 @@ variables and not C++
 .I streams.
 .PP
 You can also use
-.I flex
+.I \*n
 to generate a C++ scanner class, using the
 .B \-+
 option (or, equivalently,
 .B %option c++),
-which is automatically specified if the name of the flex
+which is automatically specified if the name of the \*n
 executable ends in a '+', such as
-.I flex++.
-When using this option, flex defaults to generating the scanner to the file
+.I \*n++.
+When using this option, \*n defaults to generating the scanner to the file
 .B lex.yy.cc
 instead of
 .B lex.yy.c.
@@ -3472,7 +3474,7 @@ respectively.
 .B virtual int yylex()
 performs the same role is
 .B yylex()
-does for ordinary flex scanners: it scans the input stream, consuming
+does for ordinary \*n scanners: it scans the input stream, consuming
 tokens, until a rule's action returns a value.
 If you derive a subclass
 .B S
@@ -3485,12 +3487,12 @@ inside
 then you need to use
 .B %option yyclass="S"
 to inform
-.I flex
+.I \*n
 that you will be using that subclass instead of
 .B yyFlexLexer.
 In this case, rather than generating
 .B yyFlexLexer::yylex(),
-.I flex
+.I \*n
 generates
 .B S::yylex()
 (and also generates a dummy
@@ -3590,7 +3592,7 @@ feature is not available to C++ scanner classes; you must use
 Here is an example of a simple C++ scanner:
 .nf
 
-        // An example of using the flex C++ scanner class.
+        // An example of using the \*n C++ scanner class.
 
     %{
     int mylineno = 0;
@@ -3681,14 +3683,14 @@ IMPORTANT: the present form of the scanning class is
 .I experimental
 and may change considerably between major releases.
 .SH INCOMPATIBILITIES WITH LEX AND POSIX
-.I flex
+.I \*n
 is a rewrite of the AT&T Unix
 .I lex
 tool (the two implementations do not share any code, though),
 with some extensions and incompatibilities, both of which
 are of concern to those who wish to write scanners acceptable
 to either implementation.
-Flex is fully compliant with the POSIX
+\*N is fully compliant with the POSIX
 .I lex
 specification, except that when using
 .B %pointer
@@ -3699,9 +3701,9 @@ destroys the contents of
 which is counter to the POSIX specification.
 .PP
 In this section we discuss all of the known areas of incompatibility
-between flex, AT&T lex, and the POSIX specification.
+between \*n, AT&T lex, and the POSIX specification.
 .PP
-.I flex's
+.I \*n's
 .B \-l
 option turns on maximum compatibility with the original AT&T
 .I lex
@@ -3712,7 +3714,7 @@ using the
 .B \-l
 option.
 .PP
-.I flex
+.I \*n
 is fully compatible with
 .I lex
 with the following exceptions:
@@ -3753,7 +3755,7 @@ Input is instead controlled by defining the
 macro.
 .IP
 The
-.I flex
+.I \*n
 restriction that
 .B input()
 cannot be redefined is in accordance with the POSIX specification,
@@ -3766,7 +3768,7 @@ The
 routine is not redefinable.
 This restriction is in accordance with POSIX.
 .bP
-.I flex
+.I \*n
 scanners are not as reentrant as
 .I lex
 scanners.
@@ -3776,7 +3778,7 @@ the scanner is subsequently called again, you may get the following
 message:
 .nf
 
-    fatal flex scanner internal error--end of buffer missed
+    fatal \*n scanner internal error--end of buffer missed
 
 .fi
 To reenter the scanner, first use
@@ -3788,7 +3790,7 @@ To reenter the scanner, first use
 Note that this call will throw away any buffered input; usually this
 isn't a problem with an interactive scanner.
 .IP
-Also note that flex C++ scanner classes
+Also note that \*n C++ scanner classes
 .I are
 reentrant, so if using C++ is an option for you, you should use
 them instead.
@@ -3811,7 +3813,7 @@ does not support exclusive start conditions (%x), though they
 are in the POSIX specification.
 .bP
 When definitions are expanded,
-.I flex
+.I \*n
 encloses them in parentheses.
 With lex, the following:
 .nf
@@ -3827,7 +3829,7 @@ is expanded the rule is equivalent to "foo[A-Z][A-Z0-9]*?"
 and the precedence is such that the '?' is associated with
 "[A-Z0-9]*".
 With
-.I flex,
+.I \*n,
 the rule will be expanded to
 "foo([A-Z][A-Z0-9]*)?" and so the string \*(``foo\*('' will match.
 .IP
@@ -3844,7 +3846,7 @@ But the
 and
 .B <<EOF>>
 operators cannot be used in a
-.I flex
+.I \*n
 definition.
 .IP
 Using
@@ -3866,7 +3868,7 @@ has trailing whitespace:
       { foobar_action(); }
 
 .fi
-.I flex
+.I \*n
 does not support this feature.
 .bP
 The
@@ -3895,7 +3897,7 @@ The precedence of the
 .I lex
 interprets "abc{1,3}" as "match one, two, or
 three occurrences of 'abc'", whereas
-.I flex
+.I \*n
 interprets it as "match 'ab'
 followed by one, two, or three occurrences of 'c'".
 The latter is
@@ -3907,7 +3909,7 @@ operator is different.
 .I lex
 interprets "^foo|bar" as "match either 'foo' at the beginning of a line,
 or 'bar' anywhere", whereas
-.I flex
+.I \*n
 interprets it as "match either 'foo' or 'bar' if they come at the beginning
 of a line".
 The latter is in agreement with the POSIX specification.
@@ -3917,16 +3919,16 @@ The special table-size declarations such as
 supported by
 .I lex
 are not required by
-.I flex
+.I \*n
 scanners;
-.I flex
+.I \*n
 ignores them.
 .bP
 The name
 .bd 1
 FLEX_SCANNER
 is #define'd so scanners may be written for use with either
-.I flex
+.I \*n
 or
 .I lex.
 Scanners also include
@@ -3934,13 +3936,13 @@ Scanners also include
 and
 .B YY_FLEX_MINOR_VERSION
 indicating which version of
-.I flex
+.I \*n
 generated the scanner
 (for example, for the 2.5 release, these defines would be 2 and 5
 respectively).
 .PP
 The following
-.I flex
+.I \*n
 features are not included in
 .I lex
 or the POSIX specification:
@@ -3967,9 +3969,9 @@ or the POSIX specification:
     multiple actions on a line
 
 .fi
-plus almost all of the flex flags.
+plus almost all of the \*n flags.
 The last feature in the list refers to the fact that with
-.I flex
+.I \*n
 you can put multiple actions on the same line, separated with
 semi-colons, while with
 .I lex,
@@ -3985,7 +3987,7 @@ is (rather surprisingly) truncated to
     foo    handle_foo();
 
 .fi
-.I flex
+.I \*n
 does not truncate the action.
 Actions that are not enclosed in
 braces are simply terminated at the end of the line.
@@ -4029,9 +4031,9 @@ scanner uses
 or
 .B yymore()
 but that
-.I flex
+.I \*n
 failed to notice the fact, meaning that
-.I flex
+.I \*n
 scanned the first two sections looking for occurrences of these actions
 and failed to find any, but somehow you snuck some in (via a #include
 file, for example).
@@ -4039,9 +4041,9 @@ Use
 .B %option reject
 or
 .B %option yymore
-to indicate to flex that you really do use these features.
+to indicate to \*n that you really do use these features.
 .PP
-.I flex scanner jammed -
+.I \*n scanner jammed -
 a scanner compiled with
 .B \-s
 has encountered an input string which wasn't matched by
@@ -4058,7 +4060,7 @@ You can increase the value by
 #define'ing
 .B YYLMAX
 in the definitions section of your
-.I flex
+.I \*n
 input.
 .PP
 .I scanner requires \-8 flag to
@@ -4075,7 +4077,7 @@ See the discussion of the
 .B \-7
 flag for details.
 .PP
-.I flex scanner push-back overflow -
+.I \*n scanner push-back overflow -
 you used
 .B unput()
 to push back so much text that the scanner's buffer could not hold
@@ -4093,7 +4095,7 @@ This doesn't work with scanners that use
 REJECT.
 .PP
 .I
-fatal flex scanner internal error--end of buffer missed -
+fatal \*n scanner internal error--end of buffer missed -
 This can occur in an scanner which is reentered after a long-jump
 has jumped out (or over) the scanner's activation frame.
 Before
@@ -4128,10 +4130,10 @@ header file defining the C++ scanner base class,
 and its derived class,
 .B yyFlexLexer.
 .TP
-.I flex.skl
+.I \*n.skl
 skeleton scanner.
-This file is only used when building flex, not when
-flex executes.
+This file is only used when building \*n, not when
+\*n executes.
 .TP
 .I lex.backup
 backing-up information for
@@ -4190,7 +4192,7 @@ Due to both buffering of input and read-ahead, you cannot intermix
 calls to <stdio.h> routines, such as, for example,
 .B getchar(),
 with
-.I flex
+.I \*n
 rules and expect it to work.
 Call
 .B input()
@@ -4213,7 +4215,7 @@ or
 options.
 .PP
 The
-.I flex
+.I \*n
 internal algorithms need documentation.
 .SH SEE ALSO
 .PP
@@ -4231,7 +4233,7 @@ Alfred Aho, Ravi Sethi and Jeffrey Ullman,
 .I Compilers: Principles, Techniques and Tools,
 Addison-Wesley (1986).
 Describes the pattern-matching techniques used by
-.I flex
+.I \*n
 (deterministic finite automata).
 .SH AUTHOR
 Vern Paxson, with the help of many ideas and much inspiration from
@@ -4243,7 +4245,7 @@ Jacobson.
 The implementation was done by Kevin Gong and Vern Paxson.
 .PP
 Thanks to the many
-.I flex
+.I \*n
 beta-testers, feedbackers, and contributors, especially Francois Pinard,
 Casey Leedom,
 Robert Abramovitz,
