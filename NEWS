@@ -1,8 +1,14 @@
--- $Id: NEWS,v 1.64 2023/05/21 19:26:52 tom Exp $
+-- $Id: NEWS,v 1.67 2023/05/23 23:25:25 tom Exp $
 -------------------------------------------------------------------------------
 -- Changes by Thomas E. Dickey
 -- vile:txtmode
 -------------------------------------------------------------------------------
+
+2023/05/23
+	+ modify configure script and makefile to comment-out actions which
+	  run the generated program if it is cross-compiled.
+	+ add dependency to "scan.c" rule in makefile to eliminate a race with
+	  the ".bootstrap" target (Gentoo #906965).
 
 2023/05/21
 	+ modify configure script/makefile to detect type of compression used

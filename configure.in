@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 dnl
-AC_REVISION($Revision: 1.15 $)
+AC_REVISION($Revision: 1.16 $)
 AC_PREREQ(2.52.20230114)
 
 AC_INIT(initscan.c)
@@ -50,6 +50,10 @@ esac
 CF_WITH_MAN2HTML     
 CF_MANPAGE_FORMAT
 CF_INSTALL_MAN
+
+no_cross=
+test "x$cross_compiling" = xno || no_cross="#"
+AC_SUBST(no_cross)
 
 AC_OUTPUT(Makefile)
 CF_MAKE_DOCS(flex,1)
