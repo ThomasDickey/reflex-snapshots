@@ -45,7 +45,7 @@ for them, you are not even bound by the above copyright.
 
 Files: aclocal.m4
 Licence: other-BSD
-Copyright:  2008-2022,2023 by Thomas E. Dickey
+Copyright:  2008-2023,2024 by Thomas E. Dickey
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the
     "Software"), to deal in the Software without restriction, including
@@ -106,7 +106,7 @@ Licence: other-BSD
     shared with many OS's install programs.
 
 Files: debian/*
-Copyright:  2010-2017,2019 Thomas E. Dickey
+Copyright:  2010-2019,2024 Thomas E. Dickey
 Licence: other-BSD
     Permission to use, copy, modify, and distribute this software and its
     documentation for any purpose and without fee is hereby granted,

@@ -1,8 +1,8 @@
-dnl $Id: aclocal.m4,v 1.31 2023/05/21 19:53:46 tom Exp $
+dnl $Id: aclocal.m4,v 1.34 2024/04/01 08:22:19 tom Exp $
 dnl reflex's local definitions for autoconf -TD
 dnl ---------------------------------------------------------------------------
 dnl
-dnl Copyright 2008-2022,2023 Thomas E. Dickey
+dnl Copyright 2008-2023,2024 Thomas E. Dickey
 dnl
 dnl Permission is hereby granted, free of charge, to any person obtaining a
 dnl copy of this software and associated documentation files (the
@@ -491,7 +491,7 @@ if test "x$ifelse([$2],,CLANG_COMPILER,[$2])" = "xyes" ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_CONST_X_STRING version: 7 updated: 2021/06/07 17:39:17
+dnl CF_CONST_X_STRING version: 8 updated: 2023/12/01 17:22:50
 dnl -----------------
 dnl The X11R4-X11R6 Xt specification uses an ambiguous String type for most
 dnl character-strings.
@@ -526,6 +526,7 @@ AC_TRY_COMPILE(
 AC_CACHE_CHECK(for X11/Xt const-feature,cf_cv_const_x_string,[
 	AC_TRY_COMPILE(
 		[
+#undef  _CONST_X_STRING
 #define _CONST_X_STRING	/* X11R7.8 (perhaps) */
 #undef  XTSTRINGDEFINES	/* X11R5 and later */
 #include <stdlib.h>
@@ -943,7 +944,7 @@ if test x$cf_cv_gnu_library = xyes; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_INSTALL_MAN version: 5 updated: 2023/05/21 15:53:07
+dnl CF_INSTALL_MAN version: 6 updated: 2024/04/01 04:21:53
 dnl --------------
 dnl Call this to generate a script "install-man" which uses the detected
 dnl manpage-format to compress the resulting manpage.  Providing this as a
@@ -1063,7 +1064,7 @@ if test -n "$source" ; then
 			cp "$source" "$interim" || exit 1
 		fi
 		if test -n "@cf_manpage_compress@" ; then
-			@cf_manpage_compress@ "$interim"
+			@cf_manpage_compress@ @cf_manpage_coptions@ "$interim"
 			source="${interim}${suffix}"
 		fi
 		if test -d "$target" ; then
@@ -1247,7 +1248,7 @@ AC_SUBST(MAKE_UPPER_TAGS)
 AC_SUBST(MAKE_LOWER_TAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MANPAGE_FORMAT version: 18 updated: 2023/05/19 18:35:02
+dnl CF_MANPAGE_FORMAT version: 19 updated: 2024/03/30 08:27:40
 dnl -----------------
 dnl Option to allow user to override automatic configuration of manpage format.
 dnl There are several special cases:
@@ -1365,6 +1366,7 @@ cf_manpage_format=no
 cf_manpage_inboth=no
 cf_manpage_so_strip=
 cf_manpage_compress=
+cf_manpage_coptions=
 
 for cf_item in $MANPAGE_FORMAT
 do
@@ -1384,6 +1386,7 @@ case "$cf_item" in
 (gzip)
 	cf_manpage_so_strip="gz"
 	cf_manpage_compress=gzip
+	cf_manpage_coptions=-n
 	;;
 (bzip2)
 	cf_manpage_so_strip="bz2"
@@ -1400,6 +1403,7 @@ AC_SUBST(cf_manpage_format)
 AC_SUBST(cf_manpage_inboth)
 AC_SUBST(cf_manpage_so_strip)
 AC_SUBST(cf_manpage_compress)
+AC_SUBST(cf_manpage_coptions)
 
 ])dnl
 dnl ---------------------------------------------------------------------------
@@ -1773,7 +1777,7 @@ AC_SUBST(X_CFLAGS)
 AC_SUBST(X_LIBS)
 [])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_MAN2HTML version: 12 updated: 2021/01/03 18:30:50
+dnl CF_WITH_MAN2HTML version: 13 updated: 2023/11/23 06:40:35
 dnl ----------------
 dnl Check for man2html and groff.  Prefer man2html over groff, but use groff
 dnl as a fallback.  See
@@ -1815,7 +1819,7 @@ esac
 
 AC_MSG_CHECKING(for program to convert manpage to html)
 AC_ARG_WITH(man2html,
-	[  --with-man2html=XXX     use XXX rather than groff],
+	[[  --with-man2html[=XXX]   use XXX rather than groff]],
 	[cf_man2html=$withval],
 	[cf_man2html=$cf_man2html])
 
@@ -1971,7 +1975,7 @@ fi
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 66 updated: 2023/04/03 04:19:37
+dnl CF_XOPEN_SOURCE version: 67 updated: 2023/09/06 18:55:27
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -2031,7 +2035,7 @@ case "$host_os" in
 	cf_xopen_source="-D_SGI_SOURCE"
 	cf_XOPEN_SOURCE=
 	;;
-(linux*gnu|linux*gnuabi64|linux*gnuabin32|linux*gnueabi|linux*gnueabihf|linux*gnux32|uclinux*|gnu*|mint*|k*bsd*-gnu|cygwin|msys|mingw*)
+(linux*gnu|linux*gnuabi64|linux*gnuabin32|linux*gnueabi|linux*gnueabihf|linux*gnux32|uclinux*|gnu*|mint*|k*bsd*-gnu|cygwin|msys|mingw*|linux*uclibc)
 	CF_GNU_SOURCE($cf_XOPEN_SOURCE)
 	;;
 (minix*)
