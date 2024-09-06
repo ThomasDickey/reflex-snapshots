@@ -1,4 +1,4 @@
-/* $Id: sym.c,v 1.7 2010/06/27 17:47:05 tom Exp $ */
+/* $Id: sym.c,v 1.8 2024/09/06 22:44:15 tom Exp $ */
 /* sym - symbol table routines */
 
 /*-
@@ -33,7 +33,7 @@
 
 /* declare functions that have forward references */
 
-int hashfunct(char[], int);
+static int hashfunct(char[], int);
 
 struct hash_entry *ndtbl[NAME_TABLE_HASH_SIZE];
 struct hash_entry *sctbl[START_COND_HASH_SIZE];
@@ -129,7 +129,7 @@ ccllookup(Char ccltxt[])
 }
 
 /* hashfunct - compute the hash value for "str" and hash size "hash_size" */
-int
+static int
 hashfunct(char str[], int hash_size)
 {
     int hashval;

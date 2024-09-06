@@ -1,7 +1,7 @@
 Summary: fast lexical analyzer generator
 %define AppProgram reflex
-%define AppVersion 20240401
-# $XTermId: reflex.spec,v 1.28 2024/04/01 08:05:30 tom Exp $
+%define AppVersion 20240906
+# $XTermId: reflex.spec,v 1.29 2024/09/06 19:58:10 tom Exp $
 Name: %{AppProgram}
 Version: %{AppVersion}
 Release: 1

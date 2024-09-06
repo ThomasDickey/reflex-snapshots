@@ -1,4 +1,4 @@
-/* $Id: nfa.c,v 1.9 2021/05/10 21:17:23 tom Exp $ */
+/* $Id: nfa.c,v 1.10 2024/09/06 22:43:58 tom Exp $ */
 /* nfa - NFA construction routines */
 
 /*-
@@ -33,8 +33,8 @@
 
 /* declare functions that have forward references */
 
-int dupmachine(int);
-void mkxtion(int, int);
+static int dupmachine(int);
+static void mkxtion(int, int);
 
 /* add_accept - add an accepting state to a machine
  *
@@ -136,7 +136,7 @@ dumpnfa(int state1)
  * also note that the original MUST be contiguous, with its low and high
  * states accessible by the arrays firstst and lastst
  */
-int
+static int
 dupmachine(int mach)
 {
     int i, init, state_offset;
@@ -619,7 +619,7 @@ mkstate(int sym)
  *     statefrom - the state from which the transition is to be made
  *     stateto   - the state to which the transition is to be made
  */
-void
+static void
 mkxtion(int statefrom, int stateto)
 {
     if (trans1[statefrom] == NO_TRANSITION)

@@ -1,18 +1,28 @@
-.\" $Id: flex.1,v 1.8 2023/05/21 15:59:25 tom Exp $
+.\" $Id: flex.1,v 1.11 2024/09/06 23:05:53 tom Exp $
 .ds N Flex
 .ds n flex
-.TH FLEX 1 "2023-05-21" "Version 2.5"
+.TH FLEX 1 "2024-09-06" "Version 2.5"
 .\" Bulleted paragraph
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
 ..
-.ie \n(.g .ds `` \(lq
-.el       .ds `` ``
-.ie \n(.g .ds '' \(rq
-.el       .ds '' ''
+.ie \n(.g \{\
+.ds `` \(lq
+.ds '' \(rq
+.ds '  \(aq
+.\}
+.el \{\
+.ie t .ds `` ``
+.el   .ds `` ""
+.ie t .ds '' ''
+.el   .ds '' ""
+.ie t .ds '  \(aq
+.el   .ds '  '
+.\}
 .SH NAME
-\*n \- fast lexical analyzer generator
+\*n \-
+fast lexical analyzer generator
 .SH SYNOPSIS
 .B \*n
 .B [\-bcdfhilnpstvwBFILTV78+? \-C[aefFmr] \-ooutput \-Pprefix \-Sskeleton]
@@ -20,7 +30,7 @@
 .I [filename ...]
 .SH OVERVIEW
 This manual describes
-.I \*n,
+.IR \*n ,
 a tool for generating programs that perform pattern-matching on text.
 The
 manual includes both tutorial and reference sections:
@@ -112,7 +122,7 @@ the form of pairs
 of regular expressions and C code, called
 .I rules.  \*n
 generates as output a C source file,
-.B lex.yy.c,
+.BR lex.yy.c ,
 which defines a routine
 .B yylex().
 This file is compiled and linked with the
@@ -124,9 +134,8 @@ of the regular expressions.
 Whenever it finds one, it executes
 the corresponding C code.
 .SH SOME SIMPLE EXAMPLES
-.PP
 First some simple examples to get the flavor of how one uses
-.I \*n.
+.IR \*n .
 The following
 .I \*n
 input specifies a scanner which whenever it encounters the string
@@ -147,7 +156,7 @@ In this input, there is just one rule.
 \*(``username\*('' is the
 .I pattern
 and the \*(``printf\*('' is the
-.I action.
+.IR action .
 The "%%" marks the beginning of the rules.
 .PP
 Here's another simple example:
@@ -233,7 +242,7 @@ A somewhat more complicated example:
                 yyin = fopen( argv[0], "r" );
         else
                 yyin = stdin;
-        
+
         yylex();
         }
 
@@ -266,7 +275,7 @@ The
 section contains declarations of simple
 .I name
 definitions to simplify the scanner specification, and declarations of
-.I start conditions,
+.IR "start conditions" ,
 which are explained in a later section.
 .PP
 Name definitions have the form:
@@ -476,12 +485,11 @@ and to match zero-or-more \*(``foo\*('''s-or-\*(``bar\*('''s:
 .nf
 
     (foo|bar)*
-
 .fi
 .PP
 In addition to characters and ranges of characters, character classes
 can also contain character class
-.I expressions.
+.IR expressions .
 These are expressions enclosed inside
 .B [:
 and
@@ -600,9 +608,9 @@ Once the match is determined, the text corresponding to the match
 (called the
 .I token)
 is made available in the global character pointer
-.B yytext,
+.BR yytext ,
 and its length in the global integer
-.B yyleng.
+.BR yyleng .
 The
 .I action
 corresponding to the matched pattern is then executed (a more
@@ -629,7 +637,7 @@ Note that
 can be defined in two different ways: either as a character
 .I pointer
 or as a character
-.I array.
+.IR array .
 You can control which definition
 .I \*n
 uses by including one of the special directives
@@ -638,7 +646,7 @@ or
 .B %array
 in the first (definitions) section of your \*n input.
 The default is
-.B %pointer,
+.BR %pointer ,
 unless you use the
 .B -l
 lex compatibility option, in which case
@@ -654,7 +662,7 @@ is that you are restricted in how your actions can modify
 (see the next section), and calls to the
 .B unput()
 function destroys the present contents of
-.B yytext,
+.BR yytext ,
 which can be a considerable porting headache when moving between different
 .I lex
 versions.
@@ -677,9 +685,9 @@ externally using declarations of the form:
     extern char yytext[];
 .fi
 This definition is erroneous when used with
-.B %pointer,
+.BR %pointer ,
 but correct for
-.B %array.
+.BR %array .
 .PP
 .B %array
 defines
@@ -742,12 +750,11 @@ a single blank, and throws away whitespace found at the end of a line:
     %%
     [ \\t]+        putchar( ' ' );
     [ \\t]+$       /* ignore this token */
-
 .fi
 .PP
 If the action contains a '{', then the action spans till the balancing '}'
 is found, and the action may cross multiple lines.
-.I \*n 
+.I \*n
 knows about C strings and comments and won't be fooled by braces found
 within them, but also allows actions to begin with
 .B %{
@@ -821,7 +828,7 @@ whenever \*(``frob\*('' is seen:
 
 .fi
 Without the
-.B REJECT,
+.BR REJECT ,
 any \*(``frob\*('''s in the input would not be counted as words, since the
 scanner normally executes only one action per token.
 Multiple
@@ -860,7 +867,7 @@ options (see below).
 Note also that unlike the other special actions,
 .B REJECT
 is a
-.I branch;
+.IR branch ;
 code immediately following it in the action will
 .I not
 be executed.
@@ -933,7 +940,7 @@ An argument of 0 to
 will cause the entire current input string to be scanned again.
 Unless you've
 changed how the scanner will subsequently process its input (using
-.B BEGIN,
+.BR BEGIN ,
 for example), this will result in an endless loop.
 .PP
 Note that
@@ -976,7 +983,7 @@ is that if you are using
 .B unput()
 .I destroys
 the contents of
-.I yytext,
+.IR yytext ,
 starting with its rightmost character and devouring one character to
 the left with each call.
 If you need the value of yytext preserved
@@ -1059,7 +1066,7 @@ may be redefined.
 The output of
 .I \*n
 is the file
-.B lex.yy.c,
+.BR lex.yy.c ,
 which contains the scanning routine
 .B yylex(),
 a number of tables used by it for matching tokens, and a number
@@ -1085,7 +1092,7 @@ For example, you could use:
 
 .fi
 to give the scanning routine the name
-.I lexscan,
+.IR lexscan ,
 returning a float, and taking two floats as arguments.
 Note that
 if you give arguments to the scanning routine using a
@@ -1127,11 +1134,11 @@ to a new input file or using
 .B yyrestart()
 to do so; the latter is available for compatibility with previous versions
 of
-.I \*n,
+.IR \*n ,
 and because it can be used to switch input files in the middle of scanning.
 It can also be used to throw away the current input buffer, by calling
 it with an argument of
-.I yyin;
+.IR yyin ;
 but better is to use
 .B YY_FLUSH_BUFFER
 (see above).
@@ -1154,7 +1161,7 @@ By default (and for purposes of efficiency), the scanner uses
 block-reads rather than simple
 .I getc()
 calls to read characters from
-.I yyin.
+.IR yyin .
 The nature of how it gets its input can be controlled by defining the
 .B YY_INPUT
 macro.
@@ -1205,7 +1212,7 @@ Note that in either case, the start condition remains unchanged;
 it does
 .I not
 revert to
-.B INITIAL.
+.BR INITIAL .
 .PP
 If you do not supply your own version of
 .B yywrap(),
@@ -1279,10 +1286,10 @@ action is executed, rules with the given start
 condition will be active and
 rules with other start conditions will be inactive.
 If the start condition is
-.I inclusive,
+.IR inclusive ,
 then rules with no start conditions at all will also be active.
 If it is
-.I exclusive,
+.IR exclusive ,
 then
 .I only
 rules qualified with the start condition will be active.
@@ -1326,19 +1333,19 @@ qualifier, the
 .I bar
 pattern in the second example wouldn't be active (i.e., couldn't match)
 when in start condition
-.B example.
+.BR example .
 If we just used
 .B <example>
 to qualify
-.I bar,
+.IR bar ,
 though, then it would only be active in
 .B example
 and not in
-.B INITIAL,
+.BR INITIAL ,
 while in the first example it's active in both, because in the first
 example the
 .B example
-startion condition is an
+starting condition is an
 .I inclusive
 .B (%s)
 start condition.
@@ -1518,7 +1525,7 @@ could instead be written
 as an alias for
 .B YY_START
 (since that is what's used by AT&T
-.I lex).
+.IR lex ).
 .PP
 Note that start conditions do not have their own name-space; %s's and %x's
 declare names in the same fashion as #define's.
@@ -1590,7 +1597,7 @@ whole bunch of rules all preceded by the same start condition(s).
 \*N
 makes this a little easier and cleaner by introducing a notion of
 start condition
-.I scope.
+.IR scope .
 A start condition scope is begun with:
 .nf
 
@@ -1606,7 +1613,7 @@ scope, every rule automatically has the prefix
 applied to it, until a
 .I '}'
 which matches the initial
-.I '{'.
+.IR '{' .
 So, for example,
 .nf
 
@@ -1641,7 +1648,7 @@ as though you had used
 .TP
 .B void yy_pop_state()
 pops the top of the stack and switches to it via
-.B BEGIN.
+.BR BEGIN .
 .TP
 .B int yy_top_state()
 returns the top of the stack without altering the stack's contents.
@@ -1704,15 +1711,15 @@ pointer in the call to
 is only used as the value of
 .I yyin
 seen by
-.B YY_INPUT;
+.BR YY_INPUT ;
 if you redefine
 .B YY_INPUT
 so it no longer uses
-.I yyin,
+.IR yyin ,
 then you can safely pass a nil
 .I FILE
 pointer to
-.B yy_create_buffer.
+.BR yy_create_buffer .
 You select a particular buffer to scan from using:
 .nf
 
@@ -1721,7 +1728,7 @@ You select a particular buffer to scan from using:
 .fi
 switches the scanner's input buffer so subsequent tokens will
 come from
-.I new_buffer.
+.IR new_buffer .
 Note that
 .B yy_switch_to_buffer()
 may be used by yywrap() to set things up for continued scanning, instead
@@ -1741,8 +1748,7 @@ change the start condition.
 
 .fi
 is used to reclaim the storage associated with a buffer.
-(
-.B buffer
+.RB ( buffer
 can be nil, in which case the routine does nothing.)
 You can also clear the current contents of a buffer using:
 .nf
@@ -1753,7 +1759,7 @@ You can also clear the current contents of a buffer using:
 This function discards the buffer's contents,
 so the next time the scanner attempts to match a token from the
 buffer, it will first fill the buffer anew using
-.B YY_INPUT.
+.BR YY_INPUT .
 .PP
 .B yy_new_buffer()
 is an alias for
@@ -1852,7 +1858,7 @@ scans
 .I len
 bytes (including possibly NUL's)
 starting at location
-.I bytes.
+.IR bytes .
 .PP
 Note that both of these functions create and scan a
 .I copy
@@ -1864,7 +1870,7 @@ copy by using:
 .TP
 .B yy_scan_buffer(char *base, yy_size_t size)
 which scans in place the buffer starting at
-.I base,
+.IR base ,
 consisting of
 .I size
 bytes, the last two bytes of which
@@ -1901,9 +1907,11 @@ by doing one of four things:
 .bP
 assigning
 .I yyin
-to a new input file (in previous versions of \*n, after doing the
+to a new input file (in previous versions of
+.IR \*n ,
+after doing the
 assignment you had to call the special action
-.B YY_NEW_FILE;
+.BR YY_NEW_FILE ;
 this is no longer necessary);
 .bP
 executing a
@@ -1989,7 +1997,6 @@ is:
 .nf
 
     int ctr[YY_NUM_RULES];
-
 .fi
 .PP
 The macro
@@ -2002,7 +2009,7 @@ in a data table or open a logging file.
 The macro
 .B yy_set_interactive(is_interactive)
 can be used to control whether the current buffer is considered
-.I interactive.
+.IR interactive .
 An interactive buffer is processed more slowly,
 but must be used when the scanner's input source is indeed
 interactive to avoid problems due to waiting to fill buffers
@@ -2010,7 +2017,7 @@ interactive to avoid problems due to waiting to fill buffers
 .B \-I
 flag below).
 A non-zero value
-in the macro invocation marks the buffer as interactive, a zero  
+in the macro invocation marks the buffer as interactive, a zero
 value as non-interactive.
 Note that use of this macro overrides
 .B %option always-interactive
@@ -2036,7 +2043,7 @@ will have '^' rules active, false otherwise.
 .PP
 In the generated scanner, the actions are all gathered in one large
 switch statement and separated using
-.B YY_BREAK,
+.BR YY_BREAK ,
 which may be redefined.
 By default, it is simply a \*(``break\*('', to separate
 each rule's action from the following rule's.
@@ -2075,14 +2082,14 @@ results in somewhat slower scanners, but the value of
 becomes immune to calls to
 .I input()
 and
-.I unput(),
+.IR unput() ,
 which potentially destroy its value when
 .B yytext
 is a character pointer.
 The opposite of
 .B %array
 is
-.B %pointer,
+.BR %pointer ,
 which is the default.
 .IP
 You cannot use
@@ -2155,11 +2162,11 @@ to find the next input token.
 The routine is supposed to
 return the type of the next token as well as putting any associated
 value in the global
-.B yylval.
+.BR yylval .
 To use
 .I \*n
 with
-.I yacc,
+.IR yacc ,
 one specifies the
 .B \-d
 option to
@@ -2193,7 +2200,7 @@ has the following options:
 .TP
 .B \-b
 Generate backing-up information to
-.I lex.backup.
+.IR lex.backup .
 This is a list of scanner states which require backing up
 and the input characters on which they do so.
 By adding rules one
@@ -2240,7 +2247,7 @@ or reaches an end-of-file.
 .TP
 .B \-f
 specifies
-.I fast scanner.
+.IR "fast scanner" .
 No table compression is done and stdio is bypassed.
 The result is large but fast.
 This option is equivalent to
@@ -2251,13 +2258,13 @@ This option is equivalent to
 generates a \*(``help\*('' summary of
 .I \*n's
 options to
-.I stdout 
+.I stdout
 and then exits.
 .B \-?
 and
 .B \-\-help
 are synonyms for
-.B \-h.
+.BR \-h .
 .TP
 .B \-i
 instructs
@@ -2283,7 +2290,7 @@ Note that this does not mean
 compatibility.
 Use of this option costs a considerable amount of
 performance, and it cannot be used with the
-.B \-+, -f, -F, -Cf,
+.BR \-+ ", " -f ", " -F ", " -Cf ", "
 or
 .B -CF
 options.
@@ -2309,11 +2316,11 @@ If you give the flag twice, you will also get comments regarding
 features that lead to minor performance losses.
 .IP
 Note that the use of
-.B REJECT,
-.B %option yylineno,
+.BR REJECT ,
+.BR "%option yylineno" ,
 and variable trailing context (see the Deficiencies / Bugs section below)
 entails a substantial performance penalty; use of
-.I yymore(),
+.IR yymore() ,
 the
 .B ^
 operator,
@@ -2337,7 +2344,7 @@ instructs
 .I \*n
 to write the scanner it generates to standard output instead
 of
-.B lex.yy.c.
+.BR lex.yy.c .
 .TP
 .B \-v
 specifies that
@@ -2412,7 +2419,7 @@ If only
 the \*(``identifier\*('' rule is present
 and you then use a hash table or some such
 to detect the keywords, you're better off using
-.B -F.
+.BR -F .
 .IP
 This option is equivalent to
 .B \-CFr
@@ -2459,7 +2466,7 @@ use
 in conjunction with
 .B \-Cf
 or
-.B \-CF.
+.BR \-CF .
 Thus, this option is not really needed; it is on by default for all those
 cases in which it is allowed.
 .IP
@@ -2500,7 +2507,7 @@ concerning
 the form of the input and the resultant non-deterministic and deterministic
 finite automata.
 This option is mostly for use in maintaining
-.I \*n.
+.IR \*n .
 .TP
 .B \-V
 prints the version number to
@@ -2508,7 +2515,7 @@ prints the version number to
 and exits.
 .B \-\-version
 is a synonym for
-.B \-V.
+.BR \-V .
 .TP
 .B \-7
 instructs
@@ -2536,7 +2543,7 @@ considerably less portable.
 default behavior is to generate an 8-bit scanner unless you use the
 .B \-Cf
 or
-.B \-CF,
+.BR \-CF ,
 in which case
 .I \*n
 defaults to generating 7-bit scanners unless your site was always
@@ -2564,7 +2571,7 @@ characters.
 This flag is only needed for scanners generated using
 .B \-Cf
 or
-.B \-CF,
+.BR \-CF ,
 as otherwise \*n defaults to generating an 8-bit scanner anyway.
 .IP
 See the discussion of
@@ -2577,7 +2584,7 @@ specifies that you want \*n to generate a C++
 scanner class.
 See the section on Generating C++ Scanners below for
 details.
-.TP 
+.TP
 .B \-C[aefFmr]
 controls the degree of table compression and, more generally, trade-offs
 between small scanners and fast scanners.
@@ -2596,7 +2603,7 @@ double the size of the tables used by your scanner.
 directs
 .I \*n
 to construct
-.I equivalence classes,
+.IR "equivalence classes" ,
 i.e., sets of characters
 which have identical lexical properties (for example, if the only
 appearance of digits in the
@@ -2631,7 +2638,7 @@ This option cannot be used with
 directs
 .I \*n
 to construct
-.I meta-equivalence classes,
+.IR "meta-equivalence classes" ,
 which are sets of equivalence classes (or characters, if equivalence
 classes are not being used) that are commonly used together.
 Meta-equivalence
@@ -2653,7 +2660,7 @@ system call, resulting in a performance gain which varies from system
 to system, but in general is probably negligible unless you are also using
 .B \-Cf
 or
-.B \-CF.
+.BR \-CF .
 Using
 .B \-Cr
 can cause strange behavior if, for example, you read from
@@ -2683,7 +2690,7 @@ Otherwise the options
 may be freely mixed, and are cumulative.
 .IP
 The default setting is
-.B \-Cem,
+.BR \-Cem ,
 which specifies that
 .I \*n
 should generate equivalence classes
@@ -2719,7 +2726,7 @@ scanners.
 directs \*n to write the scanner to the file
 .B output
 instead of
-.B lex.yy.c.
+.BR lex.yy.c .
 If you combine
 .B \-o
 with the
@@ -2731,7 +2738,7 @@ but its
 directives (see the
 .B \\-L
 option above) refer to the file
-.B output.
+.BR output .
 .TP
 .B \-Pprefix
 changes the default
@@ -2739,17 +2746,17 @@ changes the default
 prefix used by
 .I \*n
 for all globally-visible variable and function names to instead be
-.I prefix.
+.IR prefix .
 For example,
 .B \-Pfoo
 changes the name of
 .B yytext
 to
-.B footext.
+.BR footext .
 It also changes the name of the default output file from
 .B lex.yy.c
 to
-.B lex.foo.c.
+.BR lex.foo.c .
 Here are all of the names affected:
 .nf
 
@@ -2790,7 +2797,7 @@ so you now
 either
 provide your own (appropriately-named) version of the routine for your
 scanner, or use
-.B %option noyywrap,
+.BR "%option noyywrap" ,
 as linking with
 .B \-lfl
 no longer provides one for you by default.
@@ -2880,7 +2887,7 @@ instructs \*n to generate a scanner which never considers its input
 \*(``interactive\*('' (again, no call made to
 .B isatty()).
 This is the opposite of
-.B always-interactive.
+.BR always-interactive .
 .TP
 .B stack
 enables the use of start condition stacks (see Start Conditions above).
@@ -2895,9 +2902,9 @@ and
 to
 .I stdin
 and
-.I stdout,
+.IR stdout ,
 instead of the default of
-.I nil.
+.IR nil .
 Some existing
 .I lex
 programs depend on this behavior, even though it is not compliant with
@@ -2912,9 +2919,9 @@ directs
 .I \*n
 to generate a scanner that maintains the number of the current line
 read from its input in the global variable
-.B yylineno.
+.BR yylineno .
 This option is implied by
-.B %option lex-compat.
+.BR "%option lex-compat" .
 .TP
 .B yywrap
 if unset (i.e.,
@@ -2953,7 +2960,7 @@ Three options take string-delimited values, offset with '=':
 
 .fi
 is equivalent to
-.B -oABC,
+.BR -oABC ,
 and
 .nf
 
@@ -2961,7 +2968,7 @@ and
 
 .fi
 is equivalent to
-.B -PXYZ.
+.BR -PXYZ .
 Finally,
 .nf
 
@@ -2976,7 +2983,7 @@ It informs
 that you have derived
 .B foo
 as a subclass of
-.B yyFlexLexer,
+.BR yyFlexLexer ,
 so
 .I \*n
 will place your actions in the member function
@@ -3056,7 +3063,7 @@ Getting rid of backing up is messy and often may be an enormous
 amount of work for a complicated scanner.
 In principal, one begins
 by using the
-.B \-b 
+.B \-b
 flag to generate a
 .I lex.backup
 file.
@@ -3120,7 +3127,7 @@ all the trouble of removing backing up from the rules unless
 we're using
 .B \-Cf
 or
-.B \-CF,
+.BR \-CF ,
 since there's no performance gain doing so with compressed scanners.
 .PP
 The way to remove the backing up is to add \*(``error\*('' rules:
@@ -3339,9 +3346,9 @@ one which doesn't include a newline:
 
 .fi
 Compiled with
-.B \-Cf,
+.BR \-Cf ,
 this is about as fast as one can get a
-.I \*n 
+.I \*n
 scanner to go for this particular problem.
 .PP
 A final note:
@@ -3361,7 +3368,7 @@ Thus if performance is
 vital, you should attempt to match \*(``large\*('' quantities of text but not
 \*(``huge\*('' quantities, where the cutoff between the two is at about 8K
 characters/token.
-.SH GENERATING C++ SCANNERS
+.SH "GENERATING C++ SCANNERS"
 .I \*n
 provides two different ways to generate scanners for use with C++.
 The
@@ -3375,13 +3382,13 @@ You can then use C++ code in your
 rule actions instead of C code.
 Note that the default input source for
 your scanner remains
-.I yyin,
+.IR yyin ,
 and default echoing is still done to
-.I yyout.
+.IR yyout .
 Both of these remain
 .I FILE *
 variables and not C++
-.I streams.
+.IR streams .
 .PP
 You can also use
 .I \*n
@@ -3395,24 +3402,24 @@ executable ends in a '+', such as
 When using this option, \*n defaults to generating the scanner to the file
 .B lex.yy.cc
 instead of
-.B lex.yy.c.
+.BR lex.yy.c .
 The generated scanner includes the header file
-.I FlexLexer.h,
+.IR FlexLexer.h ,
 which defines the interface to two C++ classes.
 .PP
 The first class,
-.B FlexLexer,
+.BR FlexLexer ,
 provides an abstract base class defining the general scanner class
 interface.
 It provides the following member functions:
 .TP
 .B const char* YYText()
 returns the text of the most recently matched token, the equivalent of
-.B yytext.
+.BR yytext .
 .TP
 .B int YYLeng()
 returns the length of the most recently matched token, the equivalent of
-.B yyleng.
+.BR yyleng .
 .TP
 .B int lineno() const
 returns the current input line number
@@ -3454,9 +3461,9 @@ object pointer).
 The second class defined in
 .I FlexLexer.h
 is
-.B yyFlexLexer,
+.BR yyFlexLexer ,
 which is derived from
-.B FlexLexer.
+.BR FlexLexer .
 It defines the following additional member functions:
 .TP
 .B
@@ -3468,7 +3475,7 @@ If not specified,
 the streams default to
 .B cin
 and
-.B cout,
+.BR cout ,
 respectively.
 .TP
 .B virtual int yylex()
@@ -3483,13 +3490,13 @@ from
 and want to access the member functions and variables of
 .B S
 inside
-.B yylex(),
+.BR yylex() ,
 then you need to use
 .B %option yyclass="S"
 to inform
 .I \*n
 that you will be using that subclass instead of
-.B yyFlexLexer.
+.BR yyFlexLexer .
 In this case, rather than generating
 .B yyFlexLexer::yylex(),
 .I \*n
@@ -3544,20 +3551,20 @@ Note that \*(``interactive\*('' scanners (see the
 and
 .B \-I
 flags) define the macro
-.B YY_INTERACTIVE.
+.BR YY_INTERACTIVE .
 If you redefine
 .B LexerInput()
 and need to take different actions depending on whether or not
 the scanner might be scanning an interactive input source, you can
 test for the presence of this name via
-.B #ifdef.
+.BR #ifdef .
 .TP
 .B
 virtual void LexerOutput( const char* buf, int size )
 writes out
 .B size
 characters from the buffer
-.B buf,
+.BR buf ,
 which, while NUL-terminated, may also contain \*(``internal\*('' NUL's if
 the scanner's rules can match text with NUL's in them.
 .TP
@@ -3656,7 +3663,7 @@ flag (or the
 option) to rename each
 .B yyFlexLexer
 to some other
-.B xxFlexLexer.
+.BR xxFlexLexer .
 You then can include
 .B <FlexLexer.h>
 in your other sources once per lexer class, first renaming
@@ -3697,11 +3704,13 @@ specification, except that when using
 (the default), a call to
 .B unput()
 destroys the contents of
-.B yytext,
+.BR yytext ,
 which is counter to the POSIX specification.
 .PP
 In this section we discuss all of the known areas of incompatibility
-between \*n, AT&T lex, and the POSIX specification.
+between
+.IR \*n ,
+AT&T lex, and the POSIX specification.
 .PP
 .I \*n's
 .B \-l
@@ -3748,7 +3757,7 @@ processing is done.
 A \*(``real\*('' end-of-file is returned by
 .B input()
 as
-.I EOF.
+.IR EOF .
 .IP
 Input is instead controlled by defining the
 .B YY_INPUT
@@ -3761,7 +3770,7 @@ restriction that
 cannot be redefined is in accordance with the POSIX specification,
 which simply does not specify any way of controlling the
 scanner's input other than by making an initial assignment to
-.I yyin.
+.IR yyin .
 .bP
 The
 .B unput()
@@ -3829,7 +3838,7 @@ is expanded the rule is equivalent to "foo[A-Z][A-Z0-9]*?"
 and the precedence is such that the '?' is associated with
 "[A-Z0-9]*".
 With
-.I \*n,
+.IR \*n ,
 the rule will be expanded to
 "foo([A-Z][A-Z0-9]*)?" and so the string \*(``foo\*('' will match.
 .IP
@@ -3879,11 +3888,11 @@ It is not part
 of the POSIX specification.
 .bP
 After a call to
-.B unput(),
+.BR unput() ,
 .I yytext
 is undefined until the next token is matched, unless the scanner
 was built using
-.B %array.
+.BR %array .
 This is not the case with
 .I lex
 or the POSIX specification.
@@ -3930,7 +3939,7 @@ FLEX_SCANNER
 is #define'd so scanners may be written for use with either
 .I \*n
 or
-.I lex.
+.IR lex .
 Scanners also include
 .B YY_FLEX_MAJOR_VERSION
 and
@@ -3974,7 +3983,7 @@ The last feature in the list refers to the fact that with
 .I \*n
 you can put multiple actions on the same line, separated with
 semi-colons, while with
-.I lex,
+.IR lex ,
 the following
 .nf
 
@@ -3992,7 +4001,6 @@ does not truncate the action.
 Actions that are not enclosed in
 braces are simply terminated at the end of the line.
 .SH DIAGNOSTICS
-.PP
 .I warning, rule cannot be matched
 indicates that the given rule
 cannot be matched because it follows other rules that will
@@ -4010,7 +4018,7 @@ Using
 .B REJECT
 in a scanner suppresses this warning.
 .PP
-.I warning,
+.IR warning ,
 .B \-s
 .I
 option given but default rule can be matched
@@ -4082,7 +4090,7 @@ you used
 .B unput()
 to push back so much text that the scanner's buffer could not hold
 both the pushed-back text and the current token in
-.B yytext.
+.BR yytext .
 Ideally the scanner should dynamically resize the buffer in this case, but at
 present it does not.
 .PP
@@ -4126,13 +4134,15 @@ generated C++ scanner class, when using
 .TP
 .I <FlexLexer.h>
 header file defining the C++ scanner base class,
-.B FlexLexer,
+.BR FlexLexer ,
 and its derived class,
-.B yyFlexLexer.
+.BR yyFlexLexer .
 .TP
 .I \*n.skl
 skeleton scanner.
-This file is only used when building \*n, not when
+This file is only used when building
+.IR \*n ,
+not when
 \*n executes.
 .TP
 .I lex.backup
@@ -4141,8 +4151,7 @@ backing-up information for
 flag (called
 .I lex.bck
 on some systems).
-.SH DEFICIENCIES / BUGS
-.PP
+.SH "DEFICIENCIES / BUGS"
 Some trailing context
 patterns cannot be properly matched and generate
 warning messages ("dangerous trailing context").
@@ -4204,7 +4213,7 @@ flag excludes the number of table entries needed to determine
 what rule has been matched.
 The number of entries is equal
 to the number of DFA states if the scanner does not use
-.B REJECT,
+.BR REJECT ,
 and somewhat greater than the number of states if it does.
 .PP
 .B REJECT
@@ -4218,11 +4227,10 @@ The
 .I \*n
 internal algorithms need documentation.
 .SH SEE ALSO
-.PP
 lex(1), yacc(1), sed(1), awk(1).
 .PP
 John Levine, Tony Mason, and Doug Brown,
-.I Lex & Yacc,
+.IR "Lex & Yacc" ,
 O'Reilly and Associates.
 Be sure to get the 2nd edition.
 .PP
@@ -4230,7 +4238,7 @@ M. E. Lesk and E. Schmidt,
 .I LEX \- Lexical Analyzer Generator
 .PP
 Alfred Aho, Ravi Sethi and Jeffrey Ullman,
-.I Compilers: Principles, Techniques and Tools,
+.IR "Compilers: Principles, Techniques and Tools" ,
 Addison-Wesley (1986).
 Describes the pattern-matching techniques used by
 .I \*n

@@ -1,4 +1,4 @@
-/* $Id: flexdef.h,v 1.29 2021/08/06 20:40:59 tom Exp $ */
+/* $Id: flexdef.h,v 1.30 2024/09/06 22:40:26 tom Exp $ */
 /* flexdef - definitions file for flex */
 
 /*-
@@ -775,7 +775,7 @@ extern void list_character_set (FILE*, int[]);
 extern void check_for_backing_up (int, int[]);
 
 /* Check to see if NFA state set constitutes "dangerous" trailing context. */
-extern void check_trailing_context (int*, int, int*, int);
+extern void check_trailing_context (const int*, int, const int*, int);
 
 /* Construct the epsilon closure of a set of ndfa states. */
 extern int *epsclosure (int*, int*, int[], int*, int*);
@@ -795,7 +795,7 @@ extern int snstods (int[], int, int[], int, int, int*);
 extern void ccl2ecl (void);
 
 /* Associate equivalence class numbers with class members. */
-extern int cre8ecs (int[], int[], int);
+extern int cre8ecs (const int[], int[], int);
 
 /* Update equivalence classes based on character class transitions. */
 extern void mkeccl (CCLTBL[], int, int[], int[], int, int);

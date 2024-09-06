@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.26 2021/08/06 23:47:40 Boris.Kolpackov Exp $ */
+/* $Id: main.c,v 1.27 2024/09/06 22:43:30 tom Exp $ */
 /* flex - tool to generate fast lexical analyzers */
 
 /*-
@@ -47,9 +47,9 @@ static char flex_patched[] = FLEX_PATCHED;
 
 /* declare functions that have forward references */
 
-void flexinit(int, char **);
-void readin(void);
-void set_up_initial_allocations(void);
+static void flexinit(int, char **);
+static void readin(void);
+static void set_up_initial_allocations(void);
 
 #ifdef NEED_ARGV_FIXUP
 extern void argv_fixup(int *, char ***);
@@ -649,7 +649,7 @@ invalid_option(const char *arg)
 }
 
 /* flexinit - initialize flex */
-void
+static void
 flexinit(int argc, char **argv)
 {
     int i, sawcmpflag;
@@ -944,7 +944,7 @@ flexinit(int argc, char **argv)
 
 /* readin - read in the rules section of the input file(s) */
 
-void
+static void
 readin(void)
 {
     static char yy_stdinit[] = "FILE *yyin = stdin, *yyout = stdout;";
@@ -1136,7 +1136,7 @@ readin(void)
 
 /* set_up_initial_allocations - allocate memory for internal tables */
 
-void
+static void
 set_up_initial_allocations(void)
 {
     current_mns = INITIAL_MNS;

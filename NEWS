@@ -1,8 +1,15 @@
--- $Id: NEWS,v 1.70 2024/04/01 08:09:53 tom Exp $
+-- $Id: NEWS,v 1.72 2024/09/06 22:45:19 tom Exp $
 -------------------------------------------------------------------------------
 -- Changes by Thomas E. Dickey
 -- vile:txtmode
 -------------------------------------------------------------------------------
+
+2024/09/06
+	+ improve manpage formatting.
+
+	+ fix some cppcheck warnings.
+
+	+ updated config.guess, config.sub
 
 2024/04/01
 	+ use "-n" option for gzip'd manpages.

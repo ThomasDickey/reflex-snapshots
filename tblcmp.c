@@ -1,4 +1,4 @@
-/* $Id: tblcmp.c,v 1.10 2021/05/10 21:17:23 tom Exp $ */
+/* $Id: tblcmp.c,v 1.11 2024/09/06 22:42:38 tom Exp $ */
 /* tblcmp - table compression routines */
 
 /*-
@@ -33,11 +33,11 @@
 
 /* declarations for functions that have forward references */
 
-void mkentry(int *, int, int, int, int);
-void mkprot(int[], int, int);
-void mktemplate(int[], int, int);
-void mv2front(int);
-int tbldiff(int[], int, int[]);
+static void mkentry(int *, int, int, int, int);
+static void mkprot(const int[], int, int);
+static void mktemplate(int[], int, int);
+static void mv2front(int);
+static int tbldiff(int[], int, int[]);
 
 /* bldtbl - build table entries for dfa state
  *
@@ -481,7 +481,7 @@ mkdeftbl(void)
  * the tables are searched for an interior spot that will accommodate the
  * state array.
  */
-void
+static void
 mkentry(int *state, int numchars, int statenum, int deflink, int totaltrans)
 {
     int minec, maxec, i, baseaddr;
@@ -618,8 +618,8 @@ mk1tbl(int state, int sym, int onenxt, int onedft)
 }
 
 /* mkprot - create new proto entry */
-void
-mkprot(int state[], int statenum, int comstate)
+static void
+mkprot(const int state[], int statenum, int comstate)
 {
     int i, slot, tblbase;
 
@@ -654,7 +654,7 @@ mkprot(int state[], int statenum, int comstate)
 /* mktemplate - create a template entry based on a state, and connect the state
  *              to it
  */
-void
+static void
 mktemplate(int state[], int statenum, int comstate)
 {
     int i, numdiff, tmpbase, tmp[CSIZE + 1];
@@ -705,7 +705,7 @@ mktemplate(int state[], int statenum, int comstate)
 }
 
 /* mv2front - move proto queue element to front of queue */
-void
+static void
 mv2front(int qelm)
 {
     if (firstprot != qelm) {
@@ -799,7 +799,7 @@ stack1(int statenum, int sym, int nextstate, int deflink)
  * between "state" and "pr" is returned as function value.  Note that this
  * number is "numecs" minus the number of "SAME_TRANS" entries in "ext".
  */
-int
+static int
 tbldiff(int state[], int pr, int ext[])
 {
     int i, *sp = state, *ep = ext, *protp;

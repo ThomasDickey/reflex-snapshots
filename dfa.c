@@ -1,4 +1,4 @@
-/* $Id: dfa.c,v 1.11 2021/08/06 20:28:09 tom Exp $ */
+/* $Id: dfa.c,v 1.12 2024/09/06 22:46:15 tom Exp $ */
 /* dfa - DFA construction routines */
 
 /*-
@@ -32,10 +32,10 @@
 #include "flexdef.h"
 
 /* declare functions that have forward references */
-void dump_associated_rules(FILE *, int);
-void dump_transitions(FILE *, int[]);
-void sympartition(int[], int, int[], int[]);
-int symfollowset(int[], int, int, int[]);
+static void dump_associated_rules(FILE *, int);
+static void dump_transitions(FILE *, const int[]);
+static void sympartition(const int[], int, int[], int[]);
+static int symfollowset(const int[], int, int, int[]);
 
 /* check_for_backing_up - check a DFA state for backing up
  *
@@ -92,7 +92,8 @@ check_for_backing_up(int ds, int state[])
  *    accset[1 .. nacc] is the list of accepting numbers for the DFA state.
  */
 void
-check_trailing_context(int *nfa_states, int num_states, int *accset, int nacc)
+check_trailing_context(const int *nfa_states, int num_states,
+		       const int *accset, int nacc)
 {
     int i, j;
 
@@ -127,7 +128,7 @@ check_trailing_context(int *nfa_states, int num_states, int *accset, int nacc)
  * extracts the first MAX_ASSOC_RULES unique rules, sorts them,
  * and writes a report to the given file.
  */
-void
+static void
 dump_associated_rules(FILE *file, int ds)
 {
     int i, j;
@@ -175,8 +176,8 @@ dump_associated_rules(FILE *file, int ds)
  * (i.e., all those which are not out-transitions, plus EOF).  The dump
  * is done to the given file.
  */
-void
-dump_transitions(FILE *file, int state[])
+static void
+dump_transitions(FILE *file, const int state[])
 {
     int i;
     int out_char_set[CSIZE];
@@ -839,8 +840,8 @@ snstods(int sns[], int numstates, int accset[], int nacc, int hashval, int *newd
  *    numstates = symfollowset(int ds[current_max_dfa_size], int dsize,
  *				int transsym, int nset[current_max_dfa_size]);
  */
-int
-symfollowset(int ds[], int dsize, int transsym, int nset[])
+static int
+symfollowset(const int ds[], int dsize, int transsym, int nset[])
 {
     int ns, tsp, sym, i, j, lenccl, ch, numstates, ccllist;
 
@@ -918,8 +919,8 @@ symfollowset(int ds[], int dsize, int transsym, int nset[])
  *    sympartition(int ds[current_max_dfa_size], int numstates,
  *			int symlist[numecs], int duplist[numecs]);
  */
-void
-sympartition(int ds[], int numstates, int symlist[], int duplist[])
+static void
+sympartition(const int ds[], int numstates, int symlist[], int duplist[])
 {
     int i, j, k, dupfwd[CSIZE + 1], lenccl, cclp, ich;
 

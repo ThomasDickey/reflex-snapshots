@@ -1,4 +1,4 @@
-/* $Id: ecs.c,v 1.8 2021/05/10 21:17:23 tom Exp $ */
+/* $Id: ecs.c,v 1.9 2024/09/06 22:40:26 tom Exp $ */
 /* ecs - equivalence class routines */
 
 /*-
@@ -74,7 +74,7 @@ ccl2ecl(void)
  */
 
 int
-cre8ecs(int fwd[], int bck[], int num)
+cre8ecs(const int fwd[], int bck[], int num)
 {
     int i, j, numcl;
 

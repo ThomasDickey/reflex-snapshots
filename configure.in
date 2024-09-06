@@ -1,10 +1,12 @@
 dnl Process this file with autoconf to produce a configure script.
 dnl
-AC_REVISION($Revision: 1.16 $)
+AC_REVISION($Revision: 1.17 $)
 AC_PREREQ(2.52.20230114)
 
 AC_INIT(initscan.c)
 AC_CONFIG_HEADER(config.h:conf.in)
+
+CF_WITH_SYSTYPE
 
 # This can be overridden, but makes --program-prefix default to "re", so
 # it will install as "reflex".
