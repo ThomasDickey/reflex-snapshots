@@ -1,5 +1,5 @@
 #! /bin/sh
-# $Id: rename.sh,v 1.8 2023/05/21 19:13:12 tom Exp $
+# $Id: rename.sh,v 1.9 2024/12/31 21:58:47 tom Exp $
 # install-helper for flex/reflex
 #
 # $1 = input file
@@ -21,12 +21,12 @@ TARGET=$1; shift
 HEADER=$1; shift
 LIBNAME=$1; shift
 
-initial=`basename $SOURCE`
-renamed=`basename $TARGET | sed -e 's%\.%++.%'`
+initial=`basename "$SOURCE"`
+renamed=`basename "$TARGET" | sed -e 's%\.%++.%'`
 partial=$my_tmpdir/$initial
 
 sed	-e "s,FlexLexer.h,${HEADER},g" \
 	-e "s,\-lfl\>,-l$LIBNAME,g" \
-	<"$SOURCE" >$partial
-sh ./install-man ${partial} "$TARGET"
-sh ./install-man -l ${renamed} "$TARGET"
+	<"$SOURCE" >"$partial"
+sh ./install-man "${partial}" "$TARGET"
+sh ./install-man -l "${renamed}" "$TARGET"

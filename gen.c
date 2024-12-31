@@ -1,4 +1,4 @@
-/* $Id: gen.c,v 1.34 2021/08/07 00:36:39 Boris.Kolpackov Exp $ */
+/* $Id: gen.c,v 1.35 2024/12/31 21:08:04 tom Exp $ */
 /* gen - actual generation (writing) of flex scanners */
 
 /*-
@@ -7,7 +7,7 @@
  *
  * This code is derived from software contributed to Berkeley by
  * Vern Paxson.
- * 
+ *
  * The United States Government has rights in this work pursuant
  * to contract no. DE-AC03-76SF00098 between the United States
  * Department of Energy and the University of California.

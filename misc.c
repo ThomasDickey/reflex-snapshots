@@ -1,4 +1,4 @@
-/* $Id: misc.c,v 1.23 2021/08/06 00:05:35 tom Exp $ */
+/* $Id: misc.c,v 1.25 2024/12/31 21:08:38 tom Exp $ */
 /* misc - miscellaneous flex routines */
 
 /*-
@@ -100,7 +100,7 @@ add_ind_action(int level, const char *new_text)
 void *
 allocate_array(size_t size, size_t element_size)
 {
-    void *mem = 0;
+    void *mem = NULL;
     if (size > 0) {
 	size_t num_bytes = element_size * size;
 
@@ -653,6 +653,10 @@ out_indent(const char *str)
 		str++;
 		cols |= (INDENT_SIZE - 1);
 		cols++;
+	    } else if (*str == '\n') {
+		cols = 0;
+		str++;
+		break;
 	    } else {
 		break;
 	    }
@@ -819,7 +823,7 @@ readable_form(int c)
 void *
 reallocate_array(void *array, long size, size_t element_size)
 {
-    void *new_array = 0;
+    void *new_array = NULL;
 
     if (size > 0) {
 	size_t num_bytes = element_size * (unsigned) size;
@@ -842,7 +846,7 @@ void
 skelout(void)
 {
     char buf_storage[MAXLINE];
-    const char *buf = 0;
+    const char *buf = NULL;
     int do_copy = 1;
 
     /* Loop pulling lines either from the skelfile, if we're using
@@ -850,7 +854,7 @@ skelout(void)
      */
     while (skelfile ?
 	   ((buf = fgets(buf_storage, MAXLINE, skelfile)) != NULL) :
-	   ((buf = skel[skel_ind++]) != 0)) {
+	   ((buf = skel[skel_ind++]) != NULL)) {
 	/* copy from skel array */
 	if (buf[0] == '%') {
 	    switch (buf[1]) {

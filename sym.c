@@ -1,4 +1,4 @@
-/* $Id: sym.c,v 1.8 2024/09/06 22:44:15 tom Exp $ */
+/* $Id: sym.c,v 1.9 2024/12/31 21:11:50 tom Exp $ */
 /* sym - symbol table routines */
 
 /*-
@@ -69,7 +69,7 @@ addsym(char sym[], char *str_def, int int_def, hash_table table, int table_size)
 
     assert(new_entry != NULL);
 
-    if ((successor = table[hash_val]) != 0) {
+    if ((successor = table[hash_val]) != NULL) {
 	new_entry->next = successor;
 	successor->prev = new_entry;
     } else

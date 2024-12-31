@@ -8,7 +8,7 @@
  *
  * This code is derived from software contributed to Berkeley by
  * Vern Paxson.
- * 
+ *
  * The United States Government has rights in this work pursuant
  * to contract no. DE-AC03-76SF00098 between the United States
  * Department of Energy and the University of California.
@@ -107,7 +107,6 @@ LEXOPT		[aceknopr]
 	int i;
 	Char nmdef[MAXLINE];
 
-
 <INITIAL>{
 	^{WS}		indented_code = true; BEGIN(CODEBLOCK);
 	^"/*"		ACTION_ECHO; yy_push_state(COMMENT);
@@ -116,7 +115,7 @@ LEXOPT		[aceknopr]
 	^"%x"{NAME}?	return XSCDECL;
 	^"%{".*{NL}	{
 			++linenum;
-			line_directive_out((FILE *) 0, 1);
+			line_directive_out(NULL, 1);
 			indented_code = false;
 			BEGIN(CODEBLOCK);
 			}
@@ -127,7 +126,7 @@ LEXOPT		[aceknopr]
 			sectnum = 2;
 			bracelevel = 0;
 			mark_defs1();
-			line_directive_out((FILE *) 0, 1);
+			line_directive_out(NULL, 1);
 			BEGIN(SECT2PROLOG);
 			return SECTEND;
 			}
@@ -441,7 +440,7 @@ LEXOPT		[aceknopr]
 			strcpy(nmstr, yytext + 1);
 			nmstr[yyleng - 2] = '\0';  /* chop trailing brace */
 
-			if ((nmdefptr = ndlookup(nmstr)) == 0)
+			if ((nmdefptr = ndlookup(nmstr)) == NULL)
 			    format_synerr(
 					_("undefined definition {%s}"),
 					    nmstr);
@@ -595,7 +594,7 @@ LEXOPT		[aceknopr]
 	/* Reject and YYmore() are checked for above, in PERCENT_BRACE_ACTION */
 <ACTION>{
 	"{"		ACTION_ECHO2; ++bracelevel;
-	"}"		--bracelevel; ACTION_ECHO2; 
+	"}"		--bracelevel; ACTION_ECHO2;
 	[^[:alpha:]_{}"'/\n]+	ACTION_ECHO2;
 	{NAME}		ACTION_ECHO2;
 	"'"([^'\\\n]|\\.)*"'"	ACTION_ECHO2; /* character constant */

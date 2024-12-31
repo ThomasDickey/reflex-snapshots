@@ -1,4 +1,4 @@
-/* $Id: yylex.c,v 1.6 2021/05/10 21:17:23 tom Exp $ */
+/* $Id: yylex.c,v 1.7 2024/12/31 21:12:07 tom Exp $ */
 /* yylex - scanner front-end for flex */
 
 /*-
@@ -7,7 +7,7 @@
  *
  * This code is derived from software contributed to Berkeley by
  * Vern Paxson.
- * 
+ *
  * The United States Government has rights in this work pursuant
  * to contract no. DE-AC03-76SF00098 between the United States
  * Department of Energy and the University of California.

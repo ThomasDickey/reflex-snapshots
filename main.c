@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.27 2024/09/06 22:43:30 tom Exp $ */
+/* $Id: main.c,v 1.29 2024/12/31 21:08:38 tom Exp $ */
 /* flex - tool to generate fast lexical analyzers */
 
 /*-
@@ -567,7 +567,7 @@ flexend(int exit_status)
  */
 /* *INDENT-OFF* */
 static const struct {
-    const char fake_opt[16];
+    const char fake_opt[18];
     const char yacc_arg;
     const char real_opt;
 } long_opts[] = {
@@ -665,7 +665,7 @@ flexinit(int argc, char **argv)
     performance_report = 0;
     did_outfilename = 0;
     prefix = copy_string("yy");
-    yyclass = 0;
+    yyclass = NULL;
     use_read = use_stdout = false;
 
     sawcmpflag = false;
@@ -949,7 +949,7 @@ readin(void)
 {
     static char yy_stdinit[] = "FILE *yyin = stdin, *yyout = stdout;";
     static char yy_nostdinit[] =
-    "FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;";
+    "FILE *yyin = NULL, *yyout = NULL;";
 #ifndef FLEXLEXER_HDR
 #define FLEXLEXER_HDR "FlexLexer.h"
 #endif

@@ -1,4 +1,4 @@
-/* $Id: ecs.c,v 1.9 2024/09/06 22:40:26 tom Exp $ */
+/* $Id: ecs.c,v 1.10 2024/12/31 21:08:04 tom Exp $ */
 /* ecs - equivalence class routines */
 
 /*-
@@ -7,7 +7,7 @@
  *
  * This code is derived from software contributed to Berkeley by
  * Vern Paxson.
- * 
+ *
  * The United States Government has rights in this work pursuant
  * to contract no. DE-AC03-76SF00098 between the United States
  * Department of Energy and the University of California.

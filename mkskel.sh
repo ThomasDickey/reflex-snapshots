@@ -1,5 +1,5 @@
 #! /bin/sh
-# $Id: mkskel.sh,v 1.6 2020/07/15 23:24:16 tom Exp $
+# $Id: mkskel.sh,v 1.7 2024/12/31 21:10:52 tom Exp $
 
 cat <<!
 /* File created from flex.skl via mkskel.sh */
@@ -18,6 +18,6 @@ sed 's,^    "%%,    /*----------------------------------------------------------
     "%%,'
 
 cat <<!
-    0
+    NULL
 };
 !

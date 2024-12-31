@@ -10,7 +10,7 @@
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 5
 #define YY_FLEX_LOWER_VERSION 4
-#define YY_FLEX_PATCH_VERSION 20240906
+#define YY_FLEX_PATCH_VERSION 20241231
 
 %-
 #include <stdio.h>
@@ -216,7 +216,7 @@ struct yy_buffer_state {
 };
 
 %- Standard (non-C++) definition
-static YY_BUFFER_STATE yy_current_buffer = 0;
+static YY_BUFFER_STATE yy_current_buffer = NULL;
 %*
 
 /* We provide macros for accessing buffer states in case in the
@@ -234,7 +234,7 @@ static int yy_n_chars;		/* number of characters read into yy_ch_buf */
 int yyleng;
 
 /* Points to current character in buffer. */
-static char *yy_c_buf_p = (char *) 0;
+static char *yy_c_buf_p = NULL;
 static int yy_init = 1;		/* whether we need to initialize */
 static int yy_start = 0;	/* start state number */
 
@@ -355,7 +355,7 @@ static int input(void);
 #if YY_STACK_USED
 static int yy_start_stack_ptr = 0;
 static int yy_start_stack_depth = 0;
-static int *yy_start_stack = 0;
+static int *yy_start_stack = NULL;
 #ifndef YY_NO_PUSH_STATE
 static void yy_push_state(int new_state);
 #endif
@@ -681,7 +681,7 @@ yyFlexLexer::yyFlexLexer(std::istream* arg_yyin, std::ostream* arg_yyout)
 	yy_start_stack_ptr = yy_start_stack_depth = 0;
 	yy_start_stack = 0;
 
-	yy_current_buffer = 0;
+	yy_current_buffer = NULL;
 
 #ifdef YY_USES_REJECT
 	yy_state_buf = new yy_state_type[YY_BUF_SIZE + 2];
@@ -822,7 +822,7 @@ int yyFlexLexer::yy_get_next_buffer()
 				                    b->yy_buf_size + 2);
 			} else
 				/* Can't grow it, we don't own it. */
-				b->yy_ch_buf = 0;
+				b->yy_ch_buf = NULL;
 
 			if (!b->yy_ch_buf)
 				YY_FATAL_ERROR("fatal error - scanner input buffer overflow");
@@ -1202,9 +1202,10 @@ yy_scan_buffer(char *bbase, yy_size_t size)
 
 	if (size < 2 ||
 	    bbase[size - 2] != YY_END_OF_BUFFER_CHAR ||
-	    bbase[size - 1] != YY_END_OF_BUFFER_CHAR)
+	    bbase[size - 1] != YY_END_OF_BUFFER_CHAR) {
 	    /* They forgot to leave room for the EOB's. */
-		return 0;
+		return NULL;
+	}
 
 	b = (YY_BUFFER_STATE) yy_flex_alloc(sizeof(struct yy_buffer_state));
 	if (!b)
@@ -1213,7 +1214,7 @@ yy_scan_buffer(char *bbase, yy_size_t size)
 	b->yy_buf_size = size - 2;	/* "- 2" to take care of EOB's */
 	b->yy_buf_pos = b->yy_ch_buf = bbase;
 	b->yy_is_our_buffer = 0;
-	b->yy_input_file = 0;
+	b->yy_input_file = NULL;
 	b->yy_n_chars = (int) b->yy_buf_size;
 	b->yy_is_interactive = 0;
 	b->yy_at_bol = 1;
@@ -1358,13 +1359,13 @@ static int yy_init_globals(void)
 
 %% code for yylineno update goes here
 
-	yy_current_buffer = 0;
-	yy_c_buf_p = (char *) 0;
+	yy_current_buffer = NULL;
+	yy_c_buf_p = NULL;
 	yy_init = 1;
 	yy_start = 0;
 
-	yyin = (FILE *) 0;
-	yyout = (FILE *) 0;
+	yyin = NULL;
+	yyout = NULL;
 
 	return 0;
 }

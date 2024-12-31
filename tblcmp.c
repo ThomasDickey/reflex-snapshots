@@ -1,4 +1,4 @@
-/* $Id: tblcmp.c,v 1.11 2024/09/06 22:42:38 tom Exp $ */
+/* $Id: tblcmp.c,v 1.12 2024/12/31 21:11:50 tom Exp $ */
 /* tblcmp - table compression routines */
 
 /*-
@@ -7,7 +7,7 @@
  *
  * This code is derived from software contributed to Berkeley by
  * Vern Paxson.
- * 
+ *
  * The United States Government has rights in this work pursuant
  * to contract no. DE-AC03-76SF00098 between the United States
  * Department of Energy and the University of California.
