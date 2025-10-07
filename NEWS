@@ -1,8 +1,13 @@
--- $Id: NEWS,v 1.74 2024/12/31 21:56:16 tom Exp $
+-- $Id: NEWS,v 1.78 2025/10/07 08:12:59 tom Exp $
 -------------------------------------------------------------------------------
 -- Changes by Thomas E. Dickey
 -- vile:txtmode
 -------------------------------------------------------------------------------
+
+2025/10/07
+	+ improved configure script macros
+
+	+ updated config.guess, config.sub
 
 2024/12/31
 	+ fix stricter gcc15 warnings.

@@ -1,8 +1,8 @@
-dnl $Id: aclocal.m4,v 1.35 2024/08/03 17:08:58 tom Exp $
+dnl $Id: aclocal.m4,v 1.36 2025/09/28 20:56:33 tom Exp $
 dnl reflex's local definitions for autoconf -TD
 dnl ---------------------------------------------------------------------------
 dnl
-dnl Copyright 2008-2023,2024 Thomas E. Dickey
+dnl Copyright 2008-2024,2025 Thomas E. Dickey
 dnl
 dnl Permission is hereby granted, free of charge, to any person obtaining a
 dnl copy of this software and associated documentation files (the
@@ -190,7 +190,7 @@ dnl Allow user to enable a normally-off option.
 AC_DEFUN([CF_ARG_ENABLE],
 [CF_ARG_OPTION($1,[$2],[$3],[$4],no)])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ARG_OPTION version: 5 updated: 2015/05/10 19:52:14
+dnl CF_ARG_OPTION version: 6 updated: 2025/08/05 04:09:09
 dnl -------------
 dnl Restricted form of AC_ARG_ENABLE that ensures user doesn't give bogus
 dnl values.
@@ -199,7 +199,7 @@ dnl Parameters:
 dnl $1 = option name
 dnl $2 = help-string
 dnl $3 = action to perform if option is not default
-dnl $4 = action if perform if option is default
+dnl $4 = action to perform if option is default
 dnl $5 = default option value (either 'yes' or 'no')
 AC_DEFUN([CF_ARG_OPTION],
 [AC_ARG_ENABLE([$1],[$2],[test "$enableval" != ifelse([$5],no,yes,no) && enableval=ifelse([$5],no,no,yes)
@@ -491,7 +491,7 @@ if test "x$ifelse([$2],,CLANG_COMPILER,[$2])" = "xyes" ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_CONST_X_STRING version: 8 updated: 2023/12/01 17:22:50
+dnl CF_CONST_X_STRING version: 9 updated: 2024/12/04 03:49:57
 dnl -----------------
 dnl The X11R4-X11R6 Xt specification uses an ambiguous String type for most
 dnl character-strings.
@@ -518,7 +518,7 @@ CF_SAVE_XTRA_FLAGS([CF_CONST_X_STRING])
 
 AC_TRY_COMPILE(
 [
-#include <stdlib.h>
+$ac_includes_default
 #include <X11/Intrinsic.h>
 ],
 [String foo = malloc(1); free((void*)foo)],[
@@ -529,7 +529,7 @@ AC_CACHE_CHECK(for X11/Xt const-feature,cf_cv_const_x_string,[
 #undef  _CONST_X_STRING
 #define _CONST_X_STRING	/* X11R7.8 (perhaps) */
 #undef  XTSTRINGDEFINES	/* X11R5 and later */
-#include <stdlib.h>
+$ac_includes_default
 #include <X11/Intrinsic.h>
 		],[String foo = malloc(1); *foo = 0],[
 			cf_cv_const_x_string=no
@@ -551,6 +551,11 @@ esac
 
 ])
 ])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_DIRNAME version: 5 updated: 2020/12/31 20:19:42
+dnl ----------
+dnl "dirname" is not portable, so we fake it with a shell script.
+AC_DEFUN([CF_DIRNAME],[$1=`echo "$2" | sed -e 's%/[[^/]]*$%%'`])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_DISABLE_ECHO version: 14 updated: 2021/09/04 06:35:04
 dnl ---------------
@@ -719,7 +724,7 @@ CF_INTEL_COMPILER(GCC,INTEL_COMPILER,CFLAGS)
 CF_CLANG_COMPILER(GCC,CLANG_COMPILER,CFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GCC_WARNINGS version: 41 updated: 2021/01/01 16:53:59
+dnl CF_GCC_WARNINGS version: 43 updated: 2024/12/21 08:44:12
 dnl ---------------
 dnl Check if the compiler supports useful warning options.  There's a few that
 dnl we don't use, simply because they're too noisy:
@@ -1693,14 +1698,45 @@ AC_SUBST(GROFF_NOTE)
 AC_SUBST(NROFF_NOTE)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PROG_LINT version: 5 updated: 2022/08/20 15:44:13
+dnl CF_PROG_INSTALL version: 12 updated: 2025/09/28 16:56:33
+dnl ---------------
+dnl Force $INSTALL to be an absolute-path.  Otherwise, edit_man.sh and the
+dnl misc/tabset install won't work properly.  Usually this happens only when
+dnl using the fallback mkinstalldirs script
+AC_DEFUN([CF_PROG_INSTALL],
+[AC_PROG_INSTALL
+AC_REQUIRE([CF_GLOB_FULLPATH])dnl
+if test "x$INSTALL" = "x./install-sh -c"; then
+	if test -f /usr/sbin/install ; then
+		case "$host_os" in
+		(linux*gnu|linux*gnuabi64|linux*gnuabin32|linux*gnuabielfv*|linux*gnueabi|linux*gnueabihf|linux*gnux32|uclinux*|gnu*|mint*|k*bsd*-gnu|cygwin|msys|mingw*|linux*uclibc)
+			INSTALL=/usr/sbin/install 
+			;;
+		esac
+	fi
+fi
+case x$INSTALL in
+(x$GLOB_FULLPATH_POSIX|x$GLOB_FULLPATH_OTHER)
+	;;
+(*)
+	CF_DIRNAME(cf_dir,$INSTALL)
+	test -z "$cf_dir" && cf_dir=.
+	INSTALL="`cd \"$cf_dir\" && pwd`"/"`echo "$INSTALL" | sed -e 's%^.*/%%'`"
+	;;
+esac
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_PROG_LINT version: 7 updated: 2024/11/30 14:37:45
 dnl ------------
 AC_DEFUN([CF_PROG_LINT],
 [
 AC_CHECK_PROGS(LINT, lint cppcheck splint)
 case "x$LINT" in
+(xlint|x*/lint) # NetBSD 10
+	test -z "$LINT_OPTS" && LINT_OPTS="-chapbrxzgFS -v -Ac11"
+	;;
 (xcppcheck|x*/cppcheck)
-	test -z "$LINT_OPTS" && LINT_OPTS="--enable=all"
+	test -z "$LINT_OPTS" && LINT_OPTS="--enable=all -D__CPPCHECK__"
 	;;
 esac
 AC_SUBST(LINT_OPTS)
@@ -1797,12 +1833,12 @@ AC_SUBST(X_CFLAGS)
 AC_SUBST(X_LIBS)
 [])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_MAN2HTML version: 13 updated: 2023/11/23 06:40:35
+dnl CF_WITH_MAN2HTML version: 14 updated: 2024/09/09 17:17:46
 dnl ----------------
 dnl Check for man2html and groff.  Prefer man2html over groff, but use groff
 dnl as a fallback.  See
 dnl
-dnl		http://invisible-island.net/scripts/man2html.html
+dnl		https://invisible-island.net/scripts/man2html.html
 dnl
 dnl Generate a shell script which hides the differences between the two.
 dnl
@@ -2015,7 +2051,7 @@ fi
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 67 updated: 2023/09/06 18:55:27
+dnl CF_XOPEN_SOURCE version: 69 updated: 2025/07/26 14:09:49
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -2075,8 +2111,11 @@ case "$host_os" in
 	cf_xopen_source="-D_SGI_SOURCE"
 	cf_XOPEN_SOURCE=
 	;;
-(linux*gnu|linux*gnuabi64|linux*gnuabin32|linux*gnueabi|linux*gnueabihf|linux*gnux32|uclinux*|gnu*|mint*|k*bsd*-gnu|cygwin|msys|mingw*|linux*uclibc)
+(linux*gnu|linux*gnuabi64|linux*gnuabin32|linux*gnuabielfv*|linux*gnueabi|linux*gnueabihf|linux*gnux32|uclinux*|gnu*|mint*|k*bsd*-gnu|cygwin|msys|mingw*|linux*uclibc)
 	CF_GNU_SOURCE($cf_XOPEN_SOURCE)
+	;;
+linux*musl)
+	cf_xopen_source="-D_BSD_SOURCE"
 	;;
 (minix*)
 	cf_xopen_source="-D_NETBSD_SOURCE" # POSIX.1-2001 features are ifdef'd with this...

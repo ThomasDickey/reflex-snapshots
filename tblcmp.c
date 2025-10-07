@@ -1,7 +1,32 @@
-/* $Id: tblcmp.c,v 1.12 2024/12/31 21:11:50 tom Exp $ */
+/* $Id: tblcmp.c,v 1.14 2025/10/07 22:49:03 tom Exp $ */
 /* tblcmp - table compression routines */
 
 /*-
+ * Copyright 2008-2024,2025  Thomas E. Dickey
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, distribute with
+ * modifications, sublicense, and/or sell copies of the Software, and to permit
+ * persons to whom the Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+ * ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ * 
+ * Except as contained in this notice, the name(s) of the above copyright
+ * holders shall not be used in advertising or otherwise to promote the sale,
+ * use or other dealings in this Software without prior written authorization.
+ *
  * Copyright (c) 1990 The Regents of the University of California.
  * All rights reserved.
  *
@@ -33,11 +58,11 @@
 
 /* declarations for functions that have forward references */
 
-static void mkentry(int *, int, int, int, int);
+static void mkentry(const int *, int, int, int, int);
 static void mkprot(const int[], int, int);
 static void mktemplate(int[], int, int);
 static void mv2front(int);
-static int tbldiff(int[], int, int[]);
+static int tbldiff(const int[], int, int[]);
 
 /* bldtbl - build table entries for dfa state
  *
@@ -340,8 +365,8 @@ find_table_space(int *state, int numtrans)
 
     while (1)			/* loops until a space is found */
     {
-	int *state_ptr;
-	int *ptr_to_last_entry_in_state;
+	const int *state_ptr;
+	const int *ptr_to_last_entry_in_state;
 
 	while (i + numecs >= current_max_xpairs)
 	    expand_nxt_chk();
@@ -482,7 +507,7 @@ mkdeftbl(void)
  * state array.
  */
 static void
-mkentry(int *state, int numchars, int statenum, int deflink, int totaltrans)
+mkentry(const int *state, int numchars, int statenum, int deflink, int totaltrans)
 {
     int minec, maxec, i, baseaddr;
     int tblbase, tbllast;
@@ -800,9 +825,11 @@ stack1(int statenum, int sym, int nextstate, int deflink)
  * number is "numecs" minus the number of "SAME_TRANS" entries in "ext".
  */
 static int
-tbldiff(int state[], int pr, int ext[])
+tbldiff(const int state[], int pr, int ext[])
 {
-    int i, *sp = state, *ep = ext, *protp;
+    const int *sp = state;
+    const int *protp;
+    int i, *ep = ext;
     int numdiff = 0;
 
     protp = &protsave[numecs * (pr - 1)];

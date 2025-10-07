@@ -1,7 +1,32 @@
-/* $Id: misc.c,v 1.25 2024/12/31 21:08:38 tom Exp $ */
+/* $Id: misc.c,v 1.27 2025/10/07 22:57:09 tom Exp $ */
 /* misc - miscellaneous flex routines */
 
 /*-
+ * Copyright 2008-2024,2025  Thomas E. Dickey
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, distribute with
+ * modifications, sublicense, and/or sell copies of the Software, and to permit
+ * persons to whom the Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+ * ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ * 
+ * Except as contained in this notice, the name(s) of the above copyright
+ * holders shall not be used in advertising or otherwise to promote the sale,
+ * use or other dealings in this Software without prior written authorization.
+ *
  * Copyright (c) 1990 The Regents of the University of California.
  * All rights reserved.
  *
@@ -113,7 +138,7 @@ allocate_array(size_t size, size_t element_size)
 
 /* all_lower - true if a string is all lower-case */
 int
-all_lower(char *str)
+all_lower(const char *str)
 {
     while (*str) {
 	if (!islower((Char) *str))
@@ -126,7 +151,7 @@ all_lower(char *str)
 
 /* all_upper - true if a string is all upper-case */
 int
-all_upper(char *str)
+all_upper(const char *str)
 {
     while (*str) {
 	if (!isupper((Char) *str))
@@ -355,11 +380,11 @@ flexfatal(const char *msg, ...)
 
 /* htoi - convert a hexadecimal digit string to an integer value */
 int
-htoi(Char *str)
+htoi(const Char *str)
 {
     unsigned int result;
 
-    (void) sscanf((char *) str, "%x", &result);
+    (void) sscanf((const char *) str, "%x", &result);
 
     return (int) result;
 }
@@ -389,8 +414,9 @@ line_directive_out(FILE *output_file, int do_infile)
 {
     char directive[MAXLINE], filename[MAXLINE];
     const char *s1;
-    char *s2, *s3;
-    static char line_fmt[] = "#line %d \"%s\"\n";
+    char *s2;
+    const char *s3;
+    static const char line_fmt[] = "#line %d \"%.2000s\"\n";
 
     if (!gen_line_dirs)
 	return;
@@ -508,7 +534,7 @@ mkdata(int value)
 
 /* myctoi - return the integer represented by a string of digits */
 int
-myctoi(char *array)
+myctoi(const char *array)
 {
     int val = 0;
 
@@ -605,11 +631,11 @@ myesc(Char *array)
 
 /* otoi - convert an octal digit string to an integer value */
 int
-otoi(Char *str)
+otoi(const Char *str)
 {
     unsigned int result;
 
-    (void) sscanf((char *) str, "%o", &result);
+    (void) sscanf((const char *) str, "%o", &result);
     return (int) result;
 }
 
@@ -932,7 +958,8 @@ yy_flex_xmalloc(int size)
 void
 zero_out(char *region_ptr, size_t size_in_bytes)
 {
-    char *rp, *rp_end;
+    char *rp;
+    const char *rp_end;
 
     rp = region_ptr;
     rp_end = region_ptr + size_in_bytes;

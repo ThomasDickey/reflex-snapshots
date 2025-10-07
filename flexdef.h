@@ -1,7 +1,32 @@
-/* $Id: flexdef.h,v 1.30 2024/09/06 22:40:26 tom Exp $ */
+/* $Id: flexdef.h,v 1.32 2025/10/07 22:54:26 tom Exp $ */
 /* flexdef - definitions file for flex */
 
 /*-
+ * Copyright 2008-2024,2025  Thomas E. Dickey
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, distribute with
+ * modifications, sublicense, and/or sell copies of the Software, and to permit
+ * persons to whom the Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+ * ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ * 
+ * Except as contained in this notice, the name(s) of the above copyright
+ * holders shall not be used in advertising or otherwise to promote the sale,
+ * use or other dealings in this Software without prior written authorization.
+ *
  * Copyright (c) 1990 The Regents of the University of California.
  * All rights reserved.
  *
@@ -766,7 +791,7 @@ extern int cclinit (void);	/* make an empty ccl */
 extern void cclnegate (int);	/* negate a ccl */
 
 /* List the members of a set of characters in CCL form. */
-extern void list_character_set (FILE*, int[]);
+extern void list_character_set (FILE*, const int[]);
 
 
 /* from file dfa.c */
@@ -826,10 +851,10 @@ extern void add_action ( const char *new_text );
 extern void add_ind_action ( int level, const char *new_text );
 
 /* True if a string is all lower case. */
-extern int all_lower (char *);
+extern int all_lower (const char *);
 
 /* True if a string is all upper case. */
-extern int all_upper (char *);
+extern int all_upper (const char *);
 
 /* Bubble sort an integer array. */
 extern void bubble (int [], int);
@@ -862,7 +887,7 @@ extern GCC_NORETURN void flexerror (const char*, ...) GCC_PRINTFLIKE(1,2);
 extern GCC_NORETURN void flexfatal (const char*, ...) GCC_PRINTFLIKE(1,2);
 
 /* Convert a hexadecimal digit string to an integer value. */
-extern int htoi (Char[]);
+extern int htoi (const Char[]);
 
 /* Report an error message formatted with one integer argument. */
 extern GCC_NORETURN void lerrif (const char[], int);
@@ -887,13 +912,13 @@ extern void mk2data (int);
 extern void mkdata (int);	/* generate a data statement */
 
 /* Return the integer represented by a string of digits. */
-extern int myctoi (char []);
+extern int myctoi (const char []);
 
 /* Return character corresponding to escape sequence. */
 extern Char myesc (Char[]);
 
 /* Convert an octal digit string to an integer value. */
-extern int otoi (Char [] );
+extern int otoi (const Char [] );
 
 /* Output a (possibly-formatted) string to the generated scanner. */
 extern void out (const char []);

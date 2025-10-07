@@ -1,14 +1,12 @@
-Summary: fast lexical analyzer generator
-%define AppProgram reflex
-%define AppVersion 20241231
-# $XTermId: reflex.spec,v 1.30 2024/12/31 21:56:16 tom Exp $
-Name: %{AppProgram}
-Version: %{AppVersion}
+Summary: Fast lexical analyzer generator
+# $XTermId: reflex.spec,v 1.33 2025/10/07 07:49:57 tom Exp $
+Name: reflex
+Version: 20251007
 Release: 1
 License: BSD
 Group: Applications/Development
-URL: https://invisible-island.net/archives/%{AppProgram}
-Source0: %{URL}/%{AppProgram}-%{AppVersion}.tgz
+URL: https://invisible-island.net/archives/%{name}
+Source0: %{URL}/%{name}-%{version}.tgz
 Packager: Thomas Dickey <dickey@invisible-island.net>
 
 %description
@@ -29,7 +27,7 @@ remains compatible with POSIX lex.
 
 %define debug_package %{nil}
 
-%setup -q -n %{AppProgram}-%{AppVersion}
+%setup -q -n %{name}-%{version}
 
 %build
 
@@ -49,21 +47,24 @@ make
 
 make install DESTDIR=$RPM_BUILD_ROOT
 
-strip $RPM_BUILD_ROOT%{_bindir}/%{AppProgram}
+strip $RPM_BUILD_ROOT%{_bindir}/%{name}
 
 %clean
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%{_bindir}/%{AppProgram}
-%{_bindir}/%{AppProgram}++
-%{_mandir}/man1/%{AppProgram}*.*
+%{_bindir}/%{name}
+%{_bindir}/%{name}++
+%{_mandir}/man1/%{name}*.*
 %{_includedir}/reFlexLexer.h
 %{_libdir}/librefl.a
 
 %changelog
 # each patch should add its ChangeLog entries here
+
+* Tue Oct 07 2025 Thomas E. Dickey
+- testing reflex 20251007-1
 
 * Wed Oct 12 2022 Thomas Dickey
 - update manpage-dependency
