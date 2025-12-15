@@ -1,7 +1,7 @@
 Summary: Fast lexical analyzer generator
-# $XTermId: reflex.spec,v 1.33 2025/10/07 07:49:57 tom Exp $
+# $XTermId: reflex.spec,v 1.34 2025/12/15 01:11:12 tom Exp $
 Name: reflex
-Version: 20251007
+Version: 20251214
 Release: 1
 License: BSD
 Group: Applications/Development
@@ -63,8 +63,8 @@ strip $RPM_BUILD_ROOT%{_bindir}/%{name}
 %changelog
 # each patch should add its ChangeLog entries here
 
-* Tue Oct 07 2025 Thomas E. Dickey
-- testing reflex 20251007-1
+* Sun Dec 14 2025 Thomas E. Dickey
+- testing reflex 20251214-1
 
 * Wed Oct 12 2022 Thomas Dickey
 - update manpage-dependency
