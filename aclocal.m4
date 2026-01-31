@@ -1,8 +1,8 @@
-dnl $Id: aclocal.m4,v 1.38 2025/12/15 01:09:02 tom Exp $
+dnl $Id: aclocal.m4,v 1.42 2026/01/31 14:08:28 tom Exp $
 dnl reflex's local definitions for autoconf -TD
 dnl ---------------------------------------------------------------------------
 dnl
-dnl Copyright 2008-2024,2025 Thomas E. Dickey
+dnl Copyright 2008-2025,2026 Thomas E. Dickey
 dnl
 dnl Permission is hereby granted, free of charge, to any person obtaining a
 dnl copy of this software and associated documentation files (the
@@ -594,7 +594,7 @@ AC_SUBST(SHOW_CC)
 AC_SUBST(ECHO_CC)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GCC_ATTRIBUTES version: 27 updated: 2025/12/14 18:31:24
+dnl CF_GCC_ATTRIBUTES version: 28 updated: 2025/12/25 18:43:31
 dnl -----------------
 dnl Test for availability of useful gcc __attribute__ directives to quiet
 dnl compiler warnings.  Though useful, not all are supported -- and contrary
@@ -622,6 +622,7 @@ EOF
 if test "$GCC" = yes
 then
 	AC_MSG_CHECKING([for $CC __attribute__ directives])
+	test -n "$verbose" && AC_MSG_RESULT()
 cat > "conftest.$ac_ext" <<EOF
 #line __oline__ "${as_me:-configure}"
 #include <stdio.h>
@@ -724,7 +725,7 @@ CF_INTEL_COMPILER(GCC,INTEL_COMPILER,CFLAGS)
 CF_CLANG_COMPILER(GCC,CLANG_COMPILER,CFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GCC_WARNINGS version: 44 updated: 2025/12/14 18:31:24
+dnl CF_GCC_WARNINGS version: 45 updated: 2025/12/24 09:07:25
 dnl ---------------
 dnl Check if the compiler supports useful warning options.  There's a few that
 dnl we don't use, simply because they're too noisy:
@@ -766,6 +767,7 @@ then
 # warning #279: controlling expression is constant
 
 	AC_MSG_CHECKING([for $CC warning options])
+	test -n "$verbose" && AC_MSG_RESULT()
 	cf_save_CFLAGS="$CFLAGS"
 	EXTRA_CFLAGS="$EXTRA_CFLAGS -Wall"
 	for cf_opt in \
@@ -789,6 +791,7 @@ then
 elif test "$GCC" = yes && test "$GCC_VERSION" != "unknown"
 then
 	AC_MSG_CHECKING([for $CC warning options])
+	test -n "$verbose" && AC_MSG_RESULT()
 	cf_save_CFLAGS="$CFLAGS"
 	cf_warn_CONST=""
 	test "$with_ext_const" = yes && cf_warn_CONST="Wwrite-strings"
@@ -969,7 +972,7 @@ if test x$cf_cv_gnu_library = xyes; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_INSTALL_MAN version: 7 updated: 2025/12/14 18:08:20
+dnl CF_INSTALL_MAN version: 8 updated: 2026/01/31 09:07:58
 dnl --------------
 dnl Call this to generate a script "install-man" which uses the detected
 dnl manpage-format to compress the resulting manpage.  Providing this as a
@@ -1060,8 +1063,8 @@ if test -n "$source" ; then
 	if test "x$OPTS" = xlink ; then
 		source_dir=`echo "$source" | sed -e "s%/[[^/]]*$%%"`
 		target_dir=`echo "$target" | sed -e "s%/[[^/]]*$%%"`
-		sourcelink="${source}${suffix}" 
-		targetfile="${target}${suffix}" 
+		sourcelink="${source}${suffix}"
+		targetfile="${target}${suffix}"
 		targetlink="${target_dir}/${sourcelink}"
 		if test ! -d "$target_dir" ; then
 			failed "target directory does not exist: $target_dir"
@@ -1486,7 +1489,7 @@ ifelse([$1],,,[$1=$PATH_SEPARATOR])
 	AC_MSG_RESULT($PATH_SEPARATOR)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PATH_SYNTAX version: 19 updated: 2024/08/03 13:08:58
+dnl CF_PATH_SYNTAX version: 20 updated: 2025/12/16 04:09:03
 dnl --------------
 dnl Check the argument to see that it looks like a pathname.  Rewrite it if it
 dnl begins with one of the prefix/exec_prefix variables, and then again if the
@@ -1518,7 +1521,7 @@ case "x[$]$1" in
 	$1=`echo "[$]$1" | sed -e s%NONE%$cf_path_syntax%`
 	;;
 (*)
-	ifelse([$2],,[AC_MSG_ERROR([expected a pathname, not \"[$]$1\"])],$2)
+	ifelse([$2],,[AC_MSG_ERROR([expected a pathname, not "[$]$1"])],$2)
 	;;
 esac
 ])dnl
@@ -1698,7 +1701,7 @@ AC_SUBST(GROFF_NOTE)
 AC_SUBST(NROFF_NOTE)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PROG_INSTALL version: 13 updated: 2025/10/21 16:28:49
+dnl CF_PROG_INSTALL version: 14 updated: 2026/01/31 09:07:58
 dnl ---------------
 dnl Force $INSTALL to be an absolute-path.  Otherwise, edit_man.sh and the
 dnl misc/tabset install won't work properly.  Usually this happens only when
@@ -1710,7 +1713,7 @@ if test "x$INSTALL" = "x./install-sh -c"; then
 	if test -f /usr/sbin/install ; then
 		case "$host_os" in
 		(linux*gnu*|uclinux*|gnu*|mint*|k*bsd*-gnu|cygwin|msys|mingw*|linux*uclibc)
-			INSTALL=/usr/sbin/install 
+			INSTALL=/usr/sbin/install
 			;;
 		esac
 	fi

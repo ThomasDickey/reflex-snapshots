@@ -11,7 +11,7 @@
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 5
 #define YY_FLEX_LOWER_VERSION 4
-#define YY_FLEX_PATCH_VERSION 20251214
+#define YY_FLEX_PATCH_VERSION 20260131
 
 #include <stdio.h>
 
@@ -272,6 +272,7 @@ static void yy_flex_free(void *);
 typedef unsigned char YY_CHAR;
 FILE *yyin = NULL, *yyout = NULL;
 typedef int yy_state_type;
+#define yy_state_zero 0
 extern char *yytext;
 #define yytext_ptr yytext
 
@@ -1247,7 +1248,7 @@ char *yytext;
 #line 4 "scan.l"
 
 /*-
- * Copyright 2008-2024,2025  Thomas E. Dickey
+ * Copyright 2008-2025,2026  Thomas E. Dickey
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -1256,10 +1257,10 @@ char *yytext;
  * modifications, sublicense, and/or sell copies of the Software, and to permit
  * persons to whom the Software is furnished to do so, subject to the following
  * conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
@@ -1267,7 +1268,7 @@ char *yytext;
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
  * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
+ *
  * Except as contained in this notice, the name(s) of the above copyright
  * holders shall not be used in advertising or otherwise to promote the sale,
  * use or other dealings in this Software without prior written authorization.
@@ -1362,7 +1363,7 @@ static void add_off_action(int, int *, const char *);
 #define OPTION 17
 #define LINEDIR 18
 
-#line 1366 "scan.c"
+#line 1367 "scan.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -1551,7 +1552,7 @@ YY_DECL
 	int i;
 	Char nmdef[MAXLINE];
 
-#line 1555 "scan.c"
+#line 1556 "scan.c"
 
     if (yy_init) {
 	yy_init = 0;
@@ -2778,7 +2779,7 @@ YY_DECL
 #line 674 "scan.l"
 	    YY_FATAL_ERROR("flex scanner jammed");
 	    YY_BREAK
-#line 2783 "scan.c"
+#line 2784 "scan.c"
 	case YY_STATE_EOF(INITIAL):
 	case YY_STATE_EOF(SECT2):
 	case YY_STATE_EOF(CODEBLOCK):
@@ -3083,7 +3084,7 @@ yy_try_NUL_trans(yy_state_type yy_current_state)
     yy_current_state = (yy_state_type) yy_nxt[yy_base[yy_current_state] + yy_c];
     yy_is_jam = (yy_current_state == 768);
 
-    return yy_is_jam ? 0 : yy_current_state;
+    return yy_is_jam ? yy_state_zero : yy_current_state;
 }
 
 #ifndef YY_NO_UNPUT

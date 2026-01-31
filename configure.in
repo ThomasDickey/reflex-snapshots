@@ -1,4 +1,4 @@
-dnl Copyright 2008-2024,2025 Thomas E. Dickey
+dnl Copyright 2008-2025,2026 Thomas E. Dickey
 dnl
 dnl Permission is hereby granted, free of charge, to any person obtaining a
 dnl copy of this software and associated documentation files (the
@@ -26,10 +26,11 @@ dnl authorization.
 dnl ---------------------------------------------------------------------------
 dnl Process this file with autoconf to produce a configure script.
 dnl
-AC_REVISION($Revision: 1.20 $)
+AC_REVISION($Revision: 1.23 $)
 AC_PREREQ(2.52.20230114)
 
-AC_INIT(initscan.c)
+AC_INIT
+AC_CONFIG_SRCDIR([initscan.c])
 AC_CONFIG_HEADERS([config.h:conf.in])
 
 CF_WITH_SYSTYPE
@@ -76,7 +77,7 @@ case "$YACC" in
   ;;
 esac
 
-CF_WITH_MAN2HTML     
+CF_WITH_MAN2HTML
 CF_MANPAGE_FORMAT
 CF_INSTALL_MAN
 
@@ -84,5 +85,6 @@ no_cross=
 test "x$cross_compiling" = xno || no_cross="#"
 AC_SUBST(no_cross)
 
-AC_OUTPUT(Makefile)
+AC_CONFIG_FILES([Makefile rename])
+AC_OUTPUT
 CF_MAKE_DOCS(flex,1)

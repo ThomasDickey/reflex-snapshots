@@ -16,7 +16,7 @@ const char *const skel[] =
     "#define YY_FLEX_MAJOR_VERSION 2",
     "#define YY_FLEX_MINOR_VERSION 5",
     "#define YY_FLEX_LOWER_VERSION 4",
-    "#define YY_FLEX_PATCH_VERSION 20251214",
+    "#define YY_FLEX_PATCH_VERSION 20260131",
     "",
     "%-",
     "#include <stdio.h>",
@@ -924,7 +924,7 @@ const char *const skel[] =
     /*-----------------------------------------------------------------------*/
     "%% code to find the next state, and perhaps do backing up, goes here",
     "",
-    "\treturn yy_is_jam ? 0 : yy_current_state;",
+    "\treturn yy_is_jam ? yy_state_zero : yy_current_state;",
     "}",
     "",
     "%-",

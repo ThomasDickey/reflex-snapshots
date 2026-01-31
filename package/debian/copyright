@@ -4,7 +4,7 @@ Upstream-Contact: Thomas Dickey <dickey@invisible-island.net>
 Source: https://invisible-island.net/reflex/
 
 Files: * package/* package/*/*
-Copyright: 2008-2024,2025  Thomas E. Dickey
+Copyright: 2008-2025,2026  Thomas E. Dickey
 License:
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the

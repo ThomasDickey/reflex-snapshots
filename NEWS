@@ -1,10 +1,14 @@
--- $Id: NEWS,v 1.79 2025/12/15 01:11:25 tom Exp $
+-- $Id: NEWS,v 1.82 2026/01/31 23:33:10 tom Exp $
 -------------------------------------------------------------------------------
 -- Changes by Thomas E. Dickey
 -- vile:txtmode
 -------------------------------------------------------------------------------
 
-2025/12/14
+2026/01/31
+	+ portability fix for "sh" path in rename-helper script.
+
+	+ fix stricter gcc16 warnings.
+
 	+ improved configure script macros
 
 	+ updated config.guess, config.sub
@@ -108,7 +112,7 @@
 	  dcl-filt.l
 
 	+ update configure macros:
-	  CF_CC_ENV_FLAGS, CF_WITH_MAN2HTML     
+	  CF_CC_ENV_FLAGS, CF_WITH_MAN2HTML
 
 	+ updated config.guess, config.sub
 
